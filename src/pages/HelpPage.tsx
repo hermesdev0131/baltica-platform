@@ -137,7 +137,7 @@ export default function HelpPage() {
                 </div>
                 <div>
                   <h3 className="font-medium text-foreground">Email</h3>
-                  <p className="text-sm text-muted-foreground">help@baltica.app</p>
+                  <p className="text-sm text-muted-foreground">help@Báltica.app</p>
                 </div>
               </CardContent>
             </Card>
