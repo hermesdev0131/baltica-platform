@@ -91,7 +91,7 @@ export default function ProgressPage() {
           ))}
         </motion.div>
 
-        {/* Day Grid */}
+        {/* Day Grid - MVP 4 days (Welcome + 3 days) */}
         <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -100,8 +100,8 @@ export default function ProgressPage() {
           <h2 className="text-lg font-semibold text-foreground mb-4">
             Tu recorrido
           </h2>
-          <div className="grid grid-cols-7 gap-2 md:gap-3">
-            {Array.from({ length: totalDays }, (_, i) => i + 1).map(day => (
+          <div className="grid grid-cols-4 gap-3 md:gap-4 max-w-md mx-auto">
+            {Array.from({ length: totalDays + 1 }, (_, i) => i).map(day => (
               <DayCard
                 key={day}
                 day={day}
@@ -112,9 +112,9 @@ export default function ProgressPage() {
           </div>
         </motion.section>
 
-        {/* Achievement */}
-        {progress.completedDays.length >= 7 && (
-          <motion.div 
+        {/* Achievement - Program Complete */}
+        {progress.completedDays.length >= 3 && (
+          <motion.div
             className="mt-10"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -126,7 +126,7 @@ export default function ProgressPage() {
                   <Trophy className="h-7 w-7 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-foreground">¡Primera semana completada!</h3>
+                  <h3 className="font-semibold text-foreground">¡Programa completado!</h3>
                   <p className="text-sm text-muted-foreground">
                     Has demostrado compromiso con tu bienestar
                   </p>

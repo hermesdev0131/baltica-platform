@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useApp } from '@/contexts/AppContext';
 import { useNotificationContext } from '@/contexts/NotificationContext';
-import { locales, Locale } from '@/lib/i18n';
-import { Globe, Moon, Sun, Menu, X, HelpCircle, BarChart3, Home } from 'lucide-react';
+import { locales } from '@/lib/i18n';
+import { Globe, Moon, Sun, Menu, X, HelpCircle, BarChart3, Home, Settings, Trophy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -32,11 +32,11 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  const currentLocale = locales.find(l => l.code === locale);
-
   const navItems = [
     { path: '/', label: t('nav.home'), icon: Home },
     { path: '/progress', label: t('nav.progress'), icon: BarChart3 },
+    { path: '/achievements', label: t('nav.achievements'), icon: Trophy },
+    { path: '/settings', label: t('nav.settings'), icon: Settings },
     { path: '/help', label: t('nav.help'), icon: HelpCircle },
   ];
 
@@ -45,9 +45,11 @@ export function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-full gradient-warm flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-sm">B</span>
-          </div>
+          <img
+            src="/Báltica LOGO OFICIAL.png"
+            alt="Báltica"
+            className="h-8 w-8 rounded-full object-cover"
+          />
           <span className="font-semibold text-lg hidden sm:block">BÁLTICA</span>
         </Link>
 

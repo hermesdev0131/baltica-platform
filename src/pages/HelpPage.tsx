@@ -11,59 +11,156 @@ import {
 import { Mail, MessageCircle, HelpCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+// FAQ alineado con la identidad BÁLTICA: humano, claro, no clínico
 const faqs = {
   en: [
     {
-      question: 'How long does each session take?',
-      answer: 'Each daily session takes less than 10 minutes. We designed it to fit easily into your routine.',
+      question: 'What is Báltica?',
+      answer: 'Báltica is a platform for daily micro-experiences of self-care and habit formation, designed to accompany you with brief, clear, and sustainable practices. Each session takes less than 10 minutes and is designed to fit easily into your daily routine.',
     },
     {
-      question: 'What if I miss a day?',
-      answer: 'No problem! You can pick up where you left off. Progress is about consistency, not perfection.',
+      question: 'Is Báltica a therapy or does it replace psychological care?',
+      answer: 'No. Báltica is not a therapy and does not replace psychological or medical care. It is an educational and preventive tool that seeks to help you pause, reflect, and practice small self-care habits. If you are experiencing intense or persistent discomfort, it is always important to seek professional support.',
     },
     {
-      question: 'Can I repeat a day?',
-      answer: 'Absolutely! You can revisit any completed day whenever you want.',
+      question: 'How much time do I need per day?',
+      answer: 'Very little. Each session is designed to last between 5 and 10 minutes, including video, audio, and a simple practice. The idea is not to demand, but to accompany you in a kind and realistic way.',
     },
     {
-      question: 'Is this a medical program?',
-      answer: 'No, this is an educational wellbeing program focused on self-care habits. It is not medical or clinical.',
+      question: 'What happens if I cannot complete a session one day?',
+      answer: 'Nothing happens. Báltica does not work like an exam or an obligation. You can resume the session whenever you want, continue from where you left off, and progress at your own pace.',
+    },
+    {
+      question: 'What type of content does Báltica include?',
+      answer: 'Each session includes: a brief video, a guided audio, support material (PDF), and a concrete and simple practice. All content is designed with clear, human, and non-clinical language.',
+    },
+    {
+      question: 'Are my responses and progress saved?',
+      answer: 'Yes. Báltica saves your progress so you can resume your sessions, review what you have done, and continue without losing information. Accesses and progress are also recorded securely for the proper functioning of the service.',
+    },
+    {
+      question: 'What type of records does the platform keep?',
+      answer: 'Basically and responsibly, we record: access dates and times, sessions started and completed, and content usage (for example, audio or video playback). These records serve to improve the experience and as backup for service usage. They are not used for clinical or diagnostic purposes.',
+    },
+    {
+      question: 'How do reminders work?',
+      answer: 'You can activate friendly daily reminders, at the time you choose, to help you maintain the habit. They are not invasive or mandatory, and you can deactivate them whenever you want.',
+    },
+    {
+      question: 'Does Báltica have achievements or celebrations?',
+      answer: 'Yes. The platform recognizes important milestones, such as consistency or usage streaks, with soft celebration messages and animations, designed to motivate without creating pressure.',
+    },
+    {
+      question: 'Can I use Báltica from my phone?',
+      answer: 'Yes. Báltica is designed to be used comfortably from your phone or computer, with a simple, clear design that adapts to different devices.',
+    },
+    {
+      question: 'Is it available in other languages?',
+      answer: 'Currently the main language is Spanish, and the platform is prepared to incorporate other languages in the future, such as English, without affecting the experience.',
+    },
+    {
+      question: 'What if I have questions or need help?',
+      answer: 'Báltica includes permanent access to a Help section, where you will find guidance and important reminders about responsible use of the platform and when to seek external professional support.',
     },
   ],
   'es-ES': [
     {
-      question: '¿Cuánto dura cada sesión?',
-      answer: 'Cada sesión diaria dura menos de 10 minutos. Lo diseñamos para que encaje fácilmente en tu rutina.',
+      question: '¿Qué es Báltica?',
+      answer: 'Báltica es una plataforma de micro-experiencias diarias de autocuidado y formación de hábitos, pensada para acompañarte con prácticas breves, claras y sostenibles. Cada jornada dura menos de 10 minutos y está diseñada para integrarse fácilmente en tu rutina diaria.',
     },
     {
-      question: '¿Qué pasa si me salto un día?',
-      answer: '¡Sin problema! Puedes retomar donde lo dejaste. El progreso se trata de constancia, no de perfección.',
+      question: '¿Báltica es una terapia o reemplaza atención psicológica?',
+      answer: 'No. Báltica no es una terapia ni reemplaza atención psicológica o médica. Es una herramienta educativa y preventiva que busca ayudarte a pausar, reflexionar y practicar pequeños hábitos de autocuidado. Si estás atravesando un malestar intenso o persistente, siempre es importante buscar acompañamiento profesional.',
     },
     {
-      question: '¿Puedo repetir un día?',
-      answer: '¡Por supuesto! Puedes volver a visitar cualquier día completado cuando quieras.',
+      question: '¿Cuánto tiempo necesito por día?',
+      answer: 'Muy poco. Cada jornada está pensada para durar entre 5 y 10 minutos, incluyendo vídeo, audio y una práctica sencilla. La idea no es exigir, sino acompañar de forma amable y realista.',
     },
     {
-      question: '¿Es un programa médico?',
-      answer: 'No, es un programa educativo de bienestar enfocado en hábitos de autocuidado. No es médico ni clínico.',
+      question: '¿Qué pasa si un día no puedo completar la jornada?',
+      answer: 'No pasa nada. Báltica no funciona como un examen ni como una obligación. Puedes retomar la jornada cuando quieras, continuar desde donde la dejaste y avanzar a tu propio ritmo.',
+    },
+    {
+      question: '¿Qué tipo de contenidos incluye Báltica?',
+      answer: 'Cada jornada incluye: un vídeo breve, un audio guiado, un material de apoyo (PDF) y una práctica concreta y sencilla. Todo el contenido está diseñado con un lenguaje claro, humano y no clínico.',
+    },
+    {
+      question: '¿Mis respuestas y avances quedan guardados?',
+      answer: 'Sí. Báltica guarda tu progreso para que puedas retomar tus jornadas, revisar lo que hiciste y continuar sin perder información. También se registran accesos y avances de forma segura para el correcto funcionamiento del servicio.',
+    },
+    {
+      question: '¿Qué tipo de registros guarda la plataforma?',
+      answer: 'De forma básica y responsable, se registran: fechas y horas de acceso, jornadas iniciadas y completadas, y uso de contenidos (por ejemplo, reproducción de audios o vídeos). Estos registros sirven para mejorar la experiencia y como respaldo del uso del servicio. No se utilizan con fines clínicos ni diagnósticos.',
+    },
+    {
+      question: '¿Cómo funcionan los recordatorios?',
+      answer: 'Puedes activar recordatorios diarios amables, en el horario que elijas, para ayudarte a mantener el hábito. No son invasivos ni obligatorios, y puedes desactivarlos cuando quieras.',
+    },
+    {
+      question: '¿Báltica tiene logros o celebraciones?',
+      answer: 'Sí. La plataforma reconoce hitos importantes, como la constancia o las rachas de uso, con mensajes y animaciones de celebración suaves, pensadas para motivar sin generar presión.',
+    },
+    {
+      question: '¿Puedo usar Báltica desde el móvil?',
+      answer: 'Sí. Báltica está pensada para usarse cómodamente desde el móvil o el ordenador, con un diseño simple, claro y adaptable a distintos dispositivos.',
+    },
+    {
+      question: '¿Está disponible en otros idiomas?',
+      answer: 'Actualmente el idioma principal es español, y la plataforma está preparada para incorporar otros idiomas en el futuro, como inglés, sin afectar la experiencia.',
+    },
+    {
+      question: '¿Qué pasa si tengo dudas o necesito ayuda?',
+      answer: 'Báltica incluye un acceso permanente a una sección de Ayuda, donde encontrarás orientación y recordatorios importantes sobre el uso responsable de la plataforma y cuándo buscar apoyo profesional externo.',
     },
   ],
   'es-LATAM': [
     {
-      question: '¿Cuánto dura cada sesión?',
-      answer: 'Cada sesión diaria dura menos de 10 minutos. Lo diseñamos para que encaje fácilmente en tu rutina.',
+      question: '¿Qué es Báltica?',
+      answer: 'Báltica es una plataforma de micro-experiencias diarias de autocuidado y formación de hábitos, pensada para acompañarte con prácticas breves, claras y sostenibles. Cada jornada dura menos de 10 minutos y está diseñada para integrarse fácilmente en tu rutina diaria.',
     },
     {
-      question: '¿Qué pasa si me salto un día?',
-      answer: '¡Sin problema! Puedes retomar donde lo dejaste. El progreso se trata de constancia, no de perfección.',
+      question: '¿Báltica es una terapia o reemplaza atención psicológica?',
+      answer: 'No. Báltica no es una terapia ni reemplaza atención psicológica o médica. Es una herramienta educativa y preventiva que busca ayudarte a pausar, reflexionar y practicar pequeños hábitos de autocuidado. Si estás atravesando un malestar intenso o persistente, siempre es importante buscar acompañamiento profesional.',
     },
     {
-      question: '¿Puedo repetir un día?',
-      answer: '¡Claro que sí! Puedes volver a revisar cualquier día completado cuando quieras.',
+      question: '¿Cuánto tiempo necesito por día?',
+      answer: 'Muy poco. Cada jornada está pensada para durar entre 5 y 10 minutos, incluyendo video, audio y una práctica sencilla. La idea no es exigir, sino acompañar de forma amable y realista.',
     },
     {
-      question: '¿Es un programa médico?',
-      answer: 'No, es un programa educativo de bienestar enfocado en hábitos de autocuidado. No es médico ni clínico.',
+      question: '¿Qué pasa si un día no puedo completar la jornada?',
+      answer: 'No pasa nada. Báltica no funciona como un examen ni como una obligación. Puedes retomar la jornada cuando quieras, continuar desde donde la dejaste y avanzar a tu propio ritmo.',
+    },
+    {
+      question: '¿Qué tipo de contenidos incluye Báltica?',
+      answer: 'Cada jornada incluye: un video breve, un audio guiado, un material de apoyo (PDF) y una práctica concreta y sencilla. Todo el contenido está diseñado con un lenguaje claro, humano y no clínico.',
+    },
+    {
+      question: '¿Mis respuestas y avances quedan guardados?',
+      answer: 'Sí. Báltica guarda tu progreso para que puedas retomar tus jornadas, revisar lo que hiciste y continuar sin perder información. También se registran accesos y avances de forma segura para el correcto funcionamiento del servicio.',
+    },
+    {
+      question: '¿Qué tipo de registros guarda la plataforma?',
+      answer: 'De forma básica y responsable, se registran: fechas y horas de acceso, jornadas iniciadas y completadas, y uso de contenidos (por ejemplo, reproducción de audios o videos). Estos registros sirven para mejorar la experiencia y como respaldo del uso del servicio. No se utilizan con fines clínicos ni diagnósticos.',
+    },
+    {
+      question: '¿Cómo funcionan los recordatorios?',
+      answer: 'Puedes activar recordatorios diarios amables, en el horario que elijas, para ayudarte a mantener el hábito. No son invasivos ni obligatorios, y puedes desactivarlos cuando quieras.',
+    },
+    {
+      question: '¿Báltica tiene logros o celebraciones?',
+      answer: 'Sí. La plataforma reconoce hitos importantes, como la constancia o las rachas de uso, con mensajes y animaciones de celebración suaves, pensadas para motivar sin generar presión.',
+    },
+    {
+      question: '¿Puedo usar Báltica desde el celular?',
+      answer: 'Sí. Báltica está pensada para usarse cómodamente desde el celular o la computadora, con un diseño simple, claro y adaptable a distintos dispositivos.',
+    },
+    {
+      question: '¿Está disponible en otros idiomas?',
+      answer: 'Actualmente el idioma principal es español, y la plataforma está preparada para incorporar otros idiomas en el futuro, como inglés, sin afectar la experiencia.',
+    },
+    {
+      question: '¿Qué pasa si tengo dudas o necesito ayuda?',
+      answer: 'Báltica incluye un acceso permanente a una sección de Ayuda, donde encontrarás orientación y recordatorios importantes sobre el uso responsable de la plataforma y cuándo buscar apoyo profesional externo.',
     },
   ],
 };

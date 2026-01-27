@@ -122,7 +122,7 @@ const Index = () => {
           >
             {[
               { icon: Clock, title: '10 min', desc: 'Experiencias diarias breves' },
-              { icon: Heart, title: '21 días', desc: 'Un hábito que transforma' },
+              { icon: Heart, title: '3 días', desc: 'Un programa que transforma' },
               { icon: Sparkles, title: 'Tu ritmo', desc: 'Avanza a tu manera' },
             ].map((feature, i) => (
               <div 
@@ -137,9 +137,9 @@ const Index = () => {
           </motion.section>
         )}
 
-        {/* Day Grid */}
+        {/* Day Grid - MVP 4 days (Welcome + 3 days) */}
         {hasStarted && (
-          <motion.section 
+          <motion.section
             className="py-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -148,8 +148,8 @@ const Index = () => {
             <h2 className="text-xl font-semibold text-foreground mb-6 text-center">
               {t('progress.title')}
             </h2>
-            <div className="grid grid-cols-7 gap-2 md:gap-3">
-              {Array.from({ length: totalDays }, (_, i) => i + 1).map(day => (
+            <div className="grid grid-cols-4 gap-3 md:gap-4 max-w-md mx-auto">
+              {Array.from({ length: totalDays + 1 }, (_, i) => i).map(day => (
                 <DayCard
                   key={day}
                   day={day}

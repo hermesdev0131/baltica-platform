@@ -67,7 +67,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return localStorage.getItem('userName') || '';
   });
   
-  const totalDays = 21;
+  const totalDays = 3; // MVP: Bienvenida (0) + 3 días
 
   // Apply theme
   useEffect(() => {

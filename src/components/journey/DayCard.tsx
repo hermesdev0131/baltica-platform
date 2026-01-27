@@ -40,7 +40,7 @@ export function DayCard({ day, status, onClick }: DayCardProps) {
         'text-sm font-medium',
         status === 'current' && 'text-primary'
       )}>
-        {t('journey.day')} {day}
+        {day === 0 ? 'B' : day}
       </span>
       
       {status === 'current' && (
