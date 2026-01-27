@@ -14,7 +14,7 @@ import { motion } from 'framer-motion';
 export default function AuthPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { t, setUserName } = useApp();
+  const { t, login } = useApp();
 
   const defaultTab = searchParams.get('mode') === 'login' ? 'login' : 'register';
   const [activeTab, setActiveTab] = useState(defaultTab);
@@ -54,9 +54,7 @@ export default function AuthPage() {
 
     // Simulate registration (mock)
     setTimeout(() => {
-      setUserName(name);
-      localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('userEmail', email);
+      login(email, name);
       setIsLoading(false);
       navigate('/onboarding');
     }, 1000);
@@ -80,8 +78,9 @@ export default function AuthPage() {
 
     // Simulate login (mock)
     setTimeout(() => {
-      localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('userEmail', email);
+      // For login, we use the email as name if no name is stored
+      const storedName = localStorage.getItem('userName') || email.split('@')[0];
+      login(email, storedName);
       setIsLoading(false);
       navigate('/');
     }, 1000);

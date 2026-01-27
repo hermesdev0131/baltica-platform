@@ -10,22 +10,28 @@ interface JourneyProgress {
 }
 
 interface AppContextType {
+  // Auth
+  isAuthenticated: boolean;
+  userEmail: string;
+  login: (email: string, name: string) => void;
+  logout: () => void;
+
   // Locale
   locale: Locale;
   setLocale: (locale: Locale) => void;
   t: (key: TranslationKey) => string;
-  
+
   // Theme
   theme: 'light' | 'dark' | 'system';
   setTheme: (theme: 'light' | 'dark' | 'system') => void;
-  
+
   // Journey
   progress: JourneyProgress;
   setCurrentDay: (day: number) => void;
   setCurrentStep: (step: JourneyProgress['currentStep']) => void;
   completeDay: (day: number) => void;
   totalDays: number;
-  
+
   // User
   userName: string;
   setUserName: (name: string) => void;
@@ -42,6 +48,15 @@ const defaultProgress: JourneyProgress = {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
+  // Auth state
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem('isAuthenticated') === 'true';
+  });
+
+  const [userEmail, setUserEmail] = useState(() => {
+    return localStorage.getItem('userEmail') || '';
+  });
+
   const [locale, setLocale] = useState<Locale>(() => {
     const saved = localStorage.getItem('locale');
     if (saved && ['es-ES', 'es-LATAM', 'en'].includes(saved)) {
@@ -53,21 +68,38 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
     return 'en';
   });
-  
+
   const [theme, setThemeState] = useState<'light' | 'dark' | 'system'>(() => {
     return (localStorage.getItem('theme') as 'light' | 'dark' | 'system') || 'system';
   });
-  
+
   const [progress, setProgress] = useState<JourneyProgress>(() => {
     const saved = localStorage.getItem('journeyProgress');
     return saved ? JSON.parse(saved) : defaultProgress;
   });
-  
+
   const [userName, setUserName] = useState(() => {
     return localStorage.getItem('userName') || '';
   });
-  
+
   const totalDays = 3; // MVP: Bienvenida (0) + 3 días
+
+  // Auth functions
+  const login = (email: string, name: string) => {
+    setIsAuthenticated(true);
+    setUserEmail(email);
+    setUserName(name);
+    localStorage.setItem('isAuthenticated', 'true');
+    localStorage.setItem('userEmail', email);
+    localStorage.setItem('userName', name);
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    setUserEmail('');
+    localStorage.setItem('isAuthenticated', 'false');
+    localStorage.removeItem('userEmail');
+  };
 
   // Apply theme
   useEffect(() => {
@@ -150,6 +182,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   return (
     <AppContext.Provider value={{
+      isAuthenticated,
+      userEmail,
+      login,
+      logout,
       locale,
       setLocale,
       t,

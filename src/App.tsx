@@ -2,8 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AppProvider } from "./contexts/AppContext";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AppProvider, useApp } from "./contexts/AppContext";
 import { NotificationProvider } from "./contexts/NotificationContext";
 
 // Pages
@@ -23,6 +23,118 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
+// Protected Route wrapper - redirects to /landing if not authenticated
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useApp();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/landing" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+// Public Route wrapper - redirects to / if already authenticated
+function PublicRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useApp();
+
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+function AppRoutes() {
+  return (
+    <Routes>
+      {/* Public routes */}
+      <Route path="/landing" element={<LandingPage />} />
+      <Route
+        path="/auth"
+        element={
+          <PublicRoute>
+            <AuthPage />
+          </PublicRoute>
+        }
+      />
+
+      {/* Protected routes */}
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Index />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/onboarding"
+        element={
+          <ProtectedRoute>
+            <OnboardingPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/journey/:day"
+        element={
+          <ProtectedRoute>
+            <JourneyPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/progress"
+        element={
+          <ProtectedRoute>
+            <ProgressPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/achievements"
+        element={
+          <ProtectedRoute>
+            <AchievementsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <SettingsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/activity-log"
+        element={
+          <ProtectedRoute>
+            <ActivityLogPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/payment"
+        element={
+          <ProtectedRoute>
+            <PaymentPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Info pages - accessible to all */}
+      <Route path="/how-it-works" element={<HowItWorksPage />} />
+      <Route path="/help" element={<HelpPage />} />
+
+      {/* Catch-all */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AppProvider>
@@ -31,34 +143,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              {/* Main app routes */}
-              <Route path="/" element={<Index />} />
-              <Route path="/landing" element={<LandingPage />} />
-              <Route path="/auth" element={<AuthPage />} />
-              <Route path="/onboarding" element={<OnboardingPage />} />
-
-              {/* Journey */}
-              <Route path="/journey/:day" element={<JourneyPage />} />
-
-              {/* Progress & Achievements */}
-              <Route path="/progress" element={<ProgressPage />} />
-              <Route path="/achievements" element={<AchievementsPage />} />
-
-              {/* Settings & Account */}
-              <Route path="/settings" element={<SettingsPage />} />
-              <Route path="/activity-log" element={<ActivityLogPage />} />
-
-              {/* Payment */}
-              <Route path="/payment" element={<PaymentPage />} />
-
-              {/* Info pages */}
-              <Route path="/how-it-works" element={<HowItWorksPage />} />
-              <Route path="/help" element={<HelpPage />} />
-
-              {/* Catch-all */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <AppRoutes />
           </BrowserRouter>
         </TooltipProvider>
       </NotificationProvider>

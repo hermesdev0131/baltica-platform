@@ -36,16 +36,13 @@ import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 
 export default function SettingsPage() {
-  const { t, locale, setLocale, theme, setTheme, userName, setUserName } = useApp();
+  const { t, locale, setLocale, theme, setTheme, userName, setUserName, userEmail, logout } = useApp();
   const { settings, updateSettings } = useNotificationContext();
   const navigate = useNavigate();
 
-  const userEmail = localStorage.getItem('userEmail') || 'usuario@ejemplo.com';
-
   const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('userEmail');
-    navigate('/landing');
+    logout();
+    navigate('/auth');
   };
 
   const themeOptions = [
@@ -94,7 +91,7 @@ export default function SettingsPage() {
 
                 <div className="space-y-2">
                   <Label>{t('settings.account.email')}</Label>
-                  <Input value={userEmail} disabled className="bg-muted" />
+                  <Input value={userEmail || 'usuario@ejemplo.com'} disabled className="bg-muted" />
                 </div>
 
                 <Separator />
