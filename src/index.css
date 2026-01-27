@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&family=Quicksand:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,81 +6,96 @@
 
 @layer base {
   :root {
-    /* Warm, calming palette */
-    --background: 40 30% 98%;
-    --foreground: 25 20% 20%;
+    /* BÁLTICA Brand Colors */
+    --baltica-navy: 225 67% 19%;      /* #102050 */
+    --baltica-blue-mid: 202 67% 38%;  /* #2070A0 */
+    --baltica-turquoise: 185 85% 41%; /* #10B0C0 */
+    --baltica-green-light: 96 56% 72%;/* #B0E090 */
 
-    --card: 40 25% 97%;
-    --card-foreground: 25 20% 20%;
+    /* Theme Colors - Light Mode */
+    --background: 0 0% 100%;
+    --foreground: 225 67% 19%; /* Navy for text per brand guidelines */
 
-    --popover: 40 25% 97%;
-    --popover-foreground: 25 20% 20%;
+    --card: 0 0% 99%;
+    --card-foreground: 225 67% 19%;
 
-    --primary: 25 60% 55%;
-    --primary-foreground: 40 30% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 225 67% 19%;
 
-    --secondary: 180 25% 90%;
-    --secondary-foreground: 180 30% 30%;
+    --primary: 185 85% 41%; /* Turquoise - brand primary */
+    --primary-foreground: 0 0% 100%; /* White */
 
-    --muted: 40 20% 94%;
-    --muted-foreground: 25 15% 45%;
+    --secondary: 202 67% 38%; /* Blue Mid */
+    --secondary-foreground: 0 0% 100%;
 
-    --accent: 340 45% 85%;
-    --accent-foreground: 340 40% 30%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 225 30% 40%;
 
-    --success: 150 40% 50%;
-    --success-foreground: 150 30% 98%;
+    --accent: 96 56% 72%; /* Green Light */
+    --accent-foreground: 225 67% 19%;
+
+    --success: 96 56% 50%;
+    --success-foreground: 0 0% 100%;
 
     --destructive: 0 60% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 40 20% 88%;
-    --input: 40 20% 88%;
-    --ring: 25 60% 55%;
+    --border: 210 20% 90%;
+    --input: 210 20% 90%;
+    --ring: 185 85% 41%; /* Turquoise for focus */
 
-    --radius: 1rem;
+    --radius: 0.75rem; /* 12px per brand guidelines */
 
     /* Custom tokens */
-    --gradient-warm: linear-gradient(135deg, hsl(25 60% 55%) 0%, hsl(340 45% 75%) 100%);
-    --gradient-calm: linear-gradient(135deg, hsl(180 25% 90%) 0%, hsl(40 30% 95%) 100%);
-    --shadow-soft: 0 4px 20px -4px hsl(25 20% 20% / 0.08);
-    --shadow-card: 0 2px 12px -2px hsl(25 20% 20% / 0.06);
+    --gradient-brand: linear-gradient(135deg, hsl(var(--baltica-turquoise)) 0%, hsl(var(--baltica-green-light)) 100%);
+    --gradient-warm: linear-gradient(135deg, hsl(var(--baltica-turquoise)) 0%, hsl(var(--baltica-blue-mid)) 100%);
+    --gradient-calm: linear-gradient(135deg, hsl(var(--baltica-green-light)) 0%, hsl(210 20% 96%) 100%);
+    --shadow-soft: 0 4px 20px -4px hsl(225 67% 19% / 0.08);
+    --shadow-card: 0 2px 12px -2px hsl(225 67% 19% / 0.06);
   }
 
   .dark {
-    --background: 25 15% 10%;
-    --foreground: 40 20% 95%;
+    /* BÁLTICA Brand Colors (same in dark) */
+    --baltica-navy: 225 67% 19%;
+    --baltica-blue-mid: 202 67% 38%;
+    --baltica-turquoise: 185 85% 41%;
+    --baltica-green-light: 96 56% 72%;
 
-    --card: 25 15% 13%;
-    --card-foreground: 40 20% 95%;
+    /* Theme Colors - Dark Mode */
+    --background: 225 40% 8%;
+    --foreground: 210 20% 95%;
 
-    --popover: 25 15% 13%;
-    --popover-foreground: 40 20% 95%;
+    --card: 225 35% 12%;
+    --card-foreground: 210 20% 95%;
 
-    --primary: 25 55% 60%;
-    --primary-foreground: 25 15% 10%;
+    --popover: 225 35% 12%;
+    --popover-foreground: 210 20% 95%;
 
-    --secondary: 180 20% 20%;
-    --secondary-foreground: 180 25% 85%;
+    --primary: 185 85% 45%; /* Slightly brighter turquoise for dark mode */
+    --primary-foreground: 225 40% 8%;
 
-    --muted: 25 15% 18%;
-    --muted-foreground: 40 15% 60%;
+    --secondary: 202 50% 45%;
+    --secondary-foreground: 210 20% 95%;
 
-    --accent: 340 35% 25%;
-    --accent-foreground: 340 40% 90%;
+    --muted: 225 30% 18%;
+    --muted-foreground: 210 15% 60%;
 
-    --success: 150 35% 45%;
-    --success-foreground: 150 30% 95%;
+    --accent: 96 45% 55%;
+    --accent-foreground: 225 40% 8%;
+
+    --success: 96 45% 45%;
+    --success-foreground: 210 20% 95%;
 
     --destructive: 0 50% 45%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 25 15% 20%;
-    --input: 25 15% 20%;
-    --ring: 25 55% 60%;
+    --border: 225 25% 20%;
+    --input: 225 25% 20%;
+    --ring: 185 85% 45%;
 
-    --gradient-warm: linear-gradient(135deg, hsl(25 55% 50%) 0%, hsl(340 35% 45%) 100%);
-    --gradient-calm: linear-gradient(135deg, hsl(180 20% 18%) 0%, hsl(25 15% 15%) 100%);
+    --gradient-brand: linear-gradient(135deg, hsl(185 85% 40%) 0%, hsl(96 45% 50%) 100%);
+    --gradient-warm: linear-gradient(135deg, hsl(185 85% 40%) 0%, hsl(202 50% 40%) 100%);
+    --gradient-calm: linear-gradient(135deg, hsl(96 45% 35%) 0%, hsl(225 30% 15%) 100%);
     --shadow-soft: 0 4px 20px -4px hsl(0 0% 0% / 0.3);
     --shadow-card: 0 2px 12px -2px hsl(0 0% 0% / 0.25);
   }
@@ -92,29 +107,75 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Nunito', sans-serif;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', sans-serif;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Quicksand', sans-serif;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Typography scale per brand guidelines (base 16px, 1.25 ratio) */
+  h1 {
+    @apply text-3xl md:text-5xl font-semibold;
+    /* 32px mobile, 48px desktop */
+  }
+
+  h2 {
+    @apply text-2xl md:text-4xl font-semibold;
+    /* 28px mobile, 38px desktop */
+  }
+
+  h3 {
+    @apply text-xl md:text-3xl font-medium;
+    /* 24px mobile, 30px desktop */
+  }
+
+  h4 {
+    @apply text-lg md:text-2xl font-medium;
+    /* 20px mobile, 24px desktop */
   }
 }
 
 @layer utilities {
+  .gradient-brand {
+    background: var(--gradient-brand);
+  }
+
   .gradient-warm {
     background: var(--gradient-warm);
   }
-  
+
   .gradient-calm {
     background: var(--gradient-calm);
   }
-  
+
   .shadow-soft {
     box-shadow: var(--shadow-soft);
   }
-  
+
   .shadow-card {
     box-shadow: var(--shadow-card);
+  }
+
+  /* Brand color utilities */
+  .text-baltica-navy {
+    color: hsl(var(--baltica-navy));
+  }
+
+  .text-baltica-turquoise {
+    color: hsl(var(--baltica-turquoise));
+  }
+
+  .bg-baltica-navy {
+    background-color: hsl(var(--baltica-navy));
+  }
+
+  .bg-baltica-turquoise {
+    background-color: hsl(var(--baltica-turquoise));
+  }
+
+  .bg-baltica-green-light {
+    background-color: hsl(var(--baltica-green-light));
   }
 }

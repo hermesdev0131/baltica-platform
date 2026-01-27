@@ -10,12 +10,13 @@ interface MoodSelectorProps {
   selectedMood?: Mood;
 }
 
+// Using brand-aligned colors with subtle mood indicators
 const moods: { key: Mood; emoji: string; color: string }[] = [
-  { key: 'great', emoji: '😊', color: 'bg-green-100 dark:bg-green-900/30 border-green-300 dark:border-green-700' },
-  { key: 'good', emoji: '🙂', color: 'bg-emerald-100 dark:bg-emerald-900/30 border-emerald-300 dark:border-emerald-700' },
-  { key: 'okay', emoji: '😐', color: 'bg-yellow-100 dark:bg-yellow-900/30 border-yellow-300 dark:border-yellow-700' },
-  { key: 'low', emoji: '😔', color: 'bg-orange-100 dark:bg-orange-900/30 border-orange-300 dark:border-orange-700' },
-  { key: 'struggling', emoji: '😢', color: 'bg-red-100 dark:bg-red-900/30 border-red-300 dark:border-red-700' },
+  { key: 'great', emoji: '😊', color: 'bg-accent/30 dark:bg-accent/20 border-accent/50' },
+  { key: 'good', emoji: '🙂', color: 'bg-primary/20 dark:bg-primary/15 border-primary/40' },
+  { key: 'okay', emoji: '😐', color: 'bg-muted border-border' },
+  { key: 'low', emoji: '😔', color: 'bg-secondary/20 dark:bg-secondary/15 border-secondary/40' },
+  { key: 'struggling', emoji: '😢', color: 'bg-destructive/10 dark:bg-destructive/15 border-destructive/30' },
 ];
 
 export function MoodSelector({ onSelect, selectedMood }: MoodSelectorProps) {

@@ -47,6 +47,13 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // BÁLTICA Brand Colors
+        baltica: {
+          navy: "hsl(var(--baltica-navy))",
+          "blue-mid": "hsl(var(--baltica-blue-mid))",
+          turquoise: "hsl(var(--baltica-turquoise))",
+          "green-light": "hsl(var(--baltica-green-light))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
