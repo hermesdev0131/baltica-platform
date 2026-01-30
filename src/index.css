@@ -29,7 +29,7 @@
     --secondary-foreground: 0 0% 100%;
 
     --muted: 210 20% 96%;
-    --muted-foreground: 225 30% 40%;
+    --muted-foreground: 212 27% 38%; /* #4A627A per brand textSecondary */
 
     --accent: 96 56% 72%; /* Green Light */
     --accent-foreground: 225 67% 19%;

@@ -142,8 +142,8 @@ export function CelebrationModal({
         return {
           title: isSpanish ? '✨ ¡Viaje completado!' : '✨ Journey complete!',
           subtitle: isSpanish
-            ? 'Has terminado los 21 días. Eres una inspiración.'
-            : 'You finished all 21 days. You are an inspiration.',
+            ? '3 días de dedicación a tu bienestar. Este es solo el comienzo.'
+            : '3 days of dedication to your wellbeing. This is just the beginning.',
         };
       default:
         return { title: '', subtitle: '' };

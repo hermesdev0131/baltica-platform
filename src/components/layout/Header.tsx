@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { Link, useLocation } from 'react-router-dom';
+import BalticaLogo from '@/components/brand/BalticaLogo';
 import { NotificationCenter } from '@/components/notifications/NotificationCenter';
 import { NotificationSettings } from '@/components/notifications/NotificationSettings';
 
@@ -44,13 +45,8 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
-          <img
-            src="/Báltica LOGO OFICIAL.png"
-            alt="Báltica"
-            className="h-8 w-8 rounded-full object-cover"
-          />
-          <span className="font-semibold text-lg hidden sm:block">BÁLTICA</span>
+        <Link to="/" className="flex items-center">
+          <BalticaLogo size={36} />
         </Link>
 
         {/* Desktop Navigation */}

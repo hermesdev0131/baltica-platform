@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Clock, Heart, Sparkles, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
+import BalticaLogo from '@/components/brand/BalticaLogo';
 
 export default function LandingPage() {
   const { t } = useApp();
@@ -32,11 +33,8 @@ export default function LandingPage() {
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full gradient-warm flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">B</span>
-            </div>
-            <span className="font-semibold text-lg">BÁLTICA</span>
+          <Link to="/" className="flex items-center">
+            <BalticaLogo size={32} />
           </Link>
 
           <div className="flex items-center gap-2">
@@ -163,12 +161,7 @@ export default function LandingPage() {
       <footer className="border-t border-border/40 py-8 mt-16">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-2">
-              <div className="h-6 w-6 rounded-full gradient-warm flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-xs">B</span>
-              </div>
-              <span className="font-semibold">BÁLTICA</span>
-            </div>
+            <BalticaLogo size={24} />
 
             <div className="flex gap-6 text-sm text-muted-foreground">
               <Link to="/how-it-works" className="hover:text-foreground transition-colors">

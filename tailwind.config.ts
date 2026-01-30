@@ -49,9 +49,11 @@ export default {
         },
         // BÁLTICA Brand Colors
         baltica: {
-          navy: "hsl(var(--baltica-navy))",
+          navy: "#102050",
+          turquoise: "#10B0C0",
+          blueMid: "#2070A0",
+          textSecondary: "#4A627A",
           "blue-mid": "hsl(var(--baltica-blue-mid))",
-          turquoise: "hsl(var(--baltica-turquoise))",
           "green-light": "hsl(var(--baltica-green-light))",
         },
         sidebar: {

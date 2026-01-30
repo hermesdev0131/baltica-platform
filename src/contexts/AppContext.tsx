@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Locale, getTranslation, TranslationKey } from '@/lib/i18n';
+import { api, setToken, getToken } from '@/lib/api';
 
 interface JourneyProgress {
   currentDay: number;
@@ -9,11 +10,56 @@ interface JourneyProgress {
   lastCompletedDate: string | null;
 }
 
+// Day answers per the pedagogical spec
+export interface WelcomeAnswers {
+  mood: string;
+  ethicalNoteViewed: boolean;
+  completedAt?: string;
+}
+
+export interface Day1Answers {
+  words: [string, string, string];
+  action: string;
+  timeSlot: 'morning' | 'afternoon' | 'evening';
+  videoWatched: boolean;
+  audioCompleted: boolean;
+  completedAt?: string;
+}
+
+export interface Day2Answers {
+  value: string;
+  customValue?: string;
+  action: string;
+  timeSlot: 'morning' | 'afternoon' | 'evening';
+  wordsAfter: [string, string, string];
+  videoWatched: boolean;
+  audioCompleted: boolean;
+  completedAt?: string;
+}
+
+export interface Day3Answers {
+  mood: string;
+  gratitudes: [string, string, string];
+  kindPhrase: string;
+  nextAction: string;
+  videoWatched: boolean;
+  audioCompleted: boolean;
+  completedAt?: string;
+}
+
+export interface DayAnswers {
+  welcome?: WelcomeAnswers;
+  day1?: Day1Answers;
+  day2?: Day2Answers;
+  day3?: Day3Answers;
+}
+
 interface AppContextType {
   // Auth
   isAuthenticated: boolean;
   userEmail: string;
-  login: (email: string, name: string) => void;
+  userRole: 'user' | 'admin';
+  login: (email: string, password: string, name?: string, isRegister?: boolean) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
 
   // Locale
@@ -32,13 +78,23 @@ interface AppContextType {
   completeDay: (day: number) => void;
   totalDays: number;
 
+  // Day Answers
+  dayAnswers: DayAnswers;
+  saveDayAnswers: (answers: Partial<DayAnswers>) => void;
+
   // User
   userName: string;
   setUserName: (name: string) => void;
+
+  // Onboarding
+  onboardingCompleted: boolean;
+  setOnboardingCompleted: (completed: boolean) => void;
+  preferredReminderTime: string;
+  setPreferredReminderTime: (time: string) => void;
 }
 
 const defaultProgress: JourneyProgress = {
-  currentDay: 1,
+  currentDay: 0,
   completedDays: [],
   currentStep: 'start',
   streak: 0,
@@ -48,13 +104,16 @@ const defaultProgress: JourneyProgress = {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  // Auth state
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return localStorage.getItem('isAuthenticated') === 'true';
   });
 
   const [userEmail, setUserEmail] = useState(() => {
     return localStorage.getItem('userEmail') || '';
+  });
+
+  const [userRole, setUserRole] = useState<'user' | 'admin'>(() => {
+    return (localStorage.getItem('userRole') as 'user' | 'admin') || 'user';
   });
 
   const [locale, setLocale] = useState<Locale>(() => {
@@ -82,54 +141,115 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return localStorage.getItem('userName') || '';
   });
 
+  const [dayAnswers, setDayAnswers] = useState<DayAnswers>(() => {
+    const saved = localStorage.getItem('dayAnswers');
+    return saved ? JSON.parse(saved) : {};
+  });
+
+  const [onboardingCompleted, setOnboardingCompletedState] = useState(() => {
+    return localStorage.getItem('onboardingCompleted') === 'true';
+  });
+
+  const [preferredReminderTime, setPreferredReminderTimeState] = useState(() => {
+    return localStorage.getItem('preferredReminderTime') || '08:00';
+  });
+
   const totalDays = 3; // MVP: Bienvenida (0) + 3 días
 
-  // Auth functions
-  const login = (email: string, name: string) => {
-    setIsAuthenticated(true);
-    setUserEmail(email);
-    setUserName(name);
-    localStorage.setItem('isAuthenticated', 'true');
-    localStorage.setItem('userEmail', email);
-    localStorage.setItem('userName', name);
+  // Load data from API on mount if authenticated
+  useEffect(() => {
+    if (isAuthenticated && getToken()) {
+      // Load progress from API
+      api.progress.get().then(data => {
+        if (data.progress) {
+          const p = data.progress;
+          setProgress({
+            currentDay: p.current_day,
+            completedDays: p.completed_days || [],
+            currentStep: p.current_step || 'start',
+            streak: p.streak || 0,
+            lastCompletedDate: p.last_completed_date || null,
+          });
+        }
+      }).catch(() => { /* use local state */ });
+
+      // Load answers from API
+      api.answers.getAll().then(data => {
+        if (data.answers) {
+          setDayAnswers(data.answers);
+        }
+      }).catch(() => { /* use local state */ });
+    }
+  }, [isAuthenticated]);
+
+  const login = async (email: string, password: string, name?: string, isRegister?: boolean): Promise<{ success: boolean; error?: string }> => {
+    try {
+      let data: any;
+      if (isRegister && name) {
+        data = await api.auth.register({ email, name, password });
+      } else {
+        data = await api.auth.login({ email, password });
+      }
+
+      setToken(data.token);
+      setIsAuthenticated(true);
+      setUserEmail(data.user.email);
+      setUserName(data.user.name);
+      setUserRole(data.user.role);
+      localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('userEmail', data.user.email);
+      localStorage.setItem('userName', data.user.name);
+      localStorage.setItem('userRole', data.user.role);
+
+      if (data.user.locale) setLocale(data.user.locale);
+      if (data.user.onboarding_completed) setOnboardingCompletedState(true);
+
+      return { success: true };
+    } catch (err: any) {
+      // Fallback to local mock if API is unavailable
+      if (err instanceof TypeError && err.message.includes('fetch')) {
+        // Network error - API not running, use local mock
+        setIsAuthenticated(true);
+        setUserEmail(email);
+        setUserName(name || email.split('@')[0]);
+        setUserRole(email === 'admin@baltica.app' ? 'admin' : 'user');
+        localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('userEmail', email);
+        localStorage.setItem('userName', name || email.split('@')[0]);
+        localStorage.setItem('userRole', email === 'admin@baltica.app' ? 'admin' : 'user');
+        return { success: true };
+      }
+      return { success: false, error: err.error || 'Error de autenticación' };
+    }
   };
 
   const logout = () => {
+    setToken(null);
     setIsAuthenticated(false);
     setUserEmail('');
+    setUserRole('user');
     localStorage.setItem('isAuthenticated', 'false');
     localStorage.removeItem('userEmail');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('authToken');
   };
 
-  // Apply theme
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
-    
     if (theme === 'system') {
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       root.classList.add(systemTheme);
     } else {
       root.classList.add(theme);
     }
-    
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-  // Save locale
-  useEffect(() => {
-    localStorage.setItem('locale', locale);
-  }, [locale]);
-
-  // Save progress
-  useEffect(() => {
-    localStorage.setItem('journeyProgress', JSON.stringify(progress));
-  }, [progress]);
-
-  // Save username
-  useEffect(() => {
-    localStorage.setItem('userName', userName);
-  }, [userName]);
+  useEffect(() => { localStorage.setItem('locale', locale); }, [locale]);
+  useEffect(() => { localStorage.setItem('journeyProgress', JSON.stringify(progress)); }, [progress]);
+  useEffect(() => { localStorage.setItem('userName', userName); }, [userName]);
+  useEffect(() => { localStorage.setItem('dayAnswers', JSON.stringify(dayAnswers)); }, [dayAnswers]);
 
   const t = (key: TranslationKey): string => getTranslation(locale, key);
 
@@ -139,27 +259,26 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const setCurrentDay = (day: number) => {
     setProgress(prev => ({ ...prev, currentDay: day }));
+    api.progress.update({ current_day: day }).catch(() => {});
   };
 
   const setCurrentStep = (step: JourneyProgress['currentStep']) => {
     setProgress(prev => ({ ...prev, currentStep: step }));
+    api.progress.update({ current_step: step }).catch(() => {});
   };
 
   const completeDay = (day: number) => {
     const today = new Date().toISOString().split('T')[0];
-    
     setProgress(prev => {
-      const newCompletedDays = prev.completedDays.includes(day) 
-        ? prev.completedDays 
+      const newCompletedDays = prev.completedDays.includes(day)
+        ? prev.completedDays
         : [...prev.completedDays, day];
-      
-      // Calculate streak
+
       let newStreak = prev.streak;
       if (prev.lastCompletedDate) {
         const lastDate = new Date(prev.lastCompletedDate);
         const todayDate = new Date(today);
         const diffDays = Math.floor((todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
-        
         if (diffDays === 1) {
           newStreak = prev.streak + 1;
         } else if (diffDays > 1) {
@@ -178,12 +297,37 @@ export function AppProvider({ children }: { children: ReactNode }) {
         lastCompletedDate: today,
       };
     });
+    // Sync to API
+    api.progress.completeDay(day).catch(() => {});
+  };
+
+  const saveDayAnswers = (answers: Partial<DayAnswers>) => {
+    setDayAnswers(prev => ({ ...prev, ...answers }));
+    // Sync each key to API
+    Object.entries(answers).forEach(([key, value]) => {
+      if (value) {
+        api.answers.save(key, value).catch(() => {});
+      }
+    });
+  };
+
+  const setOnboardingCompleted = (completed: boolean) => {
+    setOnboardingCompletedState(completed);
+    localStorage.setItem('onboardingCompleted', String(completed));
+    api.auth.updateMe({ onboarding_completed: completed }).catch(() => {});
+  };
+
+  const setPreferredReminderTime = (time: string) => {
+    setPreferredReminderTimeState(time);
+    localStorage.setItem('preferredReminderTime', time);
+    api.auth.updateMe({ preferred_reminder_time: time }).catch(() => {});
   };
 
   return (
     <AppContext.Provider value={{
       isAuthenticated,
       userEmail,
+      userRole,
       login,
       logout,
       locale,
@@ -196,8 +340,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setCurrentStep,
       completeDay,
       totalDays,
+      dayAnswers,
+      saveDayAnswers,
       userName,
       setUserName,
+      onboardingCompleted,
+      setOnboardingCompleted,
+      preferredReminderTime,
+      setPreferredReminderTime,
     }}>
       {children}
     </AppContext.Provider>

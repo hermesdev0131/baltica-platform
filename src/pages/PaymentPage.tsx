@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
+import { useAdmin } from '@/contexts/AdminContext';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,7 +26,8 @@ import { motion } from 'framer-motion';
 type PaymentStatus = 'idle' | 'processing' | 'success' | 'error';
 
 export default function PaymentPage() {
-  const { t } = useApp();
+  const { t, userEmail, userName } = useApp();
+  const { addUser, getUserStatus, addLog } = useAdmin();
   const navigate = useNavigate();
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>('idle');
 
@@ -37,6 +39,26 @@ export default function PaymentPage() {
       // For prototype, always succeed
       setPaymentStatus('success');
       localStorage.setItem('paymentCompleted', 'true');
+
+      // Auto-register user in admin system on payment success
+      const existingUser = getUserStatus(userEmail);
+      if (!existingUser) {
+        const paymentId = 'MP-' + Date.now().toString(36).toUpperCase();
+        addUser({
+          email: userEmail,
+          name: userName || userEmail.split('@')[0],
+          status: 'active',
+          paymentId,
+          notes: 'Auto-registrado por pago Mercado Pago',
+        });
+      } else {
+        addLog({
+          userId: existingUser.id,
+          userEmail: existingUser.email,
+          eventType: 'payment_event',
+          eventDetail: 'Pago completado via Mercado Pago',
+        });
+      }
 
       // Redirect after success
       setTimeout(() => {

@@ -8,9 +8,17 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+server/node_modules
 dist
 dist-ssr
 *.local
+
+# Claude
+.claude
+
+# Environment files
+.env
+server/.env
 
 # Editor directories and files
 .vscode/*
@@ -22,3 +30,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Server build output
+server/dist
+
+# OS files
+Thumbs.db

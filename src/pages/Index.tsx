@@ -8,11 +8,12 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
-  const { t, progress, totalDays, userName, setUserName } = useApp();
+  const { t, locale, progress, totalDays, userName, setUserName } = useApp();
   const navigate = useNavigate();
   
   const hasStarted = progress.completedDays.length > 0;
-  const progressPercent = (progress.completedDays.length / totalDays) * 100;
+  const programComplete = progress.completedDays.includes(3);
+  const progressPercent = (progress.completedDays.length / (totalDays + 1)) * 100;
   
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -96,12 +97,14 @@ const Index = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               className="gap-2 px-8 py-6 text-lg rounded-full shadow-soft"
-              onClick={() => navigate(`/journey/${progress.currentDay}`)}
+              onClick={() => programComplete ? navigate('/progress') : navigate(`/journey/${progress.currentDay}`)}
             >
-              {hasStarted ? t('welcome.continue') : t('welcome.cta')}
+              {programComplete
+                ? (locale.startsWith('es') ? 'Ver mi progreso' : 'See my progress')
+                : hasStarted ? t('welcome.continue') : t('welcome.cta')}
               <ArrowRight className="h-5 w-5" />
             </Button>
             

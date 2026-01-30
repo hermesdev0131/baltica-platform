@@ -52,12 +52,14 @@ export default function AuthPage() {
 
     setIsLoading(true);
 
-    // Simulate registration (mock)
-    setTimeout(() => {
-      login(email, name);
-      setIsLoading(false);
+    const result = await login(email, password, name, true);
+    setIsLoading(false);
+
+    if (result.success) {
       navigate('/onboarding');
-    }, 1000);
+    } else {
+      setError(result.error || t('auth.error.email'));
+    }
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -76,14 +78,14 @@ export default function AuthPage() {
 
     setIsLoading(true);
 
-    // Simulate login (mock)
-    setTimeout(() => {
-      // For login, we use the email as name if no name is stored
-      const storedName = localStorage.getItem('userName') || email.split('@')[0];
-      login(email, storedName);
-      setIsLoading(false);
+    const result = await login(email, password);
+    setIsLoading(false);
+
+    if (result.success) {
       navigate('/');
-    }, 1000);
+    } else {
+      setError(result.error || t('auth.error.email'));
+    }
   };
 
   return (

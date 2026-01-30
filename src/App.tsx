@@ -4,7 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AppProvider, useApp } from "./contexts/AppContext";
+import { AdminProvider, useAdmin } from "./contexts/AdminContext";
 import { NotificationProvider } from "./contexts/NotificationContext";
+import { AccessBlocked } from "./components/AccessBlocked";
 
 // Pages
 import Index from "./pages/Index";
@@ -19,16 +21,29 @@ import ActivityLogPage from "./pages/ActivityLogPage";
 import PaymentPage from "./pages/PaymentPage";
 import HowItWorksPage from "./pages/HowItWorksPage";
 import HelpPage from "./pages/HelpPage";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
 // Protected Route wrapper - redirects to /landing if not authenticated
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useApp();
+  const { isAuthenticated, userEmail } = useApp();
+  const { getUserStatus } = useAdmin();
 
   if (!isAuthenticated) {
     return <Navigate to="/landing" replace />;
+  }
+
+  // Check access status for non-admin users
+  const userStatus = getUserStatus(userEmail);
+  if (userStatus) {
+    if (userStatus.status === 'suspended') {
+      return <AccessBlocked reason="suspended" />;
+    }
+    if (userStatus.status === 'expired') {
+      return <AccessBlocked reason="expired" />;
+    }
   }
 
   return <>{children}</>;
@@ -39,6 +54,22 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useApp();
 
   if (isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+// Admin Route wrapper
+function AdminRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useApp();
+  const { isAdmin } = useAdmin();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/landing" replace />;
+  }
+
+  if (!isAdmin) {
     return <Navigate to="/" replace />;
   }
 
@@ -56,6 +87,16 @@ function AppRoutes() {
           <PublicRoute>
             <AuthPage />
           </PublicRoute>
+        }
+      />
+
+      {/* Admin route */}
+      <Route
+        path="/admin"
+        element={
+          <AdminRoute>
+            <AdminDashboard />
+          </AdminRoute>
         }
       />
 
@@ -138,15 +179,17 @@ function AppRoutes() {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AppProvider>
-      <NotificationProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <AppRoutes />
-          </BrowserRouter>
-        </TooltipProvider>
-      </NotificationProvider>
+      <AdminProvider>
+        <NotificationProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <AppRoutes />
+            </BrowserRouter>
+          </TooltipProvider>
+        </NotificationProvider>
+      </AdminProvider>
     </AppProvider>
   </QueryClientProvider>
 );
