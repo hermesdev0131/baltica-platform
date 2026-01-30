@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useApp } from '@/contexts/AppContext';
 import { useNotificationContext } from '@/contexts/NotificationContext';
 import { locales } from '@/lib/i18n';
-import { Globe, Moon, Sun, Menu, X, HelpCircle, BarChart3, Home, Settings, Trophy } from 'lucide-react';
+import { Globe, Moon, Sun, Menu, X, HelpCircle, BarChart3, Home, Settings, Trophy, User, LogOut, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -11,13 +11,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import BalticaLogo from '@/components/brand/BalticaLogo';
 import { NotificationCenter } from '@/components/notifications/NotificationCenter';
 import { NotificationSettings } from '@/components/notifications/NotificationSettings';
 
 export function Header() {
-  const { locale, setLocale, theme, setTheme, t } = useApp();
+  const { locale, setLocale, theme, setTheme, t, userName, userEmail, userRole, logout, isAuthenticated } = useApp();
+  const navigate = useNavigate();
   const {
     notifications,
     unreadCount,
@@ -37,7 +38,6 @@ export function Header() {
     { path: '/', label: t('nav.home'), icon: Home },
     { path: '/progress', label: t('nav.progress'), icon: BarChart3 },
     { path: '/achievements', label: t('nav.achievements'), icon: Trophy },
-    { path: '/settings', label: t('nav.settings'), icon: Settings },
     { path: '/help', label: t('nav.help'), icon: HelpCircle },
   ];
 
@@ -121,6 +121,43 @@ export function Header() {
             )}
             <span className="sr-only">{t('settings.theme')}</span>
           </Button>
+
+          {/* User Menu */}
+          {isAuthenticated && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-9 w-9">
+                  <User className="h-4 w-4" />
+                  <span className="sr-only">User menu</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="px-3 py-2 border-b border-border/40">
+                  <p className="text-sm font-medium">{userName || userEmail}</p>
+                  <p className="text-xs text-muted-foreground">{userEmail}</p>
+                  {userRole === 'admin' && (
+                    <span className="inline-flex items-center gap-1 mt-1 text-xs text-primary font-medium">
+                      <Shield className="h-3 w-3" /> Admin
+                    </span>
+                  )}
+                </div>
+                {userRole === 'admin' && (
+                  <DropdownMenuItem onClick={() => navigate('/admin')}>
+                    <Shield className="h-4 w-4 mr-2" />
+                    Panel Admin
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem onClick={() => navigate('/settings')}>
+                  <Settings className="h-4 w-4 mr-2" />
+                  {t('nav.settings')}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { logout(); navigate('/auth'); }}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Cerrar sesión
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
 
           {/* Mobile Menu Toggle */}
           <Button

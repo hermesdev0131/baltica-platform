@@ -206,7 +206,7 @@ export default function HelpPage() {
                 value={`faq-${i}`}
                 className="bg-card rounded-xl border shadow-card px-4"
               >
-                <AccordionTrigger className="text-left hover:no-underline">
+                <AccordionTrigger className="text-left text-sm hover:no-underline">
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground">
@@ -233,8 +233,8 @@ export default function HelpPage() {
                   <Mail className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-medium text-foreground">Email</h3>
-                  <p className="text-sm text-muted-foreground">help@Báltica.app</p>
+                  <h3 className="text-sm font-medium text-foreground">Email</h3>
+                  <p className="text-xs text-muted-foreground">help@baltica.app</p>
                 </div>
               </CardContent>
             </Card>
@@ -244,8 +244,8 @@ export default function HelpPage() {
                   <MessageCircle className="h-6 w-6 text-secondary-foreground" />
                 </div>
                 <div>
-                  <h3 className="font-medium text-foreground">Chat</h3>
-                  <p className="text-sm text-muted-foreground">Disponible 24/7</p>
+                  <h3 className="text-sm font-medium text-foreground">Chat</h3>
+                  <p className="text-xs text-muted-foreground">Disponible 24/7</p>
                 </div>
               </CardContent>
             </Card>

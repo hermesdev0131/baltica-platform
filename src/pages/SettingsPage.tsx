@@ -94,16 +94,6 @@ export default function SettingsPage() {
                   <Input value={userEmail || 'usuario@ejemplo.com'} disabled className="bg-muted" />
                 </div>
 
-                <Separator />
-
-                <Button
-                  variant="outline"
-                  className="w-full justify-start gap-2 text-destructive hover:text-destructive"
-                  onClick={handleLogout}
-                >
-                  <LogOut className="h-4 w-4" />
-                  {t('settings.account.logout')}
-                </Button>
               </CardContent>
             </Card>
           </motion.div>
