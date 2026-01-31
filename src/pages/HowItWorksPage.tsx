@@ -54,7 +54,7 @@ export default function HowItWorksPage() {
           <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
             <HelpCircle className="h-8 w-8 text-secondary-foreground" />
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+          <h1 className="text-xl md:text-2xl font-bold text-foreground">
             {t('howItWorks.title')}
           </h1>
         </motion.div>
@@ -79,10 +79,10 @@ export default function HowItWorksPage() {
                         <Icon className="h-6 w-6" />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-foreground mb-2">
+                        <h3 className="text-sm font-semibold text-foreground mb-2">
                           {section.title}
                         </h3>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-xs text-muted-foreground">
                           {section.text}
                         </p>
                       </div>
@@ -103,7 +103,7 @@ export default function HowItWorksPage() {
         >
           <Card className="shadow-card">
             <CardContent className="p-6">
-              <h3 className="font-semibold text-foreground mb-4 text-center">
+              <h3 className="text-sm font-semibold text-foreground mb-4 text-center">
                 Arquitectura simplificada
               </h3>
               <div className="flex items-center justify-center gap-4 flex-wrap">
@@ -128,7 +128,7 @@ export default function HowItWorksPage() {
                   <p className="text-xs text-muted-foreground">Media CDN</p>
                 </div>
               </div>
-              <p className="text-center text-sm text-muted-foreground mt-4">
+              <p className="text-center text-xs text-muted-foreground mt-4">
                 Todo se ve igual desde tu perspectiva, sin importar dónde esté el contenido.
               </p>
             </CardContent>
@@ -141,7 +141,7 @@ export default function HowItWorksPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
         >
-          <h2 className="text-lg font-semibold text-foreground mb-4">
+          <h2 className="text-base font-semibold text-foreground mb-4">
             Preguntas frecuentes
           </h2>
           <Accordion type="single" collapsible className="space-y-2">
@@ -151,10 +151,10 @@ export default function HowItWorksPage() {
                 value={`faq-${i}`}
                 className="bg-card rounded-xl border shadow-card px-4"
               >
-                <AccordionTrigger className="text-left hover:no-underline">
+                <AccordionTrigger className="text-left text-sm hover:no-underline">
                   {faq.q}
                 </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
+                <AccordionContent className="text-xs text-muted-foreground">
                   {faq.a}
                 </AccordionContent>
               </AccordionItem>

@@ -1,13 +1,21 @@
 import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Clock, Heart, Sparkles, ArrowRight } from 'lucide-react';
+import { Clock, Heart, Sparkles, ArrowRight, Globe, Moon, Sun } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import BalticaLogo from '@/components/brand/BalticaLogo';
+import { locales } from '@/lib/i18n';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 
 export default function LandingPage() {
-  const { t } = useApp();
+  const { t, locale, setLocale, theme, setTheme } = useApp();
   const navigate = useNavigate();
 
   const features = [
@@ -34,14 +42,41 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link to="/" className="flex items-center">
-            <BalticaLogo size={32} />
+            <BalticaLogo size={64} />
           </Link>
 
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" onClick={() => navigate('/auth?mode=login')}>
+          <div className="flex items-center gap-1">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-9 w-9">
+                  <Globe className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {locales.map(loc => (
+                  <DropdownMenuItem
+                    key={loc.code}
+                    onClick={() => setLocale(loc.code)}
+                    className={cn(locale === loc.code && 'bg-accent')}
+                  >
+                    <span className="mr-2">{loc.flag}</span>
+                    {loc.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            >
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => navigate('/auth?mode=login')}>
               {t('auth.login.cta')}
             </Button>
-            <Button onClick={() => navigate('/auth?mode=register')}>
+            <Button size="sm" onClick={() => navigate('/auth?mode=register')}>
               {t('landing.cta')}
             </Button>
           </div>
@@ -158,12 +193,10 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border/40 py-8 mt-16">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <BalticaLogo size={24} />
-
-            <div className="flex gap-6 text-sm text-muted-foreground">
+      <footer className="border-t border-border/40 mt-16">
+        <div className="container mx-auto px-4 py-10">
+          <div className="flex flex-col items-center gap-6">
+            <nav className="flex flex-wrap justify-center gap-8 text-xs tracking-wide uppercase text-muted-foreground">
               <Link to="/how-it-works" className="hover:text-foreground transition-colors">
                 Cómo funciona
               </Link>
@@ -176,7 +209,11 @@ export default function LandingPage() {
               >
                 Nota ética
               </button>
-            </div>
+            </nav>
+            <div className="w-12 h-px bg-border/60" />
+            <p className="text-xs text-muted-foreground/60">
+              &copy; {new Date().getFullYear()} Báltica. Todos los derechos reservados.
+            </p>
           </div>
         </div>
       </footer>

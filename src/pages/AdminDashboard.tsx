@@ -32,10 +32,11 @@ import {
 import { motion } from 'framer-motion';
 
 function StatusBadge({ status }: { status: ManagedUser['status'] }) {
+  const { t } = useApp();
   const config = {
-    active: { label: 'Activo', variant: 'default' as const, className: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
-    suspended: { label: 'Suspendido', variant: 'secondary' as const, className: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' },
-    expired: { label: 'Expirado', variant: 'outline' as const, className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
+    active: { label: t('admin.status.active'), variant: 'default' as const, className: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
+    suspended: { label: t('admin.status.suspended'), variant: 'secondary' as const, className: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' },
+    expired: { label: t('admin.status.expired'), variant: 'outline' as const, className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
   };
   const c = config[status];
   return <Badge variant={c.variant} className={c.className}>{c.label}</Badge>;
@@ -43,6 +44,7 @@ function StatusBadge({ status }: { status: ManagedUser['status'] }) {
 
 function AddUserDialog() {
   const { addUser, defaultAccessDays } = useAdmin();
+  const { t } = useApp();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -68,36 +70,36 @@ function AddUserDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2"><UserPlus className="h-4 w-4" /> Agregar usuario</Button>
+        <Button className="gap-2"><UserPlus className="h-4 w-4" /> {t('admin.addUser')}</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Registrar nuevo usuario</DialogTitle>
-          <DialogDescription>Crea una cuenta con acceso al programa.</DialogDescription>
+          <DialogTitle>{t('admin.addUser.title')}</DialogTitle>
+          <DialogDescription>{t('admin.addUser.desc')}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="add-name">Nombre</Label>
+            <Label htmlFor="add-name">{t('admin.addUser.name')}</Label>
             <Input id="add-name" value={name} onChange={e => setName(e.target.value)} required />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="add-email">Email</Label>
+            <Label htmlFor="add-email">{t('admin.addUser.email')}</Label>
             <Input id="add-email" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="add-days">Días de acceso</Label>
+            <Label htmlFor="add-days">{t('admin.addUser.days')}</Label>
             <Input id="add-days" type="number" min={1} value={days} onChange={e => setDays(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="add-payment">ID de pago (opcional)</Label>
+            <Label htmlFor="add-payment">{t('admin.addUser.payment')}</Label>
             <Input id="add-payment" value={paymentId} onChange={e => setPaymentId(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="add-notes">Notas (opcional)</Label>
+            <Label htmlFor="add-notes">{t('admin.addUser.notes')}</Label>
             <Input id="add-notes" value={notes} onChange={e => setNotes(e.target.value)} />
           </div>
           <DialogFooter>
-            <Button type="submit">Crear usuario</Button>
+            <Button type="submit">{t('admin.addUser.submit')}</Button>
           </DialogFooter>
         </form>
       </DialogContent>
@@ -107,6 +109,7 @@ function AddUserDialog() {
 
 function UserRow({ user }: { user: ManagedUser }) {
   const { suspendUser, reactivateUser, removeUser } = useAdmin();
+  const { t } = useApp();
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const daysLeft = Math.max(0, Math.ceil((new Date(user.accessExpiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
@@ -122,11 +125,11 @@ function UserRow({ user }: { user: ManagedUser }) {
             </div>
             <p className="text-sm text-muted-foreground truncate">{user.email}</p>
             <div className="flex flex-wrap gap-3 mt-2 text-xs text-muted-foreground">
-              <span>Día {user.currentDay}/3</span>
-              <span>{user.completedDays.length} completados</span>
-              <span>Racha: {user.streak}</span>
-              <span>{daysLeft} días restantes</span>
-              {user.paymentId && <span>Pago: {user.paymentId}</span>}
+              <span>{t('admin.user.day')} {user.currentDay}/3</span>
+              <span>{user.completedDays.length} {t('admin.user.completed')}</span>
+              <span>{t('admin.user.streak')}: {user.streak}</span>
+              <span>{daysLeft} {t('admin.user.daysLeft')}</span>
+              {user.paymentId && <span>{t('admin.user.payment')}: {user.paymentId}</span>}
             </div>
             {user.notes && <p className="text-xs text-muted-foreground mt-1 italic">{user.notes}</p>}
           </div>
@@ -134,11 +137,11 @@ function UserRow({ user }: { user: ManagedUser }) {
           <div className="flex gap-2 shrink-0">
             {user.status === 'active' ? (
               <Button variant="outline" size="sm" className="gap-1 text-red-600" onClick={() => suspendUser(user.id)}>
-                <Ban className="h-3 w-3" /> Suspender
+                <Ban className="h-3 w-3" /> {t('admin.user.suspend')}
               </Button>
             ) : (
               <Button variant="outline" size="sm" className="gap-1 text-green-600" onClick={() => reactivateUser(user.id)}>
-                <RefreshCw className="h-3 w-3" /> Reactivar
+                <RefreshCw className="h-3 w-3" /> {t('admin.user.reactivate')}
               </Button>
             )}
             {confirmDelete ? (
@@ -160,6 +163,7 @@ function UserRow({ user }: { user: ManagedUser }) {
 
 export default function AdminDashboard() {
   const { users, accessLogs, defaultAccessDays, setDefaultAccessDays } = useAdmin();
+  const { t } = useApp();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'suspended' | 'expired'>('all');
   const [newDefaultDays, setNewDefaultDays] = useState(String(defaultAccessDays));
@@ -187,17 +191,17 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-3 mb-8">
             <Shield className="h-8 w-8 text-primary" />
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground">Panel de Administración</h1>
-              <p className="text-muted-foreground">Gestión de usuarios y accesos</p>
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground">{t('admin.title')}</h1>
+              <p className="text-muted-foreground">{t('admin.subtitle')}</p>
             </div>
           </div>
         </motion.div>
 
         <Tabs defaultValue="users">
           <TabsList className="mb-6">
-            <TabsTrigger value="users" className="gap-2"><Users className="h-4 w-4" /> Usuarios</TabsTrigger>
-            <TabsTrigger value="logs" className="gap-2"><Activity className="h-4 w-4" /> Logs</TabsTrigger>
-            <TabsTrigger value="settings" className="gap-2"><Settings className="h-4 w-4" /> Config</TabsTrigger>
+            <TabsTrigger value="users" className="gap-2"><Users className="h-4 w-4" /> {t('admin.tabs.users')}</TabsTrigger>
+            <TabsTrigger value="logs" className="gap-2"><Activity className="h-4 w-4" /> {t('admin.tabs.logs')}</TabsTrigger>
+            <TabsTrigger value="settings" className="gap-2"><Settings className="h-4 w-4" /> {t('admin.tabs.settings')}</TabsTrigger>
           </TabsList>
 
           {/* Users Tab */}
@@ -205,11 +209,11 @@ export default function AdminDashboard() {
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
               {[
-                { label: 'Total', value: stats.total, color: 'text-foreground' },
-                { label: 'Activos', value: stats.active, color: 'text-green-600' },
-                { label: 'Suspendidos', value: stats.suspended, color: 'text-red-600' },
-                { label: 'Expirados', value: stats.expired, color: 'text-yellow-600' },
-                { label: 'Completaron', value: stats.completed, color: 'text-primary' },
+                { label: t('admin.stats.total'), value: stats.total, color: 'text-foreground' },
+                { label: t('admin.stats.active'), value: stats.active, color: 'text-green-600' },
+                { label: t('admin.stats.suspended'), value: stats.suspended, color: 'text-red-600' },
+                { label: t('admin.stats.expired'), value: stats.expired, color: 'text-yellow-600' },
+                { label: t('admin.stats.completed'), value: stats.completed, color: 'text-primary' },
               ].map(s => (
                 <Card key={s.label} className="shadow-card">
                   <CardContent className="p-3 text-center">
@@ -225,7 +229,7 @@ export default function AdminDashboard() {
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Buscar por nombre o email..."
+                  placeholder={t('admin.search')}
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   className="pl-10"
@@ -239,7 +243,7 @@ export default function AdminDashboard() {
                     size="sm"
                     onClick={() => setStatusFilter(f)}
                   >
-                    {f === 'all' ? 'Todos' : f === 'active' ? 'Activos' : f === 'suspended' ? 'Suspendidos' : 'Expirados'}
+                    {t(`admin.filter.${f}`)}
                   </Button>
                 ))}
               </div>
@@ -251,7 +255,7 @@ export default function AdminDashboard() {
               {filteredUsers.length === 0 ? (
                 <Card className="shadow-card">
                   <CardContent className="p-8 text-center text-muted-foreground">
-                    {users.length === 0 ? 'No hay usuarios registrados aún.' : 'No se encontraron usuarios con ese filtro.'}
+                    {users.length === 0 ? t('admin.user.noUsers') : t('admin.user.noResults')}
                   </CardContent>
                 </Card>
               ) : (
@@ -264,24 +268,38 @@ export default function AdminDashboard() {
           <TabsContent value="logs">
             <Card className="shadow-card">
               <CardHeader>
-                <CardTitle className="text-lg">Registros de actividad</CardTitle>
-                <CardDescription>Historial de acciones administrativas y de usuarios</CardDescription>
+                <CardTitle className="text-lg">{t('admin.logs.title')}</CardTitle>
+                <CardDescription>{t('admin.logs.desc')}</CardDescription>
               </CardHeader>
               <CardContent>
                 {accessLogs.length === 0 ? (
-                  <p className="text-center text-muted-foreground py-8">No hay registros aún.</p>
+                  <p className="text-center text-muted-foreground py-8">{t('admin.logs.empty')}</p>
                 ) : (
                   <div className="space-y-2 max-h-[600px] overflow-y-auto">
-                    {accessLogs.slice(0, 100).map(log => (
-                      <div key={log.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 text-sm">
-                        <Clock className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-foreground">{log.eventDetail}</p>
-                          <p className="text-xs text-muted-foreground">{log.userEmail} — {new Date(log.timestamp).toLocaleString()}</p>
+                    {accessLogs.slice(0, 100).map(log => {
+                      const translateDetail = (detail: string) => {
+                        const [key, param] = detail.split(':');
+                        const tKey = `admin.logs.event.${key}.detail` as any;
+                        const translated = t(tKey);
+                        if (translated === tKey) return detail;
+                        return param ? translated.replace('{days}', param) : translated;
+                      };
+                      const translateType = (type: string) => {
+                        const tKey = `admin.logs.event.${type}` as any;
+                        const translated = t(tKey);
+                        return translated === tKey ? type : translated;
+                      };
+                      return (
+                        <div key={log.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 text-sm">
+                          <Clock className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-foreground">{translateDetail(log.eventDetail)}</p>
+                            <p className="text-xs text-muted-foreground">{log.userEmail} — {new Date(log.timestamp).toLocaleString()}</p>
+                          </div>
+                          <Badge variant="outline" className="shrink-0 text-xs">{translateType(log.eventType)}</Badge>
                         </div>
-                        <Badge variant="outline" className="shrink-0 text-xs">{log.eventType}</Badge>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </CardContent>
@@ -292,12 +310,12 @@ export default function AdminDashboard() {
           <TabsContent value="settings">
             <Card className="shadow-card max-w-md">
               <CardHeader>
-                <CardTitle className="text-lg">Configuración de acceso</CardTitle>
-                <CardDescription>Valores por defecto para nuevos usuarios</CardDescription>
+                <CardTitle className="text-lg">{t('admin.settings.title')}</CardTitle>
+                <CardDescription>{t('admin.settings.desc')}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="default-days">Días de acceso por defecto</Label>
+                  <Label htmlFor="default-days">{t('admin.settings.defaultDays')}</Label>
                   <div className="flex gap-2">
                     <Input
                       id="default-days"
@@ -307,10 +325,10 @@ export default function AdminDashboard() {
                       onChange={e => setNewDefaultDays(e.target.value)}
                     />
                     <Button onClick={() => setDefaultAccessDays(parseInt(newDefaultDays, 10) || 60)}>
-                      Guardar
+                      {t('admin.settings.save')}
                     </Button>
                   </div>
-                  <p className="text-xs text-muted-foreground">Actualmente: {defaultAccessDays} días</p>
+                  <p className="text-xs text-muted-foreground">{t('admin.settings.current')}: {defaultAccessDays} días</p>
                 </div>
 
                 <div className="pt-4 border-t">

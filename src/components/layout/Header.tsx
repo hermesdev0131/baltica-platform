@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useApp } from '@/contexts/AppContext';
 import { useNotificationContext } from '@/contexts/NotificationContext';
 import { locales } from '@/lib/i18n';
-import { Globe, Moon, Sun, Menu, X, HelpCircle, BarChart3, Home, Settings, Trophy, User, LogOut, Shield } from 'lucide-react';
+import { Globe, Moon, Sun, Menu, X, HelpCircle, BarChart3, Home, Settings, Trophy, User, LogOut, Shield, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -34,19 +34,21 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  const navItems = [
-    { path: '/', label: t('nav.home'), icon: Home },
-    { path: '/progress', label: t('nav.progress'), icon: BarChart3 },
-    { path: '/achievements', label: t('nav.achievements'), icon: Trophy },
-    { path: '/help', label: t('nav.help'), icon: HelpCircle },
-  ];
+  const navItems = !isAuthenticated || userRole === 'admin'
+    ? []
+    : [
+        { path: '/', label: t('nav.home'), icon: Home },
+        { path: '/progress', label: t('nav.progress'), icon: BarChart3 },
+        { path: '/achievements', label: t('nav.achievements'), icon: Trophy },
+        { path: '/help', label: t('nav.help'), icon: HelpCircle },
+      ];
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link to="/" className="flex items-center">
-          <BalticaLogo size={36} />
+          <BalticaLogo size={64} />
         </Link>
 
         {/* Desktop Navigation */}
@@ -67,23 +69,25 @@ export function Header() {
 
         {/* Right Actions */}
         <div className="flex items-center gap-1">
-          {/* Notifications */}
-          <NotificationCenter
-            notifications={notifications}
-            unreadCount={unreadCount}
-            onMarkAsRead={markAsRead}
-            onMarkAllAsRead={markAllAsRead}
-            onClearAll={clearAll}
-            onDelete={deleteNotification}
-          />
-
-          {/* Notification Settings */}
-          <NotificationSettings
-            settings={settings}
-            onUpdateSettings={updateSettings}
-            permissionStatus={permissionStatus}
-            onRequestPermission={requestPermission}
-          />
+          {/* Notifications - only when authenticated */}
+          {isAuthenticated && (
+            <>
+              <NotificationCenter
+                notifications={notifications}
+                unreadCount={unreadCount}
+                onMarkAsRead={markAsRead}
+                onMarkAllAsRead={markAllAsRead}
+                onClearAll={clearAll}
+                onDelete={deleteNotification}
+              />
+              <NotificationSettings
+                settings={settings}
+                onUpdateSettings={updateSettings}
+                permissionStatus={permissionStatus}
+                onRequestPermission={requestPermission}
+              />
+            </>
+          )}
 
           {/* Language Selector */}
           <DropdownMenu>
@@ -121,6 +125,18 @@ export function Header() {
             )}
             <span className="sr-only">{t('settings.theme')}</span>
           </Button>
+
+          {/* Back button - pre-login pages */}
+          {!isAuthenticated && location.pathname !== '/landing' && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9"
+              onClick={() => navigate(-1)}
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          )}
 
           {/* User Menu */}
           {isAuthenticated && (

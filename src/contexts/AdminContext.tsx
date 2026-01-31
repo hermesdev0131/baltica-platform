@@ -181,7 +181,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         userId: newUser.id,
         userEmail: newUser.email,
         eventType: 'account_created',
-        eventDetail: `Cuenta creada con acceso de ${days} días`,
+        eventDetail: `account_created:${days}`,
       });
     });
   };
@@ -197,7 +197,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         userId,
         userEmail: user.email,
         eventType: 'access_suspended',
-        eventDetail: reason || 'Acceso suspendido por administrador',
+        eventDetail: reason || 'access_suspended',
       });
     }
   };
@@ -217,7 +217,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         userId,
         userEmail: user.email,
         eventType: 'access_granted',
-        eventDetail: `Acceso reactivado por ${extraDays || user.accessDurationDays} días`,
+        eventDetail: `access_granted:${extraDays || user.accessDurationDays}`,
       });
     }
   };

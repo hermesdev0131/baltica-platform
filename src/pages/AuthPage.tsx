@@ -10,11 +10,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Sparkles, ArrowLeft, Mail, Lock, User, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Globe, Moon, Sun } from 'lucide-react';
+import { locales } from '@/lib/i18n';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 
 export default function AuthPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { t, login } = useApp();
+  const { t, login, locale, setLocale, theme, setTheme } = useApp();
 
   const defaultTab = searchParams.get('mode') === 'login' ? 'login' : 'register';
   const [activeTab, setActiveTab] = useState(defaultTab);
@@ -82,7 +91,8 @@ export default function AuthPage() {
     setIsLoading(false);
 
     if (result.success) {
-      navigate('/');
+      const role = localStorage.getItem('userRole');
+      navigate(role === 'admin' ? '/admin' : '/');
     } else {
       setError(result.error || t('auth.error.email'));
     }
@@ -92,7 +102,7 @@ export default function AuthPage() {
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <header className="w-full border-b border-border/40 bg-background/80">
-        <div className="container mx-auto flex h-16 items-center px-4">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Button
             variant="ghost"
             size="sm"
@@ -102,6 +112,35 @@ export default function AuthPage() {
             <ArrowLeft className="h-4 w-4" />
             {t('common.back')}
           </Button>
+          <div className="flex items-center gap-1">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-9 w-9">
+                  <Globe className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {locales.map(loc => (
+                  <DropdownMenuItem
+                    key={loc.code}
+                    onClick={() => setLocale(loc.code)}
+                    className={cn(locale === loc.code && 'bg-accent')}
+                  >
+                    <span className="mr-2">{loc.flag}</span>
+                    {loc.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-9 w-9"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            >
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+          </div>
         </div>
       </header>
 

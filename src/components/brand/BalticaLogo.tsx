@@ -15,7 +15,7 @@ export function BalticaLogo({
   const logoSrc =
     variant === "mono"
       ? "/Logo Báltica Escala de Grises.png"
-      : "/Logo Báltica Unicolor Azul Oscuro.png";
+      : "/Báltica LOGO OFICIAL.png";
 
   return (
     <div
