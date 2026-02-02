@@ -1,15 +1,21 @@
 import { useApp } from '@/contexts/AppContext';
+import { useAdmin } from '@/contexts/AdminContext';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ProgressRing } from '@/components/journey/ProgressRing';
 import { DayCard } from '@/components/journey/DayCard';
-import { ArrowRight, Sparkles, Clock, Heart } from 'lucide-react';
+import { ArrowRight, Sparkles, Clock, Heart, ShieldAlert, Mail } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
-  const { t, locale, progress, totalDays, userName, setUserName } = useApp();
+  const { t, locale, progress, totalDays, userName, setUserName, userEmail } = useApp();
+  const { getUserStatus } = useAdmin();
   const navigate = useNavigate();
+  const userStatus = getUserStatus(userEmail);
+  const isSuspended = userStatus?.status === 'suspended';
+  const isExpired = userStatus?.status === 'expired';
   
   const hasStarted = progress.completedDays.length > 0;
   const programComplete = progress.completedDays.includes(3);
@@ -33,6 +39,30 @@ const Index = () => {
       <Header />
       
       <main className="container mx-auto px-4 py-8 max-w-4xl">
+        {/* Status Banner */}
+        {isSuspended && (
+          <Alert className="mb-6 border-amber-200 bg-amber-50/50 dark:bg-amber-950/20">
+            <ShieldAlert className="h-4 w-4 text-amber-600" />
+            <AlertDescription className="flex items-center justify-between">
+              <span>{t('status.suspended')}</span>
+              <a href="mailto:help@baltica.app" className="inline-flex items-center gap-1 text-primary text-sm font-medium hover:underline ml-2">
+                <Mail className="h-3 w-3" /> {t('status.contactSupport')}
+              </a>
+            </AlertDescription>
+          </Alert>
+        )}
+        {isExpired && (
+          <Alert className="mb-6 border-red-200 bg-red-50/50 dark:bg-red-950/20">
+            <Clock className="h-4 w-4 text-red-600" />
+            <AlertDescription className="flex items-center justify-between">
+              <span>{t('status.expired')}</span>
+              <Button variant="link" size="sm" className="p-0 h-auto" onClick={() => navigate('/payment')}>
+                {t('status.repay')}
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+
         {/* Hero Section */}
         <motion.section 
           className="text-center py-12 md:py-20"
@@ -100,6 +130,7 @@ const Index = () => {
             <Button
               size="lg"
               className="gap-2 px-8 py-6 text-lg rounded-full shadow-soft"
+              disabled={isSuspended || isExpired}
               onClick={() => programComplete ? navigate('/progress') : navigate(`/journey/${progress.currentDay}`)}
             >
               {programComplete

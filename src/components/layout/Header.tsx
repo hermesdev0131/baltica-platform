@@ -69,8 +69,8 @@ export function Header() {
 
         {/* Right Actions */}
         <div className="flex items-center gap-1">
-          {/* Notifications - only when authenticated */}
-          {isAuthenticated && (
+          {/* Notifications - only when authenticated and not admin */}
+          {isAuthenticated && userRole !== 'admin' && (
             <>
               <NotificationCenter
                 notifications={notifications}
@@ -163,7 +163,7 @@ export function Header() {
                     Panel Admin
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuItem onClick={() => navigate('/settings')}>
+                <DropdownMenuItem onClick={() => navigate(userRole === 'admin' ? '/admin?tab=settings' : '/settings')}>
                   <Settings className="h-4 w-4 mr-2" />
                   {t('nav.settings')}
                 </DropdownMenuItem>

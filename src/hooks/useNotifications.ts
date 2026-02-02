@@ -25,14 +25,16 @@ const defaultSettings: NotificationSettings = {
   encouragement: true,
 };
 
-export function useNotifications() {
+export function useNotifications(userKey?: string) {
+  const prefix = userKey ? `${userKey}_` : '';
+
   const [settings, setSettings] = useState<NotificationSettings>(() => {
-    const saved = localStorage.getItem('notificationSettings');
+    const saved = localStorage.getItem(`${prefix}notificationSettings`);
     return saved ? JSON.parse(saved) : defaultSettings;
   });
 
   const [notifications, setNotifications] = useState<AppNotification[]>(() => {
-    const saved = localStorage.getItem('appNotifications');
+    const saved = localStorage.getItem(`${prefix}appNotifications`);
     return saved ? JSON.parse(saved) : [];
   });
 
@@ -45,15 +47,23 @@ export function useNotifications() {
     }
   }, []);
 
+  // Reload when user changes
+  useEffect(() => {
+    const savedSettings = localStorage.getItem(`${prefix}notificationSettings`);
+    setSettings(savedSettings ? JSON.parse(savedSettings) : defaultSettings);
+    const savedNotifications = localStorage.getItem(`${prefix}appNotifications`);
+    setNotifications(savedNotifications ? JSON.parse(savedNotifications) : []);
+  }, [prefix]);
+
   // Save settings to localStorage
   useEffect(() => {
-    localStorage.setItem('notificationSettings', JSON.stringify(settings));
-  }, [settings]);
+    if (prefix || !userKey) localStorage.setItem(`${prefix}notificationSettings`, JSON.stringify(settings));
+  }, [settings, prefix]);
 
   // Save notifications to localStorage
   useEffect(() => {
-    localStorage.setItem('appNotifications', JSON.stringify(notifications));
-  }, [notifications]);
+    if (prefix || !userKey) localStorage.setItem(`${prefix}appNotifications`, JSON.stringify(notifications));
+  }, [notifications, prefix]);
 
   // Request browser notification permission
   const requestPermission = useCallback(async () => {

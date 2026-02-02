@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAdmin, ManagedUser } from '@/contexts/AdminContext';
 import { useApp } from '@/contexts/AppContext';
+import { api } from '@/lib/api';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,8 +29,13 @@ import {
   Trash2,
   Settings,
   Search,
+  Calendar,
+  Key,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useSearchParams } from 'react-router-dom';
 
 function StatusBadge({ status }: { status: ManagedUser['status'] }) {
   const { t } = useApp();
@@ -48,22 +54,25 @@ function AddUserDialog() {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [days, setDays] = useState(String(defaultAccessDays));
   const [paymentId, setPaymentId] = useState('');
   const [notes, setNotes] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !name) return;
+    if (!email || !name || !password) return;
     addUser({
       email,
       name,
+      password,
       status: 'active',
       accessDurationDays: parseInt(days, 10) || defaultAccessDays,
       paymentId: paymentId || undefined,
       notes: notes || undefined,
     });
-    setName(''); setEmail(''); setDays(String(defaultAccessDays)); setPaymentId(''); setNotes('');
+    setName(''); setEmail(''); setPassword(''); setDays(String(defaultAccessDays)); setPaymentId(''); setNotes('');
     setOpen(false);
   };
 
@@ -87,6 +96,15 @@ function AddUserDialog() {
             <Input id="add-email" type="email" value={email} onChange={e => setEmail(e.target.value)} required />
           </div>
           <div className="space-y-2">
+            <Label htmlFor="add-password">{t('admin.addUser.password')}</Label>
+            <div className="relative">
+              <Input id="add-password" type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)} required minLength={6} />
+              <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full w-9" onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </Button>
+            </div>
+          </div>
+          <div className="space-y-2">
             <Label htmlFor="add-days">{t('admin.addUser.days')}</Label>
             <Input id="add-days" type="number" min={1} value={days} onChange={e => setDays(e.target.value)} />
           </div>
@@ -108,10 +126,12 @@ function AddUserDialog() {
 }
 
 function UserRow({ user }: { user: ManagedUser }) {
-  const { suspendUser, reactivateUser, removeUser, accessLogs } = useAdmin();
+  const { suspendUser, reactivateUser, removeUser, accessLogs, updateAccessDuration } = useAdmin();
   const { t } = useApp();
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [showLogs, setShowLogs] = useState(false);
+  const [showExpiration, setShowExpiration] = useState(false);
+  const [newDays, setNewDays] = useState(String(user.accessDurationDays));
 
   const daysLeft = Math.max(0, Math.ceil((new Date(user.accessExpiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
   const userLogs = accessLogs.filter(log => log.userId === user.id);
@@ -179,6 +199,28 @@ function UserRow({ user }: { user: ManagedUser }) {
                 </div>
               </DialogContent>
             </Dialog>
+            <Dialog open={showExpiration} onOpenChange={setShowExpiration}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-1">
+                  <Calendar className="h-3 w-3" /> {daysLeft}d
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-sm">
+                <DialogHeader>
+                  <DialogTitle>{t('admin.user.editExpiration')}</DialogTitle>
+                  <DialogDescription>{user.name} — {user.email}</DialogDescription>
+                </DialogHeader>
+                <div className="space-y-3">
+                  <div className="space-y-2">
+                    <Label>{t('admin.user.newDays')}</Label>
+                    <Input type="number" min={1} value={newDays} onChange={e => setNewDays(e.target.value)} />
+                  </div>
+                  <Button className="w-full" onClick={() => { updateAccessDuration(user.id, parseInt(newDays, 10) || 30); setShowExpiration(false); }}>
+                    {t('admin.settings.save')}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
             {user.status === 'active' ? (
               <Button variant="outline" size="sm" className="gap-1 text-red-600" onClick={() => suspendUser(user.id)}>
                 <Ban className="h-3 w-3" /> {t('admin.user.suspend')}
@@ -209,9 +251,16 @@ function UserRow({ user }: { user: ManagedUser }) {
 export default function AdminDashboard() {
   const { users, accessLogs, defaultAccessDays, setDefaultAccessDays } = useAdmin();
   const { t } = useApp();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'users';
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'suspended' | 'expired'>('all');
   const [newDefaultDays, setNewDefaultDays] = useState(String(defaultAccessDays));
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordMsg, setPasswordMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [showPasswords, setShowPasswords] = useState(false);
 
   const filteredUsers = users.filter(u => {
     const matchSearch = !search || u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase());
@@ -242,7 +291,7 @@ export default function AdminDashboard() {
           </div>
         </motion.div>
 
-        <Tabs defaultValue="users">
+        <Tabs value={activeTab} onValueChange={v => setSearchParams({ tab: v })}>
           <TabsList className="mb-6">
             <TabsTrigger value="users" className="gap-2"><Users className="h-4 w-4" /> {t('admin.tabs.users')}</TabsTrigger>
             <TabsTrigger value="logs" className="gap-2"><Activity className="h-4 w-4" /> {t('admin.tabs.logs')}</TabsTrigger>
@@ -353,7 +402,8 @@ export default function AdminDashboard() {
 
           {/* Settings Tab */}
           <TabsContent value="settings">
-            <Card className="shadow-card max-w-md">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="shadow-card">
               <CardHeader>
                 <CardTitle className="text-lg">{t('admin.settings.title')}</CardTitle>
                 <CardDescription>{t('admin.settings.desc')}</CardDescription>
@@ -376,13 +426,72 @@ export default function AdminDashboard() {
                   <p className="text-xs text-muted-foreground">{t('admin.settings.current')}: {defaultAccessDays} días</p>
                 </div>
 
-                <div className="pt-4 border-t">
-                  <p className="text-sm text-muted-foreground">
-                    Admin email: <span className="font-mono">admin@baltica.app</span>
-                  </p>
-                </div>
               </CardContent>
             </Card>
+
+            {/* Password Change */}
+            <Card className="shadow-card">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Key className="h-5 w-5" />
+                  {t('admin.settings.changePassword')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label>{t('admin.settings.currentPassword')}</Label>
+                  <Input type={showPasswords ? 'text' : 'password'} value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} />
+                </div>
+                <div className="space-y-2">
+                  <Label>{t('admin.settings.newPassword')}</Label>
+                  <Input type={showPasswords ? 'text' : 'password'} value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+                </div>
+                <div className="space-y-2">
+                  <Label>{t('admin.settings.confirmPassword')}</Label>
+                  <Input type={showPasswords ? 'text' : 'password'} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowPasswords(!showPasswords)}
+                    className="gap-1 text-xs"
+                  >
+                    {showPasswords ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+                    {showPasswords ? t('admin.settings.hidePasswords') : t('admin.settings.showPasswords')}
+                  </Button>
+                </div>
+                {passwordMsg && (
+                  <p className={`text-sm ${passwordMsg.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+                    {passwordMsg.text}
+                  </p>
+                )}
+                <Button
+                  className="w-full"
+                  disabled={!currentPassword || !newPassword || !confirmPassword}
+                  onClick={async () => {
+                    if (newPassword !== confirmPassword) {
+                      setPasswordMsg({ type: 'error', text: t('admin.settings.passwordMismatch') });
+                      return;
+                    }
+                    if (newPassword.length < 6) {
+                      setPasswordMsg({ type: 'error', text: t('admin.settings.passwordTooShort') });
+                      return;
+                    }
+                    try {
+                      await api.auth.changePassword({ currentPassword, newPassword });
+                      setPasswordMsg({ type: 'success', text: t('admin.settings.passwordChanged') });
+                      setCurrentPassword(''); setNewPassword(''); setConfirmPassword('');
+                    } catch {
+                      setPasswordMsg({ type: 'error', text: t('admin.settings.passwordError') });
+                    }
+                  }}
+                >
+                  {t('admin.settings.changePassword')}
+                </Button>
+              </CardContent>
+            </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </main>

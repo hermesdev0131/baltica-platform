@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-route
 import { AppProvider, useApp } from "./contexts/AppContext";
 import { AdminProvider, useAdmin } from "./contexts/AdminContext";
 import { NotificationProvider } from "./contexts/NotificationContext";
-import { AccessBlocked } from "./components/AccessBlocked";
+
 
 // Pages
 import Index from "./pages/Index";
@@ -48,14 +48,14 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     return <Navigate to="/payment" replace />;
   }
 
-  // Check access status for non-admin users (exempt /payment so unpaid users can pay)
+  // Suspended/expired users can browse but not access journey pages
   const userStatus = getUserStatus(userEmail);
-  if (userStatus && location.pathname !== '/payment') {
+  if (userStatus && location.pathname.startsWith('/journey')) {
     if (userStatus.status === 'suspended') {
-      return <AccessBlocked reason="suspended" />;
+      return <Navigate to="/" replace />;
     }
     if (userStatus.status === 'expired') {
-      return <AccessBlocked reason="expired" />;
+      return <Navigate to="/payment" replace />;
     }
   }
 

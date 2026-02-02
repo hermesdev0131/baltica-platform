@@ -23,7 +23,7 @@ interface NotificationContextType {
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
-  const { t, progress, locale } = useApp();
+  const { t, progress, locale, userEmail } = useApp();
   const {
     settings,
     updateSettings,
@@ -37,7 +37,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     requestPermission,
     permissionStatus,
     sendPushNotification,
-  } = useNotifications();
+  } = useNotifications(userEmail || undefined);
 
   // Get localized messages
   const getMessages = () => {
@@ -106,14 +106,15 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!settings.enabled || !settings.dailyReminder) return;
 
+    const prefix = userEmail ? `${userEmail}_` : '';
     const checkAndSendReminder = () => {
       const now = new Date();
       const [hours, minutes] = settings.reminderTime.split(':').map(Number);
-      
+
       // Check if we already sent a reminder today
-      const lastReminderDate = localStorage.getItem('lastDailyReminder');
+      const lastReminderDate = localStorage.getItem(`${prefix}lastDailyReminder`);
       const today = now.toISOString().split('T')[0];
-      
+
       if (
         now.getHours() === hours &&
         now.getMinutes() === minutes &&
@@ -123,7 +124,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
         const lastCompleted = progress.lastCompletedDate;
         if (lastCompleted !== today) {
           sendDailyReminder();
-          localStorage.setItem('lastDailyReminder', today);
+          localStorage.setItem(`${prefix}lastDailyReminder`, today);
         }
       }
     };
@@ -133,17 +134,18 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     checkAndSendReminder(); // Check immediately
 
     return () => clearInterval(interval);
-  }, [settings.enabled, settings.dailyReminder, settings.reminderTime, progress.lastCompletedDate]);
+  }, [settings.enabled, settings.dailyReminder, settings.reminderTime, progress.lastCompletedDate, userEmail]);
 
   // Streak reminder (evening check)
   useEffect(() => {
     if (!settings.enabled || !settings.streakReminder) return;
 
+    const prefix = userEmail ? `${userEmail}_` : '';
     const checkStreakReminder = () => {
       const now = new Date();
-      const lastReminderDate = localStorage.getItem('lastStreakReminder');
+      const lastReminderDate = localStorage.getItem(`${prefix}lastStreakReminder`);
       const today = now.toISOString().split('T')[0];
-      
+
       // Send at 8 PM if user hasn't completed today and has a streak
       if (
         now.getHours() === 20 &&
@@ -152,7 +154,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
         progress.lastCompletedDate !== today
       ) {
         sendStreakReminder();
-        localStorage.setItem('lastStreakReminder', today);
+        localStorage.setItem(`${prefix}lastStreakReminder`, today);
       }
     };
 
@@ -160,7 +162,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     checkStreakReminder();
 
     return () => clearInterval(interval);
-  }, [settings.enabled, settings.streakReminder, progress.streak, progress.lastCompletedDate]);
+  }, [settings.enabled, settings.streakReminder, progress.streak, progress.lastCompletedDate, userEmail]);
 
   return (
     <NotificationContext.Provider

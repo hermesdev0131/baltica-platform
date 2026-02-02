@@ -87,15 +87,10 @@ export async function login(req: Request, res: Response) {
       return res.status(401).json({ error: 'Email o contraseña incorrectos' });
     }
 
-    // Check access status
-    if (user.status === 'suspended') {
-      return res.status(403).json({ error: 'Tu acceso ha sido suspendido', code: 'SUSPENDED' });
-    }
-
-    // Check expiration
-    if (new Date(user.access_expires_at) < new Date()) {
+    // Check expiration and update status (but still allow login)
+    if (user.status !== 'suspended' && new Date(user.access_expires_at) < new Date()) {
       await pool.query("UPDATE users SET status = 'expired' WHERE id = $1", [user.id]);
-      return res.status(403).json({ error: 'Tu acceso ha expirado', code: 'EXPIRED' });
+      user.status = 'expired';
     }
 
     // Update last login

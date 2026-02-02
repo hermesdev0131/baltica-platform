@@ -136,8 +136,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return (localStorage.getItem('theme') as 'light' | 'dark' | 'system') || 'system';
   });
 
+  // Helper to get per-user localStorage key
+  const userPrefix = (key: string, email?: string) => {
+    const e = email || userEmail;
+    return e ? `${e}_${key}` : key;
+  };
+
   const [progress, setProgress] = useState<JourneyProgress>(() => {
-    const saved = localStorage.getItem('journeyProgress');
+    const saved = localStorage.getItem(userPrefix('journeyProgress'));
     return saved ? JSON.parse(saved) : defaultProgress;
   });
 
@@ -146,23 +152,34 @@ export function AppProvider({ children }: { children: ReactNode }) {
   });
 
   const [dayAnswers, setDayAnswers] = useState<DayAnswers>(() => {
-    const saved = localStorage.getItem('dayAnswers');
+    const saved = localStorage.getItem(userPrefix('dayAnswers'));
     return saved ? JSON.parse(saved) : {};
   });
 
   const [onboardingCompleted, setOnboardingCompletedState] = useState(() => {
-    return localStorage.getItem('onboardingCompleted') === 'true';
+    return localStorage.getItem(userPrefix('onboardingCompleted')) === 'true';
   });
 
   const [preferredReminderTime, setPreferredReminderTimeState] = useState(() => {
-    return localStorage.getItem('preferredReminderTime') || '08:00';
+    return localStorage.getItem(userPrefix('preferredReminderTime')) || '08:00';
   });
 
   const [paymentCompleted, setPaymentCompletedState] = useState(() => {
-    return localStorage.getItem('paymentCompleted') === 'true';
+    return localStorage.getItem(userPrefix('paymentCompleted')) === 'true';
   });
 
   const totalDays = 3; // MVP: Bienvenida (0) + 3 días
+
+  // Reload per-user data when userEmail changes (login/logout)
+  useEffect(() => {
+    const savedProgress = localStorage.getItem(userPrefix('journeyProgress'));
+    setProgress(savedProgress ? JSON.parse(savedProgress) : defaultProgress);
+    const savedAnswers = localStorage.getItem(userPrefix('dayAnswers'));
+    setDayAnswers(savedAnswers ? JSON.parse(savedAnswers) : {});
+    setOnboardingCompletedState(localStorage.getItem(userPrefix('onboardingCompleted')) === 'true');
+    setPreferredReminderTimeState(localStorage.getItem(userPrefix('preferredReminderTime')) || '08:00');
+    setPaymentCompletedState(localStorage.getItem(userPrefix('paymentCompleted')) === 'true');
+  }, [userEmail]);
 
   // Load data from API on mount if authenticated
   useEffect(() => {
@@ -240,7 +257,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userRole');
     localStorage.removeItem('authToken');
-    localStorage.removeItem('paymentCompleted');
     setPaymentCompletedState(false);
   };
 
@@ -257,9 +273,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [theme]);
 
   useEffect(() => { localStorage.setItem('locale', locale); }, [locale]);
-  useEffect(() => { localStorage.setItem('journeyProgress', JSON.stringify(progress)); }, [progress]);
+  useEffect(() => { localStorage.setItem(userPrefix('journeyProgress'), JSON.stringify(progress)); }, [progress, userEmail]);
   useEffect(() => { localStorage.setItem('userName', userName); }, [userName]);
-  useEffect(() => { localStorage.setItem('dayAnswers', JSON.stringify(dayAnswers)); }, [dayAnswers]);
+  useEffect(() => { localStorage.setItem(userPrefix('dayAnswers'), JSON.stringify(dayAnswers)); }, [dayAnswers, userEmail]);
 
   const t = (key: TranslationKey): string => getTranslation(locale, key);
 
@@ -323,19 +339,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const setOnboardingCompleted = (completed: boolean) => {
     setOnboardingCompletedState(completed);
-    localStorage.setItem('onboardingCompleted', String(completed));
+    localStorage.setItem(userPrefix('onboardingCompleted'), String(completed));
     api.auth.updateMe({ onboarding_completed: completed }).catch(() => {});
   };
 
   const setPreferredReminderTime = (time: string) => {
     setPreferredReminderTimeState(time);
-    localStorage.setItem('preferredReminderTime', time);
+    localStorage.setItem(userPrefix('preferredReminderTime'), time);
     api.auth.updateMe({ preferred_reminder_time: time }).catch(() => {});
   };
 
   const setPaymentCompleted = (completed: boolean) => {
     setPaymentCompletedState(completed);
-    localStorage.setItem('paymentCompleted', String(completed));
+    localStorage.setItem(userPrefix('paymentCompleted'), String(completed));
   };
 
   return (
