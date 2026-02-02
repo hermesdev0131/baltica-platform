@@ -108,11 +108,26 @@ function AddUserDialog() {
 }
 
 function UserRow({ user }: { user: ManagedUser }) {
-  const { suspendUser, reactivateUser, removeUser } = useAdmin();
+  const { suspendUser, reactivateUser, removeUser, accessLogs } = useAdmin();
   const { t } = useApp();
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [showLogs, setShowLogs] = useState(false);
 
   const daysLeft = Math.max(0, Math.ceil((new Date(user.accessExpiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)));
+  const userLogs = accessLogs.filter(log => log.userId === user.id);
+
+  const translateDetail = (detail: string) => {
+    const [key, param] = detail.split(':');
+    const tKey = `admin.logs.event.${key}.detail` as any;
+    const translated = t(tKey);
+    if (translated === tKey) return detail;
+    return param ? translated.replace('{days}', param) : translated;
+  };
+  const translateType = (type: string) => {
+    const tKey = `admin.logs.event.${type}` as any;
+    const translated = t(tKey);
+    return translated === tKey ? type : translated;
+  };
 
   return (
     <Card className="shadow-card">
@@ -135,6 +150,35 @@ function UserRow({ user }: { user: ManagedUser }) {
           </div>
 
           <div className="flex gap-2 shrink-0">
+            <Dialog open={showLogs} onOpenChange={setShowLogs}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-1">
+                  <Activity className="h-3 w-3" /> {t('admin.user.logs')} ({userLogs.length})
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-lg max-h-[80vh]">
+                <DialogHeader>
+                  <DialogTitle>{t('admin.user.logs')} — {user.name}</DialogTitle>
+                  <DialogDescription>{user.email}</DialogDescription>
+                </DialogHeader>
+                <div className="space-y-2 overflow-y-auto max-h-[50vh]">
+                  {userLogs.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-6">{t('admin.user.noLogs')}</p>
+                  ) : (
+                    userLogs.map(log => (
+                      <div key={log.id} className="flex items-start gap-2 p-2 rounded-md bg-muted/50 text-xs">
+                        <Clock className="h-3 w-3 text-muted-foreground mt-0.5 shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-foreground">{translateDetail(log.eventDetail)}</p>
+                          <p className="text-muted-foreground">{new Date(log.timestamp).toLocaleString()}</p>
+                        </div>
+                        <Badge variant="outline" className="shrink-0 text-[10px]">{translateType(log.eventType)}</Badge>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </DialogContent>
+            </Dialog>
             {user.status === 'active' ? (
               <Button variant="outline" size="sm" className="gap-1 text-red-600" onClick={() => suspendUser(user.id)}>
                 <Ban className="h-3 w-3" /> {t('admin.user.suspend')}
@@ -156,6 +200,7 @@ function UserRow({ user }: { user: ManagedUser }) {
             )}
           </div>
         </div>
+
       </CardContent>
     </Card>
   );

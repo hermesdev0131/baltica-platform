@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { api } from '@/lib/api';
 import { getToken } from '@/lib/api';
+import { useApp } from '@/contexts/AppContext';
 
 export interface ManagedUser {
   id: string;
@@ -94,10 +95,8 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     return parseInt(localStorage.getItem('admin_defaultAccessDays') || '60', 10);
   });
 
-  const isAdmin = (() => {
-    const role = localStorage.getItem('userRole');
-    return role === 'admin';
-  })();
+  const { userRole } = useApp();
+  const isAdmin = userRole === 'admin';
 
   // Sync localStorage
   useEffect(() => { localStorage.setItem('admin_users', JSON.stringify(users)); }, [users]);

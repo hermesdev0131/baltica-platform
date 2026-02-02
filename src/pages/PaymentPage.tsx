@@ -26,8 +26,8 @@ import { motion } from 'framer-motion';
 type PaymentStatus = 'idle' | 'processing' | 'success' | 'error';
 
 export default function PaymentPage() {
-  const { t, userEmail, userName } = useApp();
-  const { addUser, getUserStatus, addLog } = useAdmin();
+  const { t, userEmail, userName, setPaymentCompleted } = useApp();
+  const { addUser, getUserStatus, addLog, reactivateUser } = useAdmin();
   const navigate = useNavigate();
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>('idle');
 
@@ -38,25 +38,25 @@ export default function PaymentPage() {
     setTimeout(() => {
       // For prototype, always succeed
       setPaymentStatus('success');
-      localStorage.setItem('paymentCompleted', 'true');
+      setPaymentCompleted(true);
 
-      // Auto-register user in admin system on payment success
+      // Activate user on payment success
       const existingUser = getUserStatus(userEmail);
-      if (!existingUser) {
+      if (existingUser) {
+        reactivateUser(existingUser.id);
+        addLog({
+          userId: existingUser.id,
+          userEmail: existingUser.email,
+          eventType: 'payment_event',
+          eventDetail: 'payment_completed',
+        });
+      } else {
         const paymentId = 'MP-' + Date.now().toString(36).toUpperCase();
         addUser({
           email: userEmail,
           name: userName || userEmail.split('@')[0],
           status: 'active',
           paymentId,
-          notes: 'Auto-registrado por pago Mercado Pago',
-        });
-      } else {
-        addLog({
-          userId: existingUser.id,
-          userEmail: existingUser.email,
-          eventType: 'payment_event',
-          eventDetail: 'Pago completado via Mercado Pago',
         });
       }
 

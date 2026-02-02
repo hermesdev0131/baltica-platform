@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
+import { useAdmin } from '@/contexts/AdminContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -10,7 +11,8 @@ import { Sparkles, Calendar, CheckCircle, ArrowRight, ArrowLeft, Clock } from 'l
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function OnboardingPage() {
-  const { t } = useApp();
+  const { t, userEmail, userName } = useApp();
+  const { addUser, getUserStatus } = useAdmin();
   const navigate = useNavigate();
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -34,7 +36,18 @@ export default function OnboardingPage() {
     // Save onboarding completion
     localStorage.setItem('onboardingCompleted', 'true');
     localStorage.setItem('reminderTime', selectedTime === 'custom' ? customTime : selectedTime);
-    navigate('/');
+
+    // Register user as suspended (unpaid) in admin system
+    const existingUser = getUserStatus(userEmail);
+    if (!existingUser) {
+      addUser({
+        email: userEmail,
+        name: userName || userEmail.split('@')[0],
+        status: 'suspended',
+      });
+    }
+
+    navigate('/payment');
   };
 
   const steps = [

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
+import { useAdmin } from '@/contexts/AdminContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -24,6 +25,7 @@ export default function AuthPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { t, login, locale, setLocale, theme, setTheme } = useApp();
+  const { addLog } = useAdmin();
 
   const defaultTab = searchParams.get('mode') === 'login' ? 'login' : 'register';
   const [activeTab, setActiveTab] = useState(defaultTab);
@@ -92,6 +94,13 @@ export default function AuthPage() {
 
     if (result.success) {
       const role = localStorage.getItem('userRole');
+      const userId = localStorage.getItem('userId') || '';
+      addLog({
+        userId,
+        userEmail: email,
+        eventType: 'user_login',
+        eventDetail: 'user_login',
+      });
       navigate(role === 'admin' ? '/admin' : '/');
     } else {
       setError(result.error || t('auth.error.email'));

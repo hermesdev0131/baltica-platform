@@ -91,6 +91,10 @@ interface AppContextType {
   setOnboardingCompleted: (completed: boolean) => void;
   preferredReminderTime: string;
   setPreferredReminderTime: (time: string) => void;
+
+  // Payment
+  paymentCompleted: boolean;
+  setPaymentCompleted: (completed: boolean) => void;
 }
 
 const defaultProgress: JourneyProgress = {
@@ -152,6 +156,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const [preferredReminderTime, setPreferredReminderTimeState] = useState(() => {
     return localStorage.getItem('preferredReminderTime') || '08:00';
+  });
+
+  const [paymentCompleted, setPaymentCompletedState] = useState(() => {
+    return localStorage.getItem('paymentCompleted') === 'true';
   });
 
   const totalDays = 3; // MVP: Bienvenida (0) + 3 días
@@ -232,6 +240,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userRole');
     localStorage.removeItem('authToken');
+    localStorage.removeItem('paymentCompleted');
+    setPaymentCompletedState(false);
   };
 
   useEffect(() => {
@@ -323,6 +333,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     api.auth.updateMe({ preferred_reminder_time: time }).catch(() => {});
   };
 
+  const setPaymentCompleted = (completed: boolean) => {
+    setPaymentCompletedState(completed);
+    localStorage.setItem('paymentCompleted', String(completed));
+  };
+
   return (
     <AppContext.Provider value={{
       isAuthenticated,
@@ -348,6 +363,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setOnboardingCompleted,
       preferredReminderTime,
       setPreferredReminderTime,
+      paymentCompleted,
+      setPaymentCompleted,
     }}>
       {children}
     </AppContext.Provider>

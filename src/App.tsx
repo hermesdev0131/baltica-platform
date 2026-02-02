@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AppProvider, useApp } from "./contexts/AppContext";
 import { AdminProvider, useAdmin } from "./contexts/AdminContext";
 import { NotificationProvider } from "./contexts/NotificationContext";
@@ -28,16 +28,29 @@ const queryClient = new QueryClient();
 
 // Protected Route wrapper - redirects to /landing if not authenticated
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, userEmail } = useApp();
-  const { getUserStatus } = useAdmin();
+  const { isAuthenticated, userEmail, onboardingCompleted, paymentCompleted } = useApp();
+  const { getUserStatus, isAdmin } = useAdmin();
+  const location = useLocation();
 
   if (!isAuthenticated) {
     return <Navigate to="/landing" replace />;
   }
 
-  // Check access status for non-admin users
+  // Admin should only see admin dashboard
+  if (isAdmin) {
+    return <Navigate to="/admin" replace />;
+  }
+
+  // Payment gate: after onboarding, before Day 1
+  // Allow /onboarding and /payment through without payment check
+  const paymentExemptPaths = ['/onboarding', '/payment'];
+  if (onboardingCompleted && !paymentCompleted && !paymentExemptPaths.includes(location.pathname)) {
+    return <Navigate to="/payment" replace />;
+  }
+
+  // Check access status for non-admin users (exempt /payment so unpaid users can pay)
   const userStatus = getUserStatus(userEmail);
-  if (userStatus) {
+  if (userStatus && location.pathname !== '/payment') {
     if (userStatus.status === 'suspended') {
       return <AccessBlocked reason="suspended" />;
     }
@@ -52,9 +65,10 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 // Public Route wrapper - redirects to / if already authenticated
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useApp();
+  const { isAdmin } = useAdmin();
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={isAdmin ? '/admin' : '/'} replace />;
   }
 
   return <>{children}</>;
