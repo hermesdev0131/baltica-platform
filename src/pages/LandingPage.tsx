@@ -5,6 +5,7 @@ import { Clock, Heart, Sparkles, ArrowRight, Globe, Moon, Sun } from 'lucide-rea
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import BalticaLogo from '@/components/brand/BalticaLogo';
+import { EthicalNote } from '@/components/EthicalNote';
 import { locales } from '@/lib/i18n';
 import {
   DropdownMenu,
@@ -12,6 +13,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
 export default function LandingPage() {
@@ -42,7 +50,7 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link to="/" className="flex items-center">
-            <BalticaLogo variant="full" size={48} />
+            <BalticaLogo variant="full" size={56} />
           </Link>
 
           <div className="flex items-center gap-1">
@@ -97,7 +105,7 @@ export default function LandingPage() {
             transition={{ delay: 0.2, type: 'spring' }}
             className="inline-block mb-8"
           >
-            <BalticaLogo variant="isotipo" size={96} className="mx-auto" />
+            <BalticaLogo variant="full" size={120} className="mx-auto" />
           </motion.div>
 
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 max-w-3xl mx-auto">
@@ -194,23 +202,30 @@ export default function LandingPage() {
       <footer className="border-t border-border/40 mt-16">
         <div className="container mx-auto px-4 py-10">
           <div className="flex flex-col items-center gap-6">
-            <nav className="flex flex-wrap justify-center gap-8 text-xs tracking-wide uppercase text-muted-foreground">
-              <Link to="/how-it-works" className="hover:text-foreground transition-colors">
-                Cómo funciona
-              </Link>
+            <nav className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
               <Link to="/help" className="hover:text-foreground transition-colors">
-                Ayuda
+                {t('nav.help')}
               </Link>
-              <button
-                onClick={() => {/* Open ethical note modal */}}
-                className="hover:text-foreground transition-colors"
-              >
-                Nota ética
-              </button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button className="hover:text-foreground transition-colors">
+                    {t('ethical.title')}
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-lg">
+                  <EthicalNote variant="card" />
+                </DialogContent>
+              </Dialog>
+              <Link to="/terms" className="hover:text-foreground transition-colors">
+                {t('settings.legal.terms')}
+              </Link>
+              <Link to="/privacy" className="hover:text-foreground transition-colors">
+                {t('settings.legal.privacy')}
+              </Link>
             </nav>
             <div className="w-12 h-px bg-border/60" />
             <p className="text-xs text-muted-foreground/60">
-              &copy; {new Date().getFullYear()} Báltica. Todos los derechos reservados.
+              &copy; {new Date().getFullYear()} Báltica Education. {locale.startsWith('es') ? 'Todos los derechos reservados.' : 'All rights reserved.'}
             </p>
           </div>
         </div>

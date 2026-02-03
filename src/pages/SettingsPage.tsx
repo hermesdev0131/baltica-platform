@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { useApp } from '@/contexts/AppContext';
 import { useNotificationContext } from '@/contexts/NotificationContext';
+import { api } from '@/lib/api';
 import { Header } from '@/components/layout/Header';
 import { EthicalNote } from '@/components/EthicalNote';
 import { Button } from '@/components/ui/button';
@@ -9,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Select,
   SelectContent,
@@ -22,7 +25,7 @@ import {
   Bell,
   Palette,
   FileText,
-  LogOut,
+  Lock,
   Mail,
   Smartphone,
   MessageCircle,
@@ -31,6 +34,9 @@ import {
   Monitor,
   Clock,
   ChevronRight,
+  Check,
+  AlertCircle,
+  Loader2,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
@@ -40,9 +46,45 @@ export default function SettingsPage() {
   const { settings, updateSettings } = useNotificationContext();
   const navigate = useNavigate();
 
+  // Password change state
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccess, setPasswordSuccess] = useState(false);
+
   const handleLogout = () => {
     logout();
     navigate('/auth');
+  };
+
+  const handleChangePassword = async () => {
+    setPasswordError('');
+    setPasswordSuccess(false);
+
+    if (newPassword.length < 8) {
+      setPasswordError(locale.startsWith('es') ? 'La contraseña debe tener al menos 8 caracteres' : 'Password must be at least 8 characters');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError(locale.startsWith('es') ? 'Las contraseñas no coinciden' : 'Passwords do not match');
+      return;
+    }
+
+    setPasswordLoading(true);
+    try {
+      await api.auth.changePassword({ currentPassword, newPassword });
+      setPasswordSuccess(true);
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (err: any) {
+      setPasswordError(err.error || (locale.startsWith('es') ? 'Error al cambiar contraseña' : 'Error changing password'));
+    } finally {
+      setPasswordLoading(false);
+    }
   };
 
   const themeOptions = [
@@ -94,6 +136,84 @@ export default function SettingsPage() {
                   <Input value={userEmail || 'usuario@ejemplo.com'} disabled className="bg-muted" />
                 </div>
 
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Security Section - Password Change */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+          >
+            <Card className="shadow-card">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg">
+                  <Lock className="h-5 w-5" />
+                  {locale.startsWith('es') ? 'Seguridad' : 'Security'}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="currentPassword">
+                    {locale.startsWith('es') ? 'Contraseña actual' : 'Current password'}
+                  </Label>
+                  <Input
+                    id="currentPassword"
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="newPassword">
+                    {locale.startsWith('es') ? 'Nueva contraseña' : 'New password'}
+                  </Label>
+                  <Input
+                    id="newPassword"
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">
+                    {locale.startsWith('es') ? 'Confirmar contraseña' : 'Confirm password'}
+                  </Label>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                </div>
+
+                {passwordError && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{passwordError}</AlertDescription>
+                  </Alert>
+                )}
+
+                {passwordSuccess && (
+                  <Alert className="border-green-500 text-green-700 dark:text-green-400">
+                    <Check className="h-4 w-4" />
+                    <AlertDescription>
+                      {locale.startsWith('es') ? 'Contraseña actualizada correctamente' : 'Password updated successfully'}
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                <Button
+                  onClick={handleChangePassword}
+                  disabled={passwordLoading || !currentPassword || !newPassword || !confirmPassword}
+                  className="w-full"
+                >
+                  {passwordLoading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                  {locale.startsWith('es') ? 'Cambiar contraseña' : 'Change password'}
+                </Button>
               </CardContent>
             </Card>
           </motion.div>
@@ -248,14 +368,18 @@ export default function SettingsPage() {
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 </Link>
-                <Button variant="ghost" className="w-full justify-between">
-                  {t('settings.legal.terms')}
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" className="w-full justify-between">
-                  {t('settings.legal.privacy')}
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
+                <Link to="/terms">
+                  <Button variant="ghost" className="w-full justify-between">
+                    {t('settings.legal.terms')}
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </Link>
+                <Link to="/privacy">
+                  <Button variant="ghost" className="w-full justify-between">
+                    {t('settings.legal.privacy')}
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </motion.div>
