@@ -41,22 +41,10 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     return <Navigate to="/admin" replace />;
   }
 
-  // Payment gate: after onboarding, before Day 1
-  // Allow /onboarding and /payment through without payment check
+  // Payment gate: unpaid users can only access /onboarding and /payment
   const paymentExemptPaths = ['/onboarding', '/payment'];
-  if (onboardingCompleted && !paymentCompleted && !paymentExemptPaths.includes(location.pathname)) {
+  if (!paymentCompleted && !paymentExemptPaths.includes(location.pathname)) {
     return <Navigate to="/payment" replace />;
-  }
-
-  // Suspended/expired users can browse but not access journey pages
-  const userStatus = getUserStatus(userEmail);
-  if (userStatus && location.pathname.startsWith('/journey')) {
-    if (userStatus.status === 'suspended') {
-      return <Navigate to="/" replace />;
-    }
-    if (userStatus.status === 'expired') {
-      return <Navigate to="/payment" replace />;
-    }
   }
 
   return <>{children}</>;

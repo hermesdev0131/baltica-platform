@@ -67,9 +67,25 @@ export const api = {
       request(`/answers/${dayKey}`, { method: 'PUT', body: JSON.stringify({ answers }) }),
   },
 
+  // User settings (notifications, preferences)
+  settings: {
+    get: () => request('/settings'),
+    update: (settings: {
+      locale?: string;
+      theme?: string;
+      notifications_enabled?: boolean;
+      daily_reminder?: boolean;
+      reminder_time?: string;
+      streak_reminder?: boolean;
+      encouragement?: boolean;
+    }) => request('/settings', { method: 'PUT', body: JSON.stringify(settings) }),
+  },
+
   payments: {
-    simulate: (body?: { amount?: number; currency?: string }) =>
-      request('/payments/simulate', { method: 'POST', body: JSON.stringify(body || {}) }),
+    createPreference: () =>
+      request('/payments/create-preference', { method: 'POST' }),
+    verifyPayment: (paymentId: string) =>
+      request(`/payments/verify/${paymentId}`),
   },
 
   admin: {

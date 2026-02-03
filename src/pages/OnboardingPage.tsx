@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
-import { useAdmin } from '@/contexts/AdminContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -11,8 +10,7 @@ import { Sparkles, Calendar, CheckCircle, ArrowRight, ArrowLeft, Clock } from 'l
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function OnboardingPage() {
-  const { t, userEmail, userName } = useApp();
-  const { addUser, getUserStatus } = useAdmin();
+  const { t, setOnboardingCompleted, setPreferredReminderTime } = useApp();
   const navigate = useNavigate();
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -33,19 +31,13 @@ export default function OnboardingPage() {
   };
 
   const handleComplete = () => {
-    // Save onboarding completion
-    localStorage.setItem('onboardingCompleted', 'true');
-    localStorage.setItem('reminderTime', selectedTime === 'custom' ? customTime : selectedTime);
+    // Save onboarding completion and reminder time
+    const reminderTime = selectedTime === 'custom' ? customTime :
+      selectedTime === 'morning' ? '08:00' :
+      selectedTime === 'afternoon' ? '14:00' : '20:00';
 
-    // Register user as suspended (unpaid) in admin system
-    const existingUser = getUserStatus(userEmail);
-    if (!existingUser) {
-      addUser({
-        email: userEmail,
-        name: userName || userEmail.split('@')[0],
-        status: 'suspended',
-      });
-    }
+    setOnboardingCompleted(true);
+    setPreferredReminderTime(reminderTime);
 
     navigate('/payment');
   };

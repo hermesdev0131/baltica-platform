@@ -13,6 +13,7 @@ interface JourneyProgress {
 // Day answers per the pedagogical spec
 export interface WelcomeAnswers {
   mood: string;
+  energy?: 'high' | 'medium' | 'low';
   ethicalNoteViewed: boolean;
   completedAt?: string;
 }
@@ -39,6 +40,7 @@ export interface Day2Answers {
 
 export interface Day3Answers {
   mood: string;
+  energy?: 'high' | 'medium' | 'low';
   gratitudes: [string, string, string];
   kindPhrase: string;
   nextAction: string;
@@ -204,6 +206,18 @@ export function AppProvider({ children }: { children: ReactNode }) {
           setDayAnswers(data.answers);
         }
       }).catch(() => { /* use local state */ });
+
+      // Load user settings (locale, theme) from API
+      api.settings.get().then(data => {
+        if (data.settings) {
+          if (data.settings.locale && ['es-ES', 'es-LATAM', 'en'].includes(data.settings.locale)) {
+            setLocale(data.settings.locale as Locale);
+          }
+          if (data.settings.theme && ['light', 'dark', 'system'].includes(data.settings.theme)) {
+            setThemeState(data.settings.theme as 'light' | 'dark' | 'system');
+          }
+        }
+      }).catch(() => { /* use local state */ });
     }
   }, [isAuthenticated]);
 
@@ -228,6 +242,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
       if (data.user.locale) setLocale(data.user.locale);
       if (data.user.onboarding_completed) setOnboardingCompletedState(true);
+
+      // Sync payment status from backend - active status means paid
+      const isPaid = data.user.status === 'active';
+      setPaymentCompletedState(isPaid);
+      localStorage.setItem(userPrefix('paymentCompleted', data.user.email), String(isPaid));
 
       return { success: true };
     } catch (err: any) {
@@ -270,9 +289,19 @@ export function AppProvider({ children }: { children: ReactNode }) {
       root.classList.add(theme);
     }
     localStorage.setItem('theme', theme);
-  }, [theme]);
+    // Sync theme to backend
+    if (isAuthenticated && getToken()) {
+      api.settings.update({ theme }).catch(() => {});
+    }
+  }, [theme, isAuthenticated]);
 
-  useEffect(() => { localStorage.setItem('locale', locale); }, [locale]);
+  useEffect(() => {
+    localStorage.setItem('locale', locale);
+    // Sync locale to backend
+    if (isAuthenticated && getToken()) {
+      api.settings.update({ locale }).catch(() => {});
+    }
+  }, [locale, isAuthenticated]);
   useEffect(() => { localStorage.setItem(userPrefix('journeyProgress'), JSON.stringify(progress)); }, [progress, userEmail]);
   useEffect(() => { localStorage.setItem('userName', userName); }, [userName]);
   useEffect(() => { localStorage.setItem(userPrefix('dayAnswers'), JSON.stringify(dayAnswers)); }, [dayAnswers, userEmail]);

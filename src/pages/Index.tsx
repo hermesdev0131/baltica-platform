@@ -5,17 +5,19 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ProgressRing } from '@/components/journey/ProgressRing';
 import { DayCard } from '@/components/journey/DayCard';
-import { ArrowRight, Sparkles, Clock, Heart, ShieldAlert, Mail } from 'lucide-react';
+import { ArrowRight, Clock, Heart, ShieldAlert, Mail } from 'lucide-react';
+import BalticaLogo from '@/components/brand/BalticaLogo';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
 const Index = () => {
-  const { t, locale, progress, totalDays, userName, setUserName, userEmail } = useApp();
+  const { t, locale, progress, totalDays, userName, setUserName, userEmail, paymentCompleted } = useApp();
   const { getUserStatus } = useAdmin();
   const navigate = useNavigate();
   const userStatus = getUserStatus(userEmail);
   const isSuspended = userStatus?.status === 'suspended';
   const isExpired = userStatus?.status === 'expired';
+  const canAccessJourney = paymentCompleted && !isSuspended && !isExpired;
   
   const hasStarted = progress.completedDays.length > 0;
   const programComplete = progress.completedDays.includes(3);
@@ -62,6 +64,17 @@ const Index = () => {
             </AlertDescription>
           </Alert>
         )}
+        {!paymentCompleted && !isSuspended && !isExpired && (
+          <Alert className="mb-6 border-blue-200 bg-blue-50/50 dark:bg-blue-950/20">
+            <ShieldAlert className="h-4 w-4 text-blue-600" />
+            <AlertDescription className="flex items-center justify-between">
+              <span>{locale.startsWith('es') ? 'Completa tu pago para acceder al programa.' : 'Complete your payment to access the program.'}</span>
+              <Button variant="link" size="sm" className="p-0 h-auto" onClick={() => navigate('/payment')}>
+                {locale.startsWith('es') ? 'Ir a pagar' : 'Go to payment'}
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
 
         {/* Hero Section */}
         <motion.section 
@@ -87,9 +100,7 @@ const Index = () => {
                 transition={{ delay: 0.2, type: 'spring' }}
                 className="inline-block mb-6"
               >
-                <div className="h-20 w-20 rounded-full gradient-warm flex items-center justify-center mx-auto shadow-soft">
-                  <Sparkles className="h-10 w-10 text-primary-foreground" />
-                </div>
+                <BalticaLogo variant="isotipo" size={80} className="mx-auto" />
               </motion.div>
               <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-4">
                 {t('welcome.title')}
@@ -130,8 +141,8 @@ const Index = () => {
             <Button
               size="lg"
               className="gap-2 px-8 py-6 text-lg rounded-full shadow-soft"
-              disabled={isSuspended || isExpired}
-              onClick={() => programComplete ? navigate('/progress') : navigate(`/journey/${progress.currentDay}`)}
+              disabled={!canAccessJourney}
+              onClick={() => !canAccessJourney ? navigate('/payment') : programComplete ? navigate('/progress') : navigate(`/journey/${progress.currentDay}`)}
             >
               {programComplete
                 ? (locale.startsWith('es') ? 'Ver mi progreso' : 'See my progress')
@@ -187,8 +198,8 @@ const Index = () => {
                 <DayCard
                   key={day}
                   day={day}
-                  status={getDayStatus(day)}
-                  onClick={() => getDayStatus(day) !== 'locked' && navigate(`/journey/${day}`)}
+                  status={canAccessJourney ? getDayStatus(day) : 'locked'}
+                  onClick={() => canAccessJourney && getDayStatus(day) !== 'locked' && navigate(`/journey/${day}`)}
                 />
               ))}
             </div>

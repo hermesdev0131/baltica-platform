@@ -25,6 +25,12 @@ export interface UserRow {
   theme: string;
   onboarding_completed: boolean;
   preferred_reminder_time: string;
+  // Notification settings
+  notifications_enabled: boolean;
+  daily_reminder: boolean;
+  reminder_time: string;
+  streak_reminder: boolean;
+  encouragement: boolean;
   created_at: string;
   last_login_at: string | null;
 }

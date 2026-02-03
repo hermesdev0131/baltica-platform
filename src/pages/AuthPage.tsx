@@ -9,7 +9,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Sparkles, ArrowLeft, Mail, Lock, User, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Mail, Lock, User, AlertCircle } from 'lucide-react';
+import BalticaLogo from '@/components/brand/BalticaLogo';
 import { motion } from 'framer-motion';
 import { Globe, Moon, Sun } from 'lucide-react';
 import { locales } from '@/lib/i18n';
@@ -163,10 +164,7 @@ export default function AuthPage() {
         >
           {/* Logo */}
           <div className="text-center mb-8">
-            <div className="h-16 w-16 rounded-full gradient-warm flex items-center justify-center mx-auto mb-4 shadow-soft">
-              <Sparkles className="h-8 w-8 text-primary-foreground" />
-            </div>
-            <h1 className="text-2xl font-bold text-foreground">BÁLTICA</h1>
+            <BalticaLogo variant="full" size={56} className="mx-auto" />
           </div>
 
           {/* Auth Card */}

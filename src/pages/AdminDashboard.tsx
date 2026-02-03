@@ -127,7 +127,9 @@ function AddUserDialog() {
 
 function UserRow({ user }: { user: ManagedUser }) {
   const { suspendUser, reactivateUser, removeUser, accessLogs, updateAccessDuration } = useAdmin();
-  const { t } = useApp();
+  const { t, userEmail } = useApp();
+  const isCurrentAdmin = user.email === userEmail;
+  const [showDetail, setShowDetail] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [showLogs, setShowLogs] = useState(false);
   const [showExpiration, setShowExpiration] = useState(false);
@@ -150,101 +152,144 @@ function UserRow({ user }: { user: ManagedUser }) {
   };
 
   return (
-    <Card className="shadow-card">
-      <CardContent className="p-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <p className="font-semibold text-foreground truncate">{user.name}</p>
-              <StatusBadge status={user.status} />
-            </div>
-            <p className="text-sm text-muted-foreground truncate">{user.email}</p>
-            <div className="flex flex-wrap gap-3 mt-2 text-xs text-muted-foreground">
-              <span>{t('admin.user.day')} {user.currentDay}/3</span>
-              <span>{user.completedDays.length} {t('admin.user.completed')}</span>
-              <span>{t('admin.user.streak')}: {user.streak}</span>
-              <span>{daysLeft} {t('admin.user.daysLeft')}</span>
-              {user.paymentId && <span>{t('admin.user.payment')}: {user.paymentId}</span>}
-            </div>
-            {user.notes && <p className="text-xs text-muted-foreground mt-1 italic">{user.notes}</p>}
-          </div>
-
-          <div className="flex gap-2 shrink-0">
-            <Dialog open={showLogs} onOpenChange={setShowLogs}>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-1">
-                  <Activity className="h-3 w-3" /> {t('admin.user.logs')} ({userLogs.length})
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-lg max-h-[80vh]">
-                <DialogHeader>
-                  <DialogTitle>{t('admin.user.logs')} — {user.name}</DialogTitle>
-                  <DialogDescription>{user.email}</DialogDescription>
-                </DialogHeader>
-                <div className="space-y-2 overflow-y-auto max-h-[50vh]">
-                  {userLogs.length === 0 ? (
-                    <p className="text-sm text-muted-foreground text-center py-6">{t('admin.user.noLogs')}</p>
-                  ) : (
-                    userLogs.map(log => (
-                      <div key={log.id} className="flex items-start gap-2 p-2 rounded-md bg-muted/50 text-xs">
-                        <Clock className="h-3 w-3 text-muted-foreground mt-0.5 shrink-0" />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-foreground">{translateDetail(log.eventDetail)}</p>
-                          <p className="text-muted-foreground">{new Date(log.timestamp).toLocaleString()}</p>
-                        </div>
-                        <Badge variant="outline" className="shrink-0 text-[10px]">{translateType(log.eventType)}</Badge>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </DialogContent>
-            </Dialog>
-            <Dialog open={showExpiration} onOpenChange={setShowExpiration}>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-1">
-                  <Calendar className="h-3 w-3" /> {daysLeft}d
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-sm">
-                <DialogHeader>
-                  <DialogTitle>{t('admin.user.editExpiration')}</DialogTitle>
-                  <DialogDescription>{user.name} — {user.email}</DialogDescription>
-                </DialogHeader>
-                <div className="space-y-3">
-                  <div className="space-y-2">
-                    <Label>{t('admin.user.newDays')}</Label>
-                    <Input type="number" min={1} value={newDays} onChange={e => setNewDays(e.target.value)} />
-                  </div>
-                  <Button className="w-full" onClick={() => { updateAccessDuration(user.id, parseInt(newDays, 10) || 30); setShowExpiration(false); }}>
-                    {t('admin.settings.save')}
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-            {user.status === 'active' ? (
-              <Button variant="outline" size="sm" className="gap-1 text-red-600" onClick={() => suspendUser(user.id)}>
-                <Ban className="h-3 w-3" /> {t('admin.user.suspend')}
-              </Button>
-            ) : (
-              <Button variant="outline" size="sm" className="gap-1 text-green-600" onClick={() => reactivateUser(user.id)}>
-                <RefreshCw className="h-3 w-3" /> {t('admin.user.reactivate')}
-              </Button>
-            )}
-            {confirmDelete ? (
-              <div className="flex gap-1">
-                <Button variant="destructive" size="sm" onClick={() => { removeUser(user.id); setConfirmDelete(false); }}>Sí</Button>
-                <Button variant="ghost" size="sm" onClick={() => setConfirmDelete(false)}>No</Button>
+    <>
+      <Card className="shadow-card">
+        <CardContent className="p-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div className="flex-1 min-w-0 cursor-pointer" onClick={() => setShowDetail(true)}>
+              <div className="flex items-center gap-2 mb-1">
+                <p className="font-semibold text-foreground truncate">{user.name}</p>
+                <StatusBadge status={user.status} />
               </div>
-            ) : (
-              <Button variant="ghost" size="sm" onClick={() => setConfirmDelete(true)}>
-                <Trash2 className="h-3 w-3" />
-              </Button>
+              <p className="text-sm text-muted-foreground truncate">{user.email}</p>
+            </div>
+
+            <div className="flex gap-2 shrink-0">
+              <Dialog open={showLogs} onOpenChange={setShowLogs}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-1">
+                    <Activity className="h-3 w-3" /> {t('admin.user.logs')} ({userLogs.length})
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-lg max-h-[80vh]">
+                  <DialogHeader>
+                    <DialogTitle>{t('admin.user.logs')} — {user.name}</DialogTitle>
+                    <DialogDescription>{user.email}</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-2 overflow-y-auto max-h-[50vh]">
+                    {userLogs.length === 0 ? (
+                      <p className="text-sm text-muted-foreground text-center py-6">{t('admin.user.noLogs')}</p>
+                    ) : (
+                      userLogs.map(log => (
+                        <div key={log.id} className="flex items-start gap-2 p-2 rounded-md bg-muted/50 text-xs">
+                          <Clock className="h-3 w-3 text-muted-foreground mt-0.5 shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-foreground">{translateDetail(log.eventDetail)}</p>
+                            <p className="text-muted-foreground">{new Date(log.timestamp).toLocaleString()}</p>
+                          </div>
+                          <Badge variant="outline" className="shrink-0 text-[10px]">{translateType(log.eventType)}</Badge>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Dialog open={showExpiration} onOpenChange={setShowExpiration}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-1">
+                    <Calendar className="h-3 w-3" /> {daysLeft}d
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-sm">
+                  <DialogHeader>
+                    <DialogTitle>{t('admin.user.editExpiration')}</DialogTitle>
+                    <DialogDescription>{user.name} — {user.email}</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-3">
+                    <div className="space-y-2">
+                      <Label>{t('admin.user.newDays')}</Label>
+                      <Input type="number" min={1} value={newDays} onChange={e => setNewDays(e.target.value)} />
+                    </div>
+                    <Button className="w-full" onClick={() => { updateAccessDuration(user.id, Math.max(1, parseInt(newDays, 10) || 1)); setShowExpiration(false); }}>
+                      {t('admin.settings.save')}
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              {user.status === 'active' ? (
+                <Button variant="outline" size="sm" className="gap-1 text-red-600" onClick={() => suspendUser(user.id)}>
+                  <Ban className="h-3 w-3" /> {t('admin.user.suspend')}
+                </Button>
+              ) : (
+                <Button variant="outline" size="sm" className="gap-1 text-green-600" onClick={() => reactivateUser(user.id)}>
+                  <RefreshCw className="h-3 w-3" /> {t('admin.user.reactivate')}
+                </Button>
+              )}
+              {!isCurrentAdmin && (
+                confirmDelete ? (
+                  <div className="flex gap-1">
+                    <Button variant="destructive" size="sm" onClick={() => { removeUser(user.id); setConfirmDelete(false); }}>Sí</Button>
+                    <Button variant="ghost" size="sm" onClick={() => setConfirmDelete(false)}>No</Button>
+                  </div>
+                ) : (
+                  <Button variant="ghost" size="sm" onClick={() => setConfirmDelete(true)}>
+                    <Trash2 className="h-3 w-3" />
+                  </Button>
+                )
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* User Detail Modal */}
+      <Dialog open={showDetail} onOpenChange={setShowDetail}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {user.name} <StatusBadge status={user.status} />
+            </DialogTitle>
+            <DialogDescription>{user.email}</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <p className="text-muted-foreground text-xs">{t('admin.user.registered')}</p>
+                <p className="font-medium">{new Date(user.registeredAt).toLocaleDateString()}</p>
+              </div>
+              {user.lastLogin && (
+                <div>
+                  <p className="text-muted-foreground text-xs">{t('admin.user.lastLogin')}</p>
+                  <p className="font-medium">{new Date(user.lastLogin).toLocaleDateString()}</p>
+                </div>
+              )}
+              <div>
+                <p className="text-muted-foreground text-xs">{t('admin.user.day')}</p>
+                <p className="font-medium">{user.currentDay}/3 — {user.completedDays.length} {t('admin.user.completed')}</p>
+              </div>
+              <div>
+                <p className="text-muted-foreground text-xs">{t('admin.user.streak')}</p>
+                <p className="font-medium">{user.streak}</p>
+              </div>
+              <div>
+                <p className="text-muted-foreground text-xs">{t('admin.user.daysLeft')}</p>
+                <p className="font-medium">{daysLeft}</p>
+              </div>
+              <div>
+                <p className="text-muted-foreground text-xs">MercadoPago ID</p>
+                <p className="font-medium">{user.paymentId || '—'}</p>
+              </div>
+            </div>
+            {user.notes && (
+              <div className="text-sm">
+                <p className="text-muted-foreground text-xs">{t('admin.addUser.notes')}</p>
+                <p className="italic">{user.notes}</p>
+              </div>
             )}
           </div>
-        </div>
-
-      </CardContent>
-    </Card>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 

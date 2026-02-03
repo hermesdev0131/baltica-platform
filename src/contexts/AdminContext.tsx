@@ -222,11 +222,12 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   };
 
   const updateAccessDuration = (userId: string, days: number) => {
-    api.admin.users.update(userId, { access_duration_days: days }).catch(() => {});
+    const safeDays = Math.max(1, days);
+    api.admin.users.update(userId, { access_duration_days: safeDays }).catch(() => {});
     const now = new Date();
-    const newExpiry = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+    const newExpiry = new Date(now.getTime() + safeDays * 24 * 60 * 60 * 1000);
     setUsers(prev => prev.map(u =>
-      u.id === userId ? { ...u, accessDurationDays: days, accessExpiresAt: newExpiry.toISOString() } : u
+      u.id === userId ? { ...u, accessDurationDays: safeDays, accessExpiresAt: newExpiry.toISOString(), status: 'active' } : u
     ));
   };
 

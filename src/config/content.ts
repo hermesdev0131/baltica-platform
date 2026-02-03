@@ -30,6 +30,7 @@ export interface DayContent {
   };
 }
 
+// Day 0 (Block 0) per PDF spec: NO video, audio, or download - only greeting + measurements + ethical note
 export const welcomeContent: DayContent = {
   id: 0,
   key: 'welcome',
@@ -44,19 +45,19 @@ export const welcomeContent: DayContent = {
     'en': 'Before we begin, take a moment for yourself',
   },
   video: {
-    url: null, // Placeholder hasta que el cliente entregue el video
-    duration: '2:00',
-    title: 'Bienvenida al programa',
+    url: null, // No video for Day 0 per PDF spec
+    duration: '',
+    title: '',
   },
   audio: {
-    url: null,
-    duration: '3:00',
-    title: 'Preparación para el viaje',
+    url: null, // No audio for Day 0 per PDF spec
+    duration: '',
+    title: '',
   },
   pdf: {
-    url: '/PDF Bienvenida.pdf',
+    url: null, // No PDF for Day 0 per PDF spec
     duration: '',
-    title: 'Guía de bienvenida',
+    title: '',
   },
   practice: {
     'es-LATAM': 'Respira profundo 3 veces y recuerda: estás aquí por ti.',
@@ -79,7 +80,7 @@ export const day1Content: DayContent = {
     'en': 'Today is the first step. You are here, and that is already an achievement.',
   },
   video: {
-    url: null,
+    url: '/GROUNDING.mp4',
     duration: '2:30',
     title: 'Reflexión del día 1',
   },
@@ -114,7 +115,7 @@ export const day2Content: DayContent = {
     'en': 'Today we connect what you do with what matters.',
   },
   video: {
-    url: null,
+    url: '/INTRODUCCION.mp4',
     duration: '2:30',
     title: 'Reflexión del día 2',
   },
@@ -149,8 +150,8 @@ export const day3Content: DayContent = {
     'en': 'You made it this far. That says a lot about you.',
   },
   video: {
-    url: null,
-    duration: '3:00',
+    url: '/BIENVENIDA.mp4', // Reassigned from Day 0 (Day 0 has no video per PDF spec)
+    duration: '2:00',
     title: 'Cierre del programa',
   },
   audio: {

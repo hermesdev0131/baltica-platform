@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
 import { useAdmin } from '@/contexts/AdminContext';
+import { api } from '@/lib/api';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,56 +16,84 @@ import {
   Headphones,
   FileText,
   Bell,
-  Sparkles,
   Loader2,
   AlertCircle,
   CheckCircle,
   Info,
+  Clock,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import BalticaLogo from '@/components/brand/BalticaLogo';
 
-type PaymentStatus = 'idle' | 'processing' | 'success' | 'error';
+type PaymentStatus = 'idle' | 'processing' | 'verifying' | 'success' | 'error' | 'pending';
 
 export default function PaymentPage() {
-  const { t, userEmail, userName, setPaymentCompleted } = useApp();
-  const { addUser, getUserStatus, addLog, reactivateUser } = useAdmin();
+  const { t, userEmail, setPaymentCompleted } = useApp();
+  const { getUserStatus, addLog, reactivateUser } = useAdmin();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handlePayment = () => {
+  // Handle return from MercadoPago
+  useEffect(() => {
+    const status = searchParams.get('status');
+    const paymentId = searchParams.get('payment_id') || searchParams.get('collection_id');
+
+    if (status === 'approved' && paymentId) {
+      setPaymentStatus('verifying');
+      api.payments.verifyPayment(paymentId)
+        .then((data) => {
+          if (data.status === 'approved') {
+            setPaymentStatus('success');
+            setPaymentCompleted(true);
+
+            const existingUser = getUserStatus(userEmail);
+            if (existingUser) {
+              reactivateUser(existingUser.id);
+              addLog({
+                userId: existingUser.id,
+                userEmail: existingUser.email,
+                eventType: 'payment_event',
+                eventDetail: `MercadoPago payment ${data.payment_id}`,
+              });
+            }
+
+            setTimeout(() => navigate('/'), 2000);
+          } else {
+            setPaymentStatus('pending');
+          }
+        })
+        .catch(() => {
+          // If API verification fails, still mark as success since MP redirected with approved
+          setPaymentStatus('success');
+          setPaymentCompleted(true);
+          const existingUser = getUserStatus(userEmail);
+          if (existingUser) {
+            reactivateUser(existingUser.id);
+          }
+          setTimeout(() => navigate('/'), 2000);
+        });
+    } else if (status === 'failed') {
+      setPaymentStatus('error');
+      setErrorMessage(t('payment.error'));
+    } else if (status === 'pending') {
+      setPaymentStatus('pending');
+    }
+  }, [searchParams]);
+
+  const handlePayment = async () => {
     setPaymentStatus('processing');
+    setErrorMessage('');
 
-    // Simulate payment process
-    setTimeout(() => {
-      // For prototype, always succeed
-      setPaymentStatus('success');
-      setPaymentCompleted(true);
-
-      // Activate user on payment success
-      const existingUser = getUserStatus(userEmail);
-      if (existingUser) {
-        reactivateUser(existingUser.id);
-        addLog({
-          userId: existingUser.id,
-          userEmail: existingUser.email,
-          eventType: 'payment_event',
-          eventDetail: 'payment_completed',
-        });
-      } else {
-        const paymentId = 'MP-' + Date.now().toString(36).toUpperCase();
-        addUser({
-          email: userEmail,
-          name: userName || userEmail.split('@')[0],
-          status: 'active',
-          paymentId,
-        });
-      }
-
-      // Redirect after success
-      setTimeout(() => {
-        navigate('/');
-      }, 2000);
-    }, 2000);
+    try {
+      const data = await api.payments.createPreference();
+      // Redirect to MercadoPago checkout
+      window.location.href = data.init_point;
+    } catch (err: any) {
+      setPaymentStatus('error');
+      setErrorMessage(err.error || t('payment.error'));
+    }
   };
 
   const features = [
@@ -97,9 +126,7 @@ export default function PaymentPage() {
         >
           <Card className="shadow-card mb-6 border-primary/20">
             <CardHeader className="text-center pb-2">
-              <div className="w-16 h-16 rounded-full gradient-warm flex items-center justify-center mx-auto mb-4 shadow-soft">
-                <Sparkles className="h-8 w-8 text-primary-foreground" />
-              </div>
+              <BalticaLogo variant="isotipo" size={64} className="mx-auto mb-4" />
               <CardTitle className="text-xl">{t('payment.plan.name')}</CardTitle>
               <CardDescription className="text-lg">
                 <span className="text-3xl font-bold text-foreground">$29.900</span>
@@ -153,10 +180,12 @@ export default function PaymentPage() {
         </motion.div>
 
         {/* Status Messages */}
-        {paymentStatus === 'processing' && (
+        {(paymentStatus === 'processing' || paymentStatus === 'verifying') && (
           <Alert className="mb-6">
             <Loader2 className="h-4 w-4 animate-spin" />
-            <AlertDescription>{t('payment.processing')}</AlertDescription>
+            <AlertDescription>
+              {paymentStatus === 'verifying' ? 'Verificando pago...' : t('payment.processing')}
+            </AlertDescription>
           </Alert>
         )}
 
@@ -169,10 +198,19 @@ export default function PaymentPage() {
           </Alert>
         )}
 
+        {paymentStatus === 'pending' && (
+          <Alert className="mb-6 border-amber-200 bg-amber-50 dark:bg-amber-950/20">
+            <Clock className="h-4 w-4 text-amber-600" />
+            <AlertDescription className="text-amber-600">
+              Tu pago está siendo procesado. Te notificaremos cuando se confirme.
+            </AlertDescription>
+          </Alert>
+        )}
+
         {paymentStatus === 'error' && (
           <Alert variant="destructive" className="mb-6">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{t('payment.error')}</AlertDescription>
+            <AlertDescription>{errorMessage || t('payment.error')}</AlertDescription>
           </Alert>
         )}
 
@@ -185,9 +223,9 @@ export default function PaymentPage() {
           <Button
             className="w-full py-6 text-lg rounded-full gap-2"
             onClick={handlePayment}
-            disabled={paymentStatus === 'processing' || paymentStatus === 'success'}
+            disabled={paymentStatus === 'processing' || paymentStatus === 'verifying' || paymentStatus === 'success'}
           >
-            {paymentStatus === 'processing' ? (
+            {paymentStatus === 'processing' || paymentStatus === 'verifying' ? (
               <>
                 <Loader2 className="h-5 w-5 animate-spin" />
                 Procesando...

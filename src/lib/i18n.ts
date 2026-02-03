@@ -45,6 +45,25 @@ export const translations = {
     'auth.error.exists': 'Este correo ya está registrado',
     'auth.error.invalid': 'Email o contraseña incorrectos',
 
+    // Energy selector
+    'energy.title': '¿Cómo está tu energía ahora?',
+    'energy.high': 'Alta',
+    'energy.medium': 'Media',
+    'energy.low': 'Baja',
+
+    // Inactivity
+    'inactivity.title': '¿Tomaste una pausa?',
+    'inactivity.message': '¿Te sirve retomar en 2 horas? Puedo guardarte el punto.',
+    'inactivity.continue': 'Seguir ahora',
+    'inactivity.saveLater': 'Guardar y volver después',
+
+    // Floating help
+    'floatingHelp.ethical': 'Nota importante',
+    'floatingHelp.help': 'Ayuda y recursos',
+
+    // Ethical footer
+    'ethical.footer': 'Contenido educativo y preventivo. No sustituye atención profesional.',
+
     // Onboarding
     'onboarding.step1.title': 'Un viaje de 3 días',
     'onboarding.step1.text': 'Cada día te tomará menos de 10 minutos. Recibirás un vídeo, un audio guiado y una pequeña práctica.',
@@ -219,17 +238,21 @@ export const translations = {
     'audio.play': 'Reproducir',
     'audio.pause': 'Pausar',
     'audio.next': 'Siguiente',
-    
+
     // Survey
     'survey.title': '¿Cómo te sientes ahora?',
     'survey.subtitle': 'Tu respuesta nos ayuda a personalizar tu experiencia',
     'survey.submit': 'Continuar',
-    'mood.great': 'Genial',
     'mood.good': 'Bien',
     'mood.okay': 'Regular',
-    'mood.low': 'Bajo',
-    'mood.struggling': 'Difícil',
-    
+    'mood.difficult': 'Difícil',
+    'mood.response.good': '¡Qué bueno que llegues con energía positiva!',
+    'mood.response.okay': 'Gracias por compartir. Cada momento es válido.',
+    'mood.response.difficult': 'Gracias por tu honestidad. Estoy aquí para acompañarte.',
+    'energy.response.high': '¡Genial! Aprovechemos esa energía.',
+    'energy.response.medium': 'Un buen nivel para comenzar.',
+    'energy.response.low': 'Está bien. Iremos a tu ritmo.',
+
     // Closure
     'closure.title': '¡Bien hecho!',
     'closure.subtitle': 'Has completado el día',
@@ -309,6 +332,8 @@ export const translations = {
     'admin.addUser.payment': 'ID de pago (opcional)',
     'admin.addUser.notes': 'Notas (opcional)',
     'admin.addUser.submit': 'Crear usuario',
+    'admin.user.registered': 'Registro',
+    'admin.user.lastLogin': 'Último acceso',
     'admin.user.day': 'Día',
     'admin.user.completed': 'completados',
     'admin.user.streak': 'Racha',
@@ -392,6 +417,25 @@ export const translations = {
     'auth.error.password': 'La contraseña debe tener al menos 8 caracteres',
     'auth.error.exists': 'Este correo ya está registrado',
     'auth.error.invalid': 'Email o contraseña incorrectos',
+
+    // Energy selector
+    'energy.title': '¿Cómo está tu energía ahora?',
+    'energy.high': 'Alta',
+    'energy.medium': 'Media',
+    'energy.low': 'Baja',
+
+    // Inactivity
+    'inactivity.title': '¿Tomaste una pausa?',
+    'inactivity.message': '¿Te sirve retomar en 2 horas? Puedo guardarte el punto.',
+    'inactivity.continue': 'Seguir ahora',
+    'inactivity.saveLater': 'Guardar y volver después',
+
+    // Floating help
+    'floatingHelp.ethical': 'Nota importante',
+    'floatingHelp.help': 'Ayuda y recursos',
+
+    // Ethical footer
+    'ethical.footer': 'Contenido educativo y preventivo. No sustituye atención profesional.',
 
     // Onboarding
     'onboarding.step1.title': 'Un viaje de 3 días',
@@ -567,17 +611,21 @@ export const translations = {
     'audio.play': 'Reproducir',
     'audio.pause': 'Pausar',
     'audio.next': 'Siguiente',
-    
+
     // Survey
     'survey.title': '¿Cómo te sientes ahora?',
     'survey.subtitle': 'Tu respuesta nos ayuda a personalizar tu experiencia',
     'survey.submit': 'Continuar',
-    'mood.great': 'Genial',
     'mood.good': 'Bien',
     'mood.okay': 'Regular',
-    'mood.low': 'Bajo',
-    'mood.struggling': 'Difícil',
-    
+    'mood.difficult': 'Difícil',
+    'mood.response.good': '¡Qué bueno que llegues con energía positiva!',
+    'mood.response.okay': 'Gracias por compartir. Cada momento es válido.',
+    'mood.response.difficult': 'Gracias por tu honestidad. Estoy aquí para acompañarte.',
+    'energy.response.high': '¡Genial! Aprovechemos esa energía.',
+    'energy.response.medium': 'Un buen nivel para comenzar.',
+    'energy.response.low': 'Está bien. Iremos a tu ritmo.',
+
     // Closure
     'closure.title': '¡Muy bien!',
     'closure.subtitle': 'Completaste el día',
@@ -657,6 +705,8 @@ export const translations = {
     'admin.addUser.payment': 'ID de pago (opcional)',
     'admin.addUser.notes': 'Notas (opcional)',
     'admin.addUser.submit': 'Crear usuario',
+    'admin.user.registered': 'Registro',
+    'admin.user.lastLogin': 'Último acceso',
     'admin.user.day': 'Día',
     'admin.user.completed': 'completados',
     'admin.user.streak': 'Racha',
@@ -740,6 +790,25 @@ export const translations = {
     'auth.error.password': 'Password must be at least 8 characters',
     'auth.error.exists': 'This email is already registered',
     'auth.error.invalid': 'Invalid email or password',
+
+    // Energy selector
+    'energy.title': 'How is your energy right now?',
+    'energy.high': 'High',
+    'energy.medium': 'Medium',
+    'energy.low': 'Low',
+
+    // Inactivity
+    'inactivity.title': 'Taking a break?',
+    'inactivity.message': 'Would you like to resume in 2 hours? I can save your progress.',
+    'inactivity.continue': 'Continue now',
+    'inactivity.saveLater': 'Save and return later',
+
+    // Floating help
+    'floatingHelp.ethical': 'Important note',
+    'floatingHelp.help': 'Help and resources',
+
+    // Ethical footer
+    'ethical.footer': 'Educational and preventive content. Does not replace professional care.',
 
     // Onboarding
     'onboarding.step1.title': 'A 3-day journey',
@@ -915,17 +984,21 @@ export const translations = {
     'audio.play': 'Play',
     'audio.pause': 'Pause',
     'audio.next': 'Next',
-    
+
     // Survey
     'survey.title': 'How are you feeling now?',
     'survey.subtitle': 'Your answer helps us personalize your experience',
     'survey.submit': 'Continue',
-    'mood.great': 'Great',
     'mood.good': 'Good',
     'mood.okay': 'Okay',
-    'mood.low': 'Low',
-    'mood.struggling': 'Struggling',
-    
+    'mood.difficult': 'Difficult',
+    'mood.response.good': 'Great to see you\'re feeling positive!',
+    'mood.response.okay': 'Thanks for sharing. Every moment is valid.',
+    'mood.response.difficult': 'Thank you for your honesty. I\'m here with you.',
+    'energy.response.high': 'Awesome! Let\'s make the most of it.',
+    'energy.response.medium': 'A good level to start.',
+    'energy.response.low': 'That\'s okay. We\'ll go at your pace.',
+
     // Closure
     'closure.title': 'Well done!',
     'closure.subtitle': 'You completed day',
@@ -1005,6 +1078,8 @@ export const translations = {
     'admin.addUser.payment': 'Payment ID (optional)',
     'admin.addUser.notes': 'Notes (optional)',
     'admin.addUser.submit': 'Create user',
+    'admin.user.registered': 'Registered',
+    'admin.user.lastLogin': 'Last login',
     'admin.user.day': 'Day',
     'admin.user.completed': 'completed',
     'admin.user.streak': 'Streak',

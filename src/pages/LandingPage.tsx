@@ -42,7 +42,7 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link to="/" className="flex items-center">
-            <BalticaLogo size={64} />
+            <BalticaLogo variant="full" size={48} />
           </Link>
 
           <div className="flex items-center gap-1">
@@ -97,9 +97,7 @@ export default function LandingPage() {
             transition={{ delay: 0.2, type: 'spring' }}
             className="inline-block mb-8"
           >
-            <div className="h-24 w-24 rounded-full gradient-warm flex items-center justify-center mx-auto shadow-soft">
-              <Sparkles className="h-12 w-12 text-primary-foreground" />
-            </div>
+            <BalticaLogo variant="isotipo" size={96} className="mx-auto" />
           </motion.div>
 
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 max-w-3xl mx-auto">

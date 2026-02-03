@@ -12,6 +12,7 @@ import answersRoutes from './routes/answers.routes';
 import logsRoutes from './routes/logs.routes';
 import paymentsRoutes from './routes/payments.routes';
 import settingsRoutes from './routes/settings.routes';
+import userSettingsRoutes from './routes/userSettings.routes';
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use('/api/progress', progressRoutes);
 app.use('/api/answers', answersRoutes);
 app.use('/api/admin/logs', logsRoutes);
 app.use('/api/payments', paymentsRoutes);
+app.use('/api/settings', userSettingsRoutes);
 app.use('/api/admin/settings', settingsRoutes);
 
 // Health check

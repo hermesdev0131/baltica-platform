@@ -4,6 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { achievements } from '@/config/content';
 import { Trophy, Lock } from 'lucide-react';
 import { motion } from 'framer-motion';
+import BalticaLogo from '@/components/brand/BalticaLogo';
 
 export default function AchievementsPage() {
   const { t, progress, locale } = useApp();
@@ -23,9 +24,7 @@ export default function AchievementsPage() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="w-16 h-16 rounded-full gradient-warm flex items-center justify-center mx-auto mb-4 shadow-soft">
-            <Trophy className="h-8 w-8 text-primary-foreground" />
-          </div>
+          <BalticaLogo variant="isotipo" size={64} className="mx-auto mb-4" />
           <h1 className="text-2xl md:text-3xl font-bold text-foreground">
             {t('achievements.title')}
           </h1>

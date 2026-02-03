@@ -1,64 +1,127 @@
-import { useState } from 'react';
-import { useApp } from '@/contexts/AppContext';
+import { useState, useRef, useEffect } from 'react';
 import { Play, Pause, Volume2, VolumeX, Maximize } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { cn } from '@/lib/utils';
 
 interface VideoPlayerProps {
+  src?: string | null;
   title: string;
   duration: string;
   thumbnailUrl?: string;
   onComplete?: () => void;
 }
 
-export function VideoPlayer({ title, duration, thumbnailUrl, onComplete }: VideoPlayerProps) {
-  const { t } = useApp();
+export function VideoPlayer({ src, title, duration, thumbnailUrl, onComplete }: VideoPlayerProps) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showControls, setShowControls] = useState(true);
+  const [hasStarted, setHasStarted] = useState(false);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleTimeUpdate = () => {
+      const pct = (video.currentTime / video.duration) * 100;
+      setProgress(pct);
+    };
+
+    const handleEnded = () => {
+      setIsPlaying(false);
+      setProgress(100);
+      onComplete?.();
+    };
+
+    video.addEventListener('timeupdate', handleTimeUpdate);
+    video.addEventListener('ended', handleEnded);
+
+    return () => {
+      video.removeEventListener('timeupdate', handleTimeUpdate);
+      video.removeEventListener('ended', handleEnded);
+    };
+  }, [onComplete]);
 
   const handlePlayPause = () => {
-    setIsPlaying(!isPlaying);
-    if (!isPlaying) {
-      // Simulate video progress
-      const interval = setInterval(() => {
-        setProgress(prev => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            setIsPlaying(false);
-            onComplete?.();
-            return 100;
-          }
-          return prev + 1;
-        });
-      }, 100);
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isPlaying) {
+      video.pause();
+      setIsPlaying(false);
+    } else {
+      video.play();
+      setIsPlaying(true);
+      setHasStarted(true);
     }
   };
 
-  return (
-    <div 
-      className="relative w-full aspect-video rounded-2xl overflow-hidden bg-muted shadow-soft"
-      onMouseEnter={() => setShowControls(true)}
-      onMouseLeave={() => !isPlaying && setShowControls(true)}
-    >
-      {/* Thumbnail/Video */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/50">
-        {thumbnailUrl ? (
-          <img src={thumbnailUrl} alt={title} className="w-full h-full object-cover" />
-        ) : (
-          <div className="w-full h-full gradient-calm flex items-center justify-center">
-            <Play className="h-16 w-16 text-primary opacity-30" />
-          </div>
-        )}
-      </div>
+  const handleMuteToggle = () => {
+    const video = videoRef.current;
+    if (video) {
+      video.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
 
-      {/* Play Button Overlay */}
-      {!isPlaying && (
+  const handleSeek = (value: number[]) => {
+    const video = videoRef.current;
+    if (video && video.duration) {
+      video.currentTime = (value[0] / 100) * video.duration;
+      setProgress(value[0]);
+    }
+  };
+
+  const handleFullscreen = () => {
+    const container = containerRef.current;
+    if (container) {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        container.requestFullscreen();
+      }
+    }
+  };
+
+  // If no src provided, show placeholder
+  if (!src) {
+    return (
+      <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-muted shadow-soft">
+        <div className="w-full h-full gradient-calm flex items-center justify-center">
+          <div className="text-center">
+            <Play className="h-16 w-16 text-primary opacity-30 mx-auto mb-2" />
+            <p className="text-muted-foreground text-sm">Video no disponible</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black shadow-soft"
+      onMouseEnter={() => setShowControls(true)}
+      onMouseLeave={() => isPlaying && setShowControls(false)}
+    >
+      {/* Video Element */}
+      <video
+        ref={videoRef}
+        src={src}
+        className="w-full h-full object-contain"
+        playsInline
+        preload="metadata"
+        poster={thumbnailUrl}
+      />
+
+      {/* Play Button Overlay (before started) */}
+      {!hasStarted && (
         <button
           onClick={handlePlayPause}
-          className="absolute inset-0 flex items-center justify-center"
+          className="absolute inset-0 flex items-center justify-center bg-black/30"
         >
           <div className="w-20 h-20 rounded-full bg-primary/90 flex items-center justify-center shadow-lg hover:bg-primary transition-colors">
             <Play className="h-8 w-8 text-primary-foreground ml-1" />
@@ -69,7 +132,7 @@ export function VideoPlayer({ title, duration, thumbnailUrl, onComplete }: Video
       {/* Controls */}
       <div
         className={cn(
-          'absolute bottom-0 left-0 right-0 p-4 transition-opacity duration-300',
+          'absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-300',
           showControls || !isPlaying ? 'opacity-100' : 'opacity-0'
         )}
       >
@@ -78,8 +141,8 @@ export function VideoPlayer({ title, duration, thumbnailUrl, onComplete }: Video
           <Slider
             value={[progress]}
             max={100}
-            step={1}
-            onValueChange={([val]) => setProgress(val)}
+            step={0.1}
+            onValueChange={handleSeek}
             className="cursor-pointer"
           />
         </div>
@@ -97,7 +160,7 @@ export function VideoPlayer({ title, duration, thumbnailUrl, onComplete }: Video
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setIsMuted(!isMuted)}
+              onClick={handleMuteToggle}
               className="h-8 w-8 text-white hover:bg-white/20"
             >
               {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
@@ -107,12 +170,22 @@ export function VideoPlayer({ title, duration, thumbnailUrl, onComplete }: Video
           <Button
             variant="ghost"
             size="icon"
+            onClick={handleFullscreen}
             className="h-8 w-8 text-white hover:bg-white/20"
           >
             <Maximize className="h-4 w-4" />
           </Button>
         </div>
       </div>
+
+      {/* Click to play/pause when playing */}
+      {hasStarted && (
+        <button
+          onClick={handlePlayPause}
+          className="absolute inset-0 z-0"
+          style={{ background: 'transparent' }}
+        />
+      )}
     </div>
   );
 }

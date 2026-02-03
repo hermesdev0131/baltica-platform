@@ -3,12 +3,17 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
 import { useNotificationContext } from '@/contexts/NotificationContext';
 import { useCelebration } from '@/hooks/useCelebration';
+import { useInactivity } from '@/hooks/useInactivity';
 import { Header } from '@/components/layout/Header';
 import { StepIndicator, Step } from '@/components/journey/StepIndicator';
 import { VideoPlayer } from '@/components/journey/VideoPlayer';
 import { AudioPlayer } from '@/components/journey/AudioPlayer';
 import { MoodSelector } from '@/components/journey/MoodSelector';
+import { EnergySelector, Energy } from '@/components/journey/EnergySelector';
 import { EthicalNote } from '@/components/EthicalNote';
+import { EthicalFooter } from '@/components/EthicalFooter';
+import { FloatingHelp } from '@/components/FloatingHelp';
+import { InactivityModal } from '@/components/InactivityModal';
 import { CelebrationModal } from '@/components/celebrations/CelebrationModal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,6 +22,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { ArrowLeft, ArrowRight, Download, CheckCircle, Share2, Sparkles } from 'lucide-react';
+import BalticaLogo from '@/components/brand/BalticaLogo';
 import { motion, AnimatePresence } from 'framer-motion';
 import { dayContents, actionOptions, valueOptions, timeSlotOptions } from '@/config/content';
 
@@ -57,6 +63,21 @@ export default function JourneyPage() {
   const [kindPhrase, setKindPhrase] = useState(dayAnswers.day3?.kindPhrase || '');
   const [nextAction, setNextAction] = useState(dayAnswers.day3?.nextAction || '');
 
+  // Energy state for Day 0 and Day 3 (second measurement item per client spec)
+  const [selectedEnergy, setSelectedEnergy] = useState<Energy | ''>(
+    dayNumber === 0 ? (dayAnswers.welcome?.energy || '') : (dayAnswers.day3?.energy || '')
+  );
+
+  // Inactivity modal state
+  const [showInactivityModal, setShowInactivityModal] = useState(false);
+
+  // Inactivity detection - show reminder after 5 minutes of inactivity
+  const { resetTimer } = useInactivity({
+    timeout: 5 * 60 * 1000, // 5 minutes
+    onInactive: () => setShowInactivityModal(true),
+    enabled: currentStep !== 'closure', // Don't track on closure step
+  });
+
   const markStepComplete = (step: JourneyStep) => {
     if (!completedSteps.includes(step)) {
       setCompletedSteps([...completedSteps, step]);
@@ -64,7 +85,11 @@ export default function JourneyPage() {
   };
 
   const nextStep = () => {
-    const steps: JourneyStep[] = ['start', 'video', 'audio', 'download', 'survey', 'closure'];
+    // Day 0 (Block 0) per PDF spec: greeting → measurements → ethical → CTA (no video/audio/download)
+    // Days 1-3: full flow with video, audio, download, survey
+    const steps: JourneyStep[] = dayNumber === 0
+      ? ['start', 'survey', 'closure']
+      : ['start', 'video', 'audio', 'download', 'survey', 'closure'];
     const currentIndex = steps.indexOf(currentStep);
     if (currentIndex < steps.length - 1) {
       markStepComplete(currentStep);
@@ -75,13 +100,13 @@ export default function JourneyPage() {
   const canProceedFromSurvey = (): boolean => {
     switch (dayNumber) {
       case 0:
-        return !!selectedMood;
+        return !!selectedMood && !!selectedEnergy;
       case 1:
         return words.every(w => w.trim()) && !!selectedAction && !!selectedTimeSlot;
       case 2:
         return (!!selectedValue || !!customValue.trim()) && !!day2Action.trim() && !!day2TimeSlot;
       case 3:
-        return !!selectedMood && gratitudes.every(g => g.trim()) && !!kindPhrase.trim() && !!nextAction.trim();
+        return !!selectedMood && !!selectedEnergy && gratitudes.every(g => g.trim()) && !!kindPhrase.trim() && !!nextAction.trim();
       default:
         return true;
     }
@@ -91,7 +116,7 @@ export default function JourneyPage() {
     const now = new Date().toISOString();
     switch (dayNumber) {
       case 0:
-        saveDayAnswers({ welcome: { mood: selectedMood, ethicalNoteViewed: true, completedAt: now } });
+        saveDayAnswers({ welcome: { mood: selectedMood, energy: selectedEnergy as Energy, ethicalNoteViewed: true, completedAt: now } });
         break;
       case 1:
         saveDayAnswers({ day1: { words, action: selectedAction, timeSlot: selectedTimeSlot as any, videoWatched: true, audioCompleted: true, completedAt: now } });
@@ -100,7 +125,7 @@ export default function JourneyPage() {
         saveDayAnswers({ day2: { value: selectedValue || customValue, customValue, action: day2Action, timeSlot: day2TimeSlot as any, wordsAfter, videoWatched: true, audioCompleted: true, completedAt: now } });
         break;
       case 3:
-        saveDayAnswers({ day3: { mood: selectedMood, gratitudes, kindPhrase, nextAction, videoWatched: true, audioCompleted: true, completedAt: now } });
+        saveDayAnswers({ day3: { mood: selectedMood, energy: selectedEnergy as Energy, gratitudes, kindPhrase, nextAction, videoWatched: true, audioCompleted: true, completedAt: now } });
         break;
     }
   };
@@ -176,8 +201,15 @@ export default function JourneyPage() {
         <MoodSelector onSelect={setSelectedMood as any} selectedMood={selectedMood as any} />
       </div>
 
+      <div>
+        <h3 className="text-lg font-medium text-foreground mb-4 text-center">
+          {t('energy.title' as any)}
+        </h3>
+        <EnergySelector onSelect={setSelectedEnergy} selectedEnergy={selectedEnergy} />
+      </div>
+
       <div className="flex justify-center mt-8">
-        <Button onClick={nextStep} disabled={!selectedMood} className="gap-2 rounded-full px-8">
+        <Button onClick={nextStep} disabled={!canProceedFromSurvey()} className="gap-2 rounded-full px-8">
           {t('welcome.block0.ready')}
           <ArrowRight className="h-4 w-4" />
         </Button>
@@ -348,11 +380,7 @@ export default function JourneyPage() {
 
   const renderDay3Survey = () => (
     <div className="py-6 space-y-8">
-      <div>
-        <h2 className="text-xl font-semibold text-foreground mb-2 text-center">{t('survey.title')}</h2>
-        <MoodSelector onSelect={setSelectedMood as any} selectedMood={selectedMood as any} />
-      </div>
-
+      {/* 3.4: Ejercicio interactivo (gratitudes + phrase + action) - FIRST per PDF */}
       <Card className="shadow-card">
         <CardHeader>
           <CardTitle className="text-lg">{t('day.3.gratitude.title')}</CardTitle>
@@ -396,7 +424,19 @@ export default function JourneyPage() {
         </CardContent>
       </Card>
 
-      <EthicalNote variant="inline" />
+      {/* 3.5: Medición 1 (mood) - AFTER exercises per PDF */}
+      <div>
+        <h2 className="text-xl font-semibold text-foreground mb-2 text-center">{t('survey.title')}</h2>
+        <MoodSelector onSelect={setSelectedMood as any} selectedMood={selectedMood as any} />
+      </div>
+
+      {/* 3.6: Medición 2 (energy) */}
+      <div>
+        <h3 className="text-lg font-medium text-foreground mb-4 text-center">
+          {t('energy.title' as any)}
+        </h3>
+        <EnergySelector onSelect={setSelectedEnergy} selectedEnergy={selectedEnergy} />
+      </div>
 
       <div className="flex justify-center mt-8">
         <Button onClick={nextStep} disabled={!canProceedFromSurvey()} className="gap-2 rounded-full px-8">
@@ -434,6 +474,18 @@ export default function JourneyPage() {
     return t('closure.title');
   };
 
+  // Handle inactivity - save progress and navigate home
+  const handleInactivitySaveLater = () => {
+    saveCurrentAnswers();
+    setShowInactivityModal(false);
+    navigate('/');
+  };
+
+  const handleInactivityContinue = () => {
+    setShowInactivityModal(false);
+    resetTimer();
+  };
+
   return (
     <>
       <CelebrationModal
@@ -444,7 +496,13 @@ export default function JourneyPage() {
         dayNumber={celebration.dayNumber}
       />
 
-      <div className="min-h-screen bg-background">
+      <InactivityModal
+        isOpen={showInactivityModal}
+        onContinue={handleInactivityContinue}
+        onSaveLater={handleInactivitySaveLater}
+      />
+
+      <div className="min-h-screen bg-background pb-16">
         <Header />
 
         <main className="container mx-auto px-4 py-6 max-w-2xl">
@@ -456,7 +514,8 @@ export default function JourneyPage() {
             <span className="text-sm font-medium text-muted-foreground">{getDayLabel()}</span>
           </div>
 
-          {currentStep !== 'start' && currentStep !== 'closure' && (
+          {/* StepIndicator only for Days 1-3 which have video/audio/download steps */}
+          {dayNumber !== 0 && currentStep !== 'start' && currentStep !== 'closure' && (
             <StepIndicator currentStep={currentStep} completedSteps={completedSteps} />
           )}
 
@@ -474,11 +533,15 @@ export default function JourneyPage() {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ type: 'spring', delay: 0.2 }}
-                    className="w-24 h-24 rounded-full gradient-warm flex items-center justify-center mx-auto mb-8 shadow-soft"
+                    className="mb-8"
                   >
-                    <span className="text-4xl font-bold text-primary-foreground">
-                      {dayNumber === 0 ? 'B' : dayNumber}
-                    </span>
+                    {dayNumber === 0 ? (
+                      <BalticaLogo variant="isotipo" size={96} className="mx-auto" />
+                    ) : (
+                      <div className="w-24 h-24 rounded-full gradient-warm flex items-center justify-center mx-auto shadow-soft">
+                        <span className="text-4xl font-bold text-primary-foreground">{dayNumber}</span>
+                      </div>
+                    )}
                   </motion.div>
                   <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-4">{getDayTitle()}</h1>
                   <p className="text-lg text-muted-foreground mb-8 max-w-md mx-auto">{getDaySubtitle()}</p>
@@ -493,7 +556,7 @@ export default function JourneyPage() {
                 <div className="py-6">
                   <h2 className="text-xl font-semibold text-foreground mb-2 text-center">{t('content.video')}</h2>
                   <p className="text-muted-foreground text-center mb-6">{dayContent?.video.title || t('video.title')}</p>
-                  <VideoPlayer title={dayContent?.video.title || ''} duration={dayContent?.video.duration || '1:30'} onComplete={() => markStepComplete('video')} />
+                  <VideoPlayer src={dayContent?.video.url} title={dayContent?.video.title || ''} duration={dayContent?.video.duration || '1:30'} onComplete={() => markStepComplete('video')} />
                   <div className="flex justify-center mt-8">
                     <Button onClick={nextStep} className="gap-2 rounded-full px-8">
                       {t('video.next')}
@@ -572,9 +635,7 @@ export default function JourneyPage() {
                   <Card className="shadow-card mb-8 text-left">
                     <CardHeader>
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full gradient-warm flex items-center justify-center">
-                          <Sparkles className="h-5 w-5 text-primary-foreground" />
-                        </div>
+                        <BalticaLogo variant="isotipo" size={40} />
                         <CardTitle className="text-lg">
                           {dayNumber === 3
                             ? (locale.startsWith('es') ? 'Mensaje final' : 'Final message')
@@ -598,13 +659,16 @@ export default function JourneyPage() {
                           {locale.startsWith('es') ? 'Tu viaje emocional' : 'Your emotional journey'}
                         </CardTitle>
                       </CardHeader>
-                      <CardContent>
+                      <CardContent className="space-y-4">
                         <div className="flex items-center justify-around">
                           <div className="text-center">
                             <p className="text-sm text-muted-foreground mb-1">
                               {locale.startsWith('es') ? 'Al comenzar' : 'At the start'}
                             </p>
                             <p className="text-lg font-medium">{t(`mood.${dayAnswers.welcome.mood}` as any)}</p>
+                            {dayAnswers.welcome.energy && (
+                              <p className="text-sm text-muted-foreground">{t(`energy.${dayAnswers.welcome.energy}` as any)}</p>
+                            )}
                           </div>
                           <ArrowRight className="h-5 w-5 text-muted-foreground" />
                           <div className="text-center">
@@ -612,10 +676,20 @@ export default function JourneyPage() {
                               {locale.startsWith('es') ? 'Al finalizar' : 'At the end'}
                             </p>
                             <p className="text-lg font-medium">{t(`mood.${selectedMood}` as any)}</p>
+                            {selectedEnergy && (
+                              <p className="text-sm text-muted-foreground">{t(`energy.${selectedEnergy}` as any)}</p>
+                            )}
                           </div>
                         </div>
                       </CardContent>
                     </Card>
+                  )}
+
+                  {/* Ethical note for Day 3 closure (node 3.8 per PDF spec) */}
+                  {dayNumber === 3 && (
+                    <div className="mb-8">
+                      <EthicalNote variant="inline" />
+                    </div>
                   )}
 
                   <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -635,6 +709,9 @@ export default function JourneyPage() {
             </motion.div>
           </AnimatePresence>
         </main>
+
+        <FloatingHelp />
+        <EthicalFooter />
       </div>
     </>
   );

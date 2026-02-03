@@ -39,8 +39,8 @@ export async function register(req: Request, res: Response) {
     const expiresAt = new Date(Date.now() + accessDays * 24 * 60 * 60 * 1000);
 
     const result = await pool.query(
-      `INSERT INTO users (email, name, password_hash, access_expires_at, access_duration_days)
-       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      `INSERT INTO users (email, name, password_hash, status, access_expires_at, access_duration_days)
+       VALUES ($1, $2, $3, 'suspended', $4, $5) RETURNING *`,
       [email, name, passwordHash, expiresAt.toISOString(), accessDays]
     );
 

@@ -1,4 +1,5 @@
 import { useApp } from '@/contexts/AppContext';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,7 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Mail, MessageCircle, HelpCircle } from 'lucide-react';
+import { Mail, MessageCircle, HelpCircle, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 // FAQ alineado con la identidad BÁLTICA: humano, claro, no clínico
@@ -167,16 +168,48 @@ const faqs = {
 
 export default function HelpPage() {
   const { t, locale } = useApp();
-  
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Get return path from navigation state (H.2 per PDF spec - return to previous point)
+  const returnTo = (location.state as { returnTo?: string })?.returnTo;
+  const isFromJourney = returnTo?.startsWith('/journey');
+
   const currentFaqs = faqs[locale] || faqs.en;
+
+  const handleReturn = () => {
+    if (returnTo) {
+      navigate(returnTo);
+    } else {
+      navigate(-1);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <Header />
 
       <main className="container mx-auto px-4 py-8 max-w-2xl">
+        {/* Return button when coming from journey (H.2) */}
+        {isFromJourney && (
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="mb-6"
+          >
+            <Button
+              variant="ghost"
+              onClick={handleReturn}
+              className="gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              {locale.startsWith('es') ? 'Volver a mi jornada' : 'Return to my journey'}
+            </Button>
+          </motion.div>
+        )}
+
         {/* Title */}
-        <motion.div 
+        <motion.div
           className="text-center mb-10"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}

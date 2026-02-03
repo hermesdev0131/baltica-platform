@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { api, getToken } from '@/lib/api';
 
 export interface NotificationSettings {
   enabled: boolean;
@@ -27,6 +28,7 @@ const defaultSettings: NotificationSettings = {
 
 export function useNotifications(userKey?: string) {
   const prefix = userKey ? `${userKey}_` : '';
+  const isInitialLoad = useRef(true);
 
   const [settings, setSettings] = useState<NotificationSettings>(() => {
     const saved = localStorage.getItem(`${prefix}notificationSettings`);
@@ -47,6 +49,29 @@ export function useNotifications(userKey?: string) {
     }
   }, []);
 
+  // Load settings from backend on mount
+  useEffect(() => {
+    if (getToken()) {
+      api.settings.get().then(data => {
+        if (data.settings) {
+          const s = data.settings;
+          setSettings({
+            enabled: s.notifications_enabled ?? defaultSettings.enabled,
+            dailyReminder: s.daily_reminder ?? defaultSettings.dailyReminder,
+            reminderTime: s.reminder_time ?? defaultSettings.reminderTime,
+            streakReminder: s.streak_reminder ?? defaultSettings.streakReminder,
+            encouragement: s.encouragement ?? defaultSettings.encouragement,
+          });
+        }
+        isInitialLoad.current = false;
+      }).catch(() => {
+        isInitialLoad.current = false;
+      });
+    } else {
+      isInitialLoad.current = false;
+    }
+  }, [userKey]);
+
   // Reload when user changes
   useEffect(() => {
     const savedSettings = localStorage.getItem(`${prefix}notificationSettings`);
@@ -55,9 +80,20 @@ export function useNotifications(userKey?: string) {
     setNotifications(savedNotifications ? JSON.parse(savedNotifications) : []);
   }, [prefix]);
 
-  // Save settings to localStorage
+  // Save settings to localStorage and sync to backend
   useEffect(() => {
     if (prefix || !userKey) localStorage.setItem(`${prefix}notificationSettings`, JSON.stringify(settings));
+
+    // Sync to backend (skip initial load to avoid overwriting backend data)
+    if (!isInitialLoad.current && getToken()) {
+      api.settings.update({
+        notifications_enabled: settings.enabled,
+        daily_reminder: settings.dailyReminder,
+        reminder_time: settings.reminderTime,
+        streak_reminder: settings.streakReminder,
+        encouragement: settings.encouragement,
+      }).catch(() => { /* fallback to localStorage */ });
+    }
   }, [settings, prefix]);
 
   // Save notifications to localStorage
