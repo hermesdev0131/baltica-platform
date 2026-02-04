@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ProgressRing } from '@/components/journey/ProgressRing';
 import { DayCard } from '@/components/journey/DayCard';
-import { ArrowRight, Clock, Heart, ShieldAlert, Mail } from 'lucide-react';
+import { ArrowRight, Clock, Heart, Sparkles, ShieldAlert, Mail } from 'lucide-react';
 import BalticaLogo from '@/components/brand/BalticaLogo';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';

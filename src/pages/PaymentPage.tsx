@@ -16,6 +16,7 @@ import {
   Headphones,
   FileText,
   Bell,
+  Sparkles,
   Loader2,
   AlertCircle,
   CheckCircle,
