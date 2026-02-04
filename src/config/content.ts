@@ -85,7 +85,7 @@ export const day1Content: DayContent = {
     title: 'Reflexión del día 1',
   },
   audio: {
-    url: null,
+    url: '/Audio Grounding MAESTRO.mp3',
     duration: '5:00',
     title: 'Respiración consciente',
   },
@@ -120,7 +120,7 @@ export const day2Content: DayContent = {
     title: 'Reflexión del día 2',
   },
   audio: {
-    url: null,
+    url: '/Audios AconP MAESTRO.mp3',
     duration: '5:00',
     title: 'Meditación guiada',
   },
@@ -155,7 +155,7 @@ export const day3Content: DayContent = {
     title: 'Cierre del programa',
   },
   audio: {
-    url: null,
+    url: '/Audio Autocompasión MAESTRO.mp3',
     duration: '5:00',
     title: 'Meditación de autocompasión',
   },

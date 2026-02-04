@@ -1,23 +1,23 @@
-import { useState, useEffect } from 'react';
-import { useApp } from '@/contexts/AppContext';
+import { useState, useEffect, useRef } from 'react';
 import { Play, Pause, SkipBack, SkipForward } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
-import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
 interface AudioPlayerProps {
   title: string;
   subtitle?: string;
   duration: string;
+  audioSrc?: string | null;
   onComplete?: () => void;
 }
 
-export function AudioPlayer({ title, subtitle, duration, onComplete }: AudioPlayerProps) {
-  const { t } = useApp();
+export function AudioPlayer({ title, subtitle, duration, audioSrc, onComplete }: AudioPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState('0:00');
+  const [totalDuration, setTotalDuration] = useState(duration);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -26,24 +26,101 @@ export function AudioPlayer({ title, subtitle, duration, onComplete }: AudioPlay
   };
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isPlaying) {
-      interval = setInterval(() => {
-        setProgress(prev => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            setIsPlaying(false);
-            onComplete?.();
-            return 100;
-          }
-          const newProgress = prev + 0.5;
-          setCurrentTime(formatTime((newProgress / 100) * 300)); // Assume 5 min audio
-          return newProgress;
-        });
-      }, 150);
+    if (audioSrc) {
+      audioRef.current = new Audio(audioSrc);
+
+      audioRef.current.addEventListener('loadedmetadata', () => {
+        if (audioRef.current) {
+          setTotalDuration(formatTime(audioRef.current.duration));
+        }
+      });
+
+      audioRef.current.addEventListener('timeupdate', () => {
+        if (audioRef.current) {
+          const percent = (audioRef.current.currentTime / audioRef.current.duration) * 100;
+          setProgress(percent);
+          setCurrentTime(formatTime(audioRef.current.currentTime));
+        }
+      });
+
+      audioRef.current.addEventListener('ended', () => {
+        setIsPlaying(false);
+        setProgress(100);
+        onComplete?.();
+      });
+
+      return () => {
+        if (audioRef.current) {
+          audioRef.current.pause();
+          audioRef.current = null;
+        }
+      };
     }
-    return () => clearInterval(interval);
-  }, [isPlaying, onComplete]);
+  }, [audioSrc, onComplete]);
+
+  useEffect(() => {
+    if (!audioSrc) {
+      // Fallback: simulate playback if no audio source
+      let interval: NodeJS.Timeout;
+      if (isPlaying) {
+        interval = setInterval(() => {
+          setProgress(prev => {
+            if (prev >= 100) {
+              clearInterval(interval);
+              setIsPlaying(false);
+              onComplete?.();
+              return 100;
+            }
+            const newProgress = prev + 0.5;
+            setCurrentTime(formatTime((newProgress / 100) * 300));
+            return newProgress;
+          });
+        }, 150);
+      }
+      return () => clearInterval(interval);
+    }
+  }, [isPlaying, onComplete, audioSrc]);
+
+  const togglePlay = () => {
+    if (audioSrc && audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  const handleSeek = (value: number[]) => {
+    const newProgress = value[0];
+    setProgress(newProgress);
+
+    if (audioSrc && audioRef.current) {
+      audioRef.current.currentTime = (newProgress / 100) * audioRef.current.duration;
+    } else {
+      setCurrentTime(formatTime((newProgress / 100) * 300));
+    }
+  };
+
+  const skipBackward = () => {
+    if (audioSrc && audioRef.current) {
+      audioRef.current.currentTime = Math.max(0, audioRef.current.currentTime - 10);
+    } else {
+      setProgress(prev => Math.max(0, prev - 10));
+    }
+  };
+
+  const skipForward = () => {
+    if (audioSrc && audioRef.current) {
+      audioRef.current.currentTime = Math.min(
+        audioRef.current.duration,
+        audioRef.current.currentTime + 10
+      );
+    } else {
+      setProgress(prev => Math.min(100, prev + 10));
+    }
+  };
 
   return (
     <div className="w-full max-w-md mx-auto">
@@ -67,10 +144,10 @@ export function AudioPlayer({ title, subtitle, duration, onComplete }: AudioPlay
             }}
           />
         ))}
-        
+
         {/* Center button */}
         <motion.button
-          onClick={() => setIsPlaying(!isPlaying)}
+          onClick={togglePlay}
           className="relative z-10 w-24 h-24 rounded-full gradient-warm flex items-center justify-center shadow-soft"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -97,14 +174,11 @@ export function AudioPlayer({ title, subtitle, duration, onComplete }: AudioPlay
           value={[progress]}
           max={100}
           step={0.1}
-          onValueChange={([val]) => {
-            setProgress(val);
-            setCurrentTime(formatTime((val / 100) * 300));
-          }}
+          onValueChange={handleSeek}
         />
         <div className="flex justify-between text-sm text-muted-foreground">
           <span>{currentTime}</span>
-          <span>{duration}</span>
+          <span>{totalDuration}</span>
         </div>
       </div>
 
@@ -114,14 +188,14 @@ export function AudioPlayer({ title, subtitle, duration, onComplete }: AudioPlay
           variant="ghost"
           size="icon"
           className="h-12 w-12 rounded-full"
-          onClick={() => setProgress(Math.max(0, progress - 10))}
+          onClick={skipBackward}
         >
           <SkipBack className="h-5 w-5" />
         </Button>
         <Button
           size="icon"
           className="h-16 w-16 rounded-full"
-          onClick={() => setIsPlaying(!isPlaying)}
+          onClick={togglePlay}
         >
           {isPlaying ? (
             <Pause className="h-6 w-6" />
@@ -133,7 +207,7 @@ export function AudioPlayer({ title, subtitle, duration, onComplete }: AudioPlay
           variant="ghost"
           size="icon"
           className="h-12 w-12 rounded-full"
-          onClick={() => setProgress(Math.min(100, progress + 10))}
+          onClick={skipForward}
         >
           <SkipForward className="h-5 w-5" />
         </Button>

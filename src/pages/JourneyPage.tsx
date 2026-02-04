@@ -570,7 +570,7 @@ export default function JourneyPage() {
                 <div className="py-6">
                   <h2 className="text-xl font-semibold text-foreground mb-2 text-center">{t('content.audio')}</h2>
                   <p className="text-muted-foreground text-center mb-8">{dayContent?.audio.title || t('audio.title')}</p>
-                  <AudioPlayer title={dayContent?.audio.title || ''} subtitle={t('audio.title')} duration={dayContent?.audio.duration || '5:00'} onComplete={() => markStepComplete('audio')} />
+                  <AudioPlayer title={dayContent?.audio.title || ''} subtitle={t('audio.title')} duration={dayContent?.audio.duration || '5:00'} audioSrc={dayContent?.audio.url} onComplete={() => markStepComplete('audio')} />
                   <div className="flex justify-center mt-8">
                     <Button onClick={nextStep} className="gap-2 rounded-full px-8">
                       {t('audio.next')}
