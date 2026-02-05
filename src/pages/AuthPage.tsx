@@ -58,7 +58,7 @@ export default function AuthPage() {
     }
 
     if (!acceptTerms) {
-      setError('Debes aceptar los términos para continuar');
+      setError(t('auth.error.terms' as any));
       return;
     }
 
@@ -164,7 +164,7 @@ export default function AuthPage() {
         >
           {/* Logo */}
           <div className="text-center mb-8">
-            <BalticaLogo variant="full" size={56} className="mx-auto" />
+            <BalticaLogo variant="full" size={100} className="mx-auto drop-shadow-lg" />
           </div>
 
           {/* Auth Card */}
@@ -172,8 +172,8 @@ export default function AuthPage() {
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <CardHeader className="pb-4">
                 <TabsList className="grid w-full grid-cols-2">
-                  <TabsTrigger value="register">Registro</TabsTrigger>
-                  <TabsTrigger value="login">Iniciar Sesión</TabsTrigger>
+                  <TabsTrigger value="register">{t('auth.tabs.register' as any)}</TabsTrigger>
+                  <TabsTrigger value="login">{t('auth.tabs.login' as any)}</TabsTrigger>
                 </TabsList>
               </CardHeader>
 
@@ -260,7 +260,7 @@ export default function AuthPage() {
                       className="w-full rounded-full"
                       disabled={isLoading}
                     >
-                      {isLoading ? 'Creando cuenta...' : t('auth.register.cta')}
+                      {isLoading ? t('auth.register.creating' as any) : t('auth.register.cta')}
                     </Button>
                   </form>
                 </TabsContent>
@@ -310,7 +310,7 @@ export default function AuthPage() {
                       className="w-full rounded-full"
                       disabled={isLoading}
                     >
-                      {isLoading ? 'Entrando...' : t('auth.login.cta')}
+                      {isLoading ? t('auth.login.signingIn' as any) : t('auth.login.cta')}
                     </Button>
 
                     <div className="text-center">

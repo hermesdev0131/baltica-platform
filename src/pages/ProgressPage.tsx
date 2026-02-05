@@ -20,22 +20,22 @@ export default function ProgressPage() {
   };
 
   const stats = [
-    { 
-      icon: Calendar, 
-      value: progress.completedDays.length, 
+    {
+      icon: Calendar,
+      value: progress.completedDays.length,
       label: t('progress.completed'),
       color: 'text-primary'
     },
-    { 
-      icon: Flame, 
-      value: progress.streak, 
+    {
+      icon: Flame,
+      value: progress.streak,
       label: t('progress.streak'),
       color: 'text-orange-500'
     },
-    { 
-      icon: TrendingUp, 
-      value: `${Math.round(progressPercent)}%`, 
-      label: 'Progreso total',
+    {
+      icon: TrendingUp,
+      value: `${Math.round(progressPercent)}%`,
+      label: t('progress.totalPercent' as any),
       color: 'text-green-500'
     },
   ];
@@ -98,7 +98,7 @@ export default function ProgressPage() {
           transition={{ delay: 0.4 }}
         >
           <h2 className="text-lg font-semibold text-foreground mb-4">
-            Tu recorrido
+            {t('progress.yourJourney' as any)}
           </h2>
           <div className="grid grid-cols-4 gap-3 md:gap-4 max-w-md mx-auto">
             {Array.from({ length: totalDays + 1 }, (_, i) => i).map(day => (

@@ -48,7 +48,7 @@ export function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link to="/" className="flex items-center">
-          <BalticaLogo size={64} />
+          <BalticaLogo variant="header" size={40} />
         </Link>
 
         {/* Desktop Navigation */}

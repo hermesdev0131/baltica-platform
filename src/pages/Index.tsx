@@ -47,7 +47,7 @@ const Index = () => {
             <ShieldAlert className="h-4 w-4 text-amber-600" />
             <AlertDescription className="flex items-center justify-between">
               <span>{t('status.suspended')}</span>
-              <a href="mailto:help@baltica.app" className="inline-flex items-center gap-1 text-primary text-sm font-medium hover:underline ml-2">
+              <a href="mailto:servicioalcliente@balticaeducation.com" className="inline-flex items-center gap-1 text-primary text-sm font-medium hover:underline ml-2">
                 <Mail className="h-3 w-3" /> {t('status.contactSupport')}
               </a>
             </AlertDescription>

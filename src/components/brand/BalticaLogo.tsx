@@ -1,4 +1,4 @@
-type LogoVariant = 'full' | 'compact' | 'isotipo' | 'mono';
+type LogoVariant = 'full' | 'compact' | 'isotipo' | 'mono' | 'header';
 
 type BalticaLogoProps = {
   variant?: LogoVariant;
@@ -11,14 +11,24 @@ export function BalticaLogo({
   size = 48,
   className = '',
 }: BalticaLogoProps) {
-  // Use PNG files
-  const logoSrc = variant === 'mono'
-    ? '/Logo Báltica Escala de Grises.png'
-    : '/Báltica LOGO OFICIAL.png';
+  // Use appropriate logo based on variant
+  const getLogoSrc = () => {
+    switch (variant) {
+      case 'header':
+        return '/logo-header.png';
+      case 'mono':
+        return '/Logo Báltica Escala de Grises.png';
+      case 'full':
+      case 'compact':
+      case 'isotipo':
+      default:
+        return '/main-logo.png';
+    }
+  };
 
   return (
     <img
-      src={logoSrc}
+      src={getLogoSrc()}
       alt="Báltica Education"
       style={{ height: size, width: 'auto' }}
       className={`object-contain ${className}`}

@@ -1,4 +1,4 @@
-// Configuración centralizada del contenido del programa BÁLTICA MVP
+// Configuración centralizada del contenido del RETO DE 3 DÍAS - BÁLTICA MVP
 // Este archivo permite cambiar fácilmente URLs de media cuando estén disponibles
 
 export interface MediaAsset {
@@ -115,7 +115,7 @@ export const day2Content: DayContent = {
     'en': 'Today we connect what you do with what matters.',
   },
   video: {
-    url: '/INTRODUCCION.mp4',
+    url: '/Accion con Proposito.mp4',
     duration: '2:30',
     title: 'Reflexión del día 2',
   },

@@ -1,7 +1,7 @@
 import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Clock, Heart, Sparkles, ArrowRight, Globe, Moon, Sun } from 'lucide-react';
+import { Clock, Heart, Sparkles, ArrowRight, Globe, Moon, Sun, Calendar, Package, Rocket } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import BalticaLogo from '@/components/brand/BalticaLogo';
@@ -50,7 +50,7 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link to="/" className="flex items-center">
-            <BalticaLogo variant="full" size={56} />
+            <BalticaLogo variant="header" size={40} />
           </Link>
 
           <div className="flex items-center gap-1">
@@ -105,7 +105,7 @@ export default function LandingPage() {
             transition={{ delay: 0.2, type: 'spring' }}
             className="inline-block mb-8"
           >
-            <BalticaLogo variant="full" size={120} className="mx-auto" />
+            <BalticaLogo variant="full" size={160} className="mx-auto drop-shadow-lg" />
           </motion.div>
 
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 max-w-3xl mx-auto">
@@ -194,6 +194,85 @@ export default function LandingPage() {
             >
               Conoce más
             </Button>
+          </div>
+        </motion.section>
+
+        {/* Coming Soon Section */}
+        <motion.section
+          className="py-16"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+        >
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
+              {t('landing.comingSoon.title')}
+            </h2>
+            <p className="text-muted-foreground mb-10">
+              {t('landing.comingSoon.subtitle')}
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* 7-Day Challenge */}
+              <Card className="shadow-card border-dashed border-2 bg-muted/20 relative overflow-hidden">
+                <div className="absolute top-3 right-3">
+                  <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded-full">
+                    {t('landing.comingSoon.title')}
+                  </span>
+                </div>
+                <CardContent className="p-6 pt-10 text-center">
+                  <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                    <Calendar className="h-7 w-7 text-primary" />
+                  </div>
+                  <h3 className="font-semibold text-foreground mb-2">
+                    {t('landing.comingSoon.7day')}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {t('landing.comingSoon.7dayDesc')}
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* 14-Day Challenge */}
+              <Card className="shadow-card border-dashed border-2 bg-muted/20 relative overflow-hidden">
+                <div className="absolute top-3 right-3">
+                  <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded-full">
+                    {t('landing.comingSoon.title')}
+                  </span>
+                </div>
+                <CardContent className="p-6 pt-10 text-center">
+                  <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                    <Rocket className="h-7 w-7 text-primary" />
+                  </div>
+                  <h3 className="font-semibold text-foreground mb-2">
+                    {t('landing.comingSoon.14day')}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {t('landing.comingSoon.14dayDesc')}
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* Special Combos */}
+              <Card className="shadow-card border-dashed border-2 bg-muted/20 relative overflow-hidden">
+                <div className="absolute top-3 right-3">
+                  <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded-full">
+                    {t('landing.comingSoon.title')}
+                  </span>
+                </div>
+                <CardContent className="p-6 pt-10 text-center">
+                  <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                    <Package className="h-7 w-7 text-primary" />
+                  </div>
+                  <h3 className="font-semibold text-foreground mb-2">
+                    {t('landing.comingSoon.combos')}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {t('landing.comingSoon.combosDesc')}
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </motion.section>
       </main>

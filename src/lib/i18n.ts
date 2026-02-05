@@ -18,7 +18,7 @@ export const translations = {
 
     // Landing
     'landing.headline': 'Tu bienestar, un paso a la vez',
-    'landing.subtitle': 'Un programa de 3 días para cultivar hábitos que transforman',
+    'landing.subtitle': 'Un reto de 3 días para cultivar hábitos que transforman',
     'landing.cta': 'Comenzar gratis',
     'landing.tagline': 'Solo 10 minutos al día',
     'landing.feature1.title': 'Breve y efectivo',
@@ -27,6 +27,14 @@ export const translations = {
     'landing.feature2.desc': 'Avanza cuando puedas, retoma donde dejaste',
     'landing.feature3.title': 'Respaldado con cariño',
     'landing.feature3.desc': 'Contenido creado por expertos en bienestar',
+    'landing.comingSoon.title': 'Próximamente',
+    'landing.comingSoon.subtitle': 'Nuevos retos para tu crecimiento',
+    'landing.comingSoon.7day': 'Reto de 7 días',
+    'landing.comingSoon.7dayDesc': 'Profundiza en tu práctica con una semana completa',
+    'landing.comingSoon.14day': 'Reto de 14 días',
+    'landing.comingSoon.14dayDesc': 'Consolida tus hábitos con dos semanas de práctica',
+    'landing.comingSoon.combos': 'Combos especiales',
+    'landing.comingSoon.combosDesc': 'Paquetes personalizados para diferentes necesidades',
 
     // Auth
     'auth.register.title': 'Crea tu cuenta',
@@ -44,6 +52,11 @@ export const translations = {
     'auth.error.password': 'La contraseña debe tener al menos 8 caracteres',
     'auth.error.exists': 'Este correo ya está registrado',
     'auth.error.invalid': 'Email o contraseña incorrectos',
+    'auth.error.terms': 'Debes aceptar los términos para continuar',
+    'auth.tabs.register': 'Registro',
+    'auth.tabs.login': 'Iniciar Sesión',
+    'auth.register.creating': 'Creando cuenta...',
+    'auth.login.signingIn': 'Entrando...',
 
     // Energy selector
     'energy.title': '¿Cómo está tu energía ahora?',
@@ -65,7 +78,7 @@ export const translations = {
     'ethical.footer': 'Contenido educativo y preventivo. No sustituye atención profesional.',
 
     // Onboarding
-    'onboarding.step1.title': 'Un viaje de 3 días',
+    'onboarding.step1.title': 'Un reto de 3 días',
     'onboarding.step1.text': 'Cada día te tomará menos de 10 minutos. Recibirás un vídeo, un audio guiado y una pequeña práctica.',
     'onboarding.step2.title': '¿Cuándo te viene mejor?',
     'onboarding.step2.text': 'Te enviaremos un recordatorio amable para que no olvides tu momento de calma.',
@@ -76,6 +89,13 @@ export const translations = {
     'onboarding.time.afternoon': 'Tarde (14:00)',
     'onboarding.time.evening': 'Noche (20:00)',
     'onboarding.time.custom': 'Personalizar',
+    'onboarding.day0.name': 'Bienvenida',
+    'onboarding.day1.name': 'Anclaje',
+    'onboarding.day2.name': 'Propósito',
+    'onboarding.day3.name': 'Cierre',
+    'onboarding.back': 'Atrás',
+    'onboarding.next': 'Siguiente',
+    'onboarding.skip': 'Saltar introducción',
 
     // Welcome
     'welcome.title': 'Tu camino hacia el bienestar',
@@ -88,11 +108,11 @@ export const translations = {
     'welcome.block0.ready': 'Estoy listo/a para comenzar',
 
     // Ethical Note
-    'ethical.title': 'Nota importante sobre este programa',
+    'ethical.title': 'Nota importante sobre este reto',
     'ethical.shortTitle': 'Nota importante',
-    'ethical.text': 'Este programa es educativo y preventivo. No reemplaza atención profesional de salud mental. Si estás pasando por un momento difícil, te animamos a buscar apoyo profesional.',
+    'ethical.text': 'Este reto es educativo y preventivo. No reemplaza atención profesional de salud mental. Si estás pasando por un momento difícil, te animamos a buscar apoyo profesional.',
     'ethical.link': 'Más información sobre este descargo',
-    'ethical.fullText': 'BÁLTICA es un programa educativo y preventivo de bienestar. No es un tratamiento médico, psicológico ni terapéutico. Este contenido no diagnostica, trata ni cura ninguna condición de salud física o mental. Si estás pasando por un momento difícil o tienes pensamientos que te preocupan, por favor busca apoyo profesional.',
+    'ethical.fullText': 'BÁLTICA es un reto educativo y preventivo de bienestar. No es un tratamiento médico, psicológico ni terapéutico. Este contenido no diagnostica, trata ni cura ninguna condición de salud física o mental. Si estás pasando por un momento difícil o tienes pensamientos que te preocupan, por favor busca apoyo profesional.',
     'ethical.resources': 'Recursos de ayuda',
     'ethical.crisis': 'Línea de atención en crisis',
     'ethical.professional': 'Consulta con un profesional de salud mental',
@@ -152,33 +172,61 @@ export const translations = {
     'activityLog.event.payment_event': 'Evento de pago',
 
     // Payment
-    'payment.title': 'Completa tu acceso',
-    'payment.plan.name': 'Programa BÁLTICA - 3 días',
+    'payment.title': 'Elige tu plan',
+    'payment.subtitle': 'RETO DE 3 DÍAS',
+    'payment.launchBadge': 'Precio de lanzamiento',
+    'payment.launchNote': 'Estos precios especiales no durarán para siempre',
     'payment.plan.includes': 'Incluye',
-    'payment.plan.item1': 'Acceso completo al programa de 3 días',
+    'payment.plan.item1': 'Acceso completo al reto de 3 días',
     'payment.plan.item2': 'Vídeos y audios guiados',
     'payment.plan.item3': 'Material descargable (PDFs)',
     'payment.plan.item4': 'Recordatorios personalizados',
-    'payment.plan.item5': 'Acceso de por vida al contenido',
+    // Plan Basic (2 months)
+    'payment.plan.basic.name': 'Básico',
+    'payment.plan.basic.duration': '2 meses',
+    'payment.plan.basic.price': '$22.900',
+    'payment.plan.basic.desc': 'Ideal para comenzar tu viaje',
+    // Plan Medium (6 months → 1 year access)
+    'payment.plan.medium.name': 'Medio',
+    'payment.plan.medium.duration': '6 meses',
+    'payment.plan.medium.price': '$32.900',
+    'payment.plan.medium.desc': 'El más popular',
+    'payment.plan.medium.badge': 'Más Popular',
+    'payment.plan.medium.bonus': '¡BONUS: Acceso por 1 año completo!',
+    // Plan Premium (1 year + future content)
+    'payment.plan.premium.name': 'Premium',
+    'payment.plan.premium.duration': '1 año',
+    'payment.plan.premium.price': '$42.900',
+    'payment.plan.premium.desc': 'Acceso total + futuro',
+    'payment.plan.premium.badge': 'Mejor Valor',
+    'payment.plan.premium.bonus': 'Incluye GRATIS: Retos 7d, 14d y 2 Combos',
+    'payment.plan.premium.updates': 'Todas las actualizaciones sin costo',
+    // Common
+    'payment.comingSoon': 'Próximamente',
+    'payment.planComingSoon': 'Este plan estará disponible próximamente. Por ahora, solo el plan de 2 meses está activo.',
+    'payment.selectPlan': 'Elegir plan',
     'payment.provider': 'Pago seguro con Mercado Pago',
     'payment.cta': 'Pagar con Mercado Pago',
-    'payment.note': '¿Preguntas sobre tu pago? Contáctanos en help@baltica.app',
-    'payment.processing': 'Procesando pago...',
-    'payment.success': '¡Pago completado!',
-    'payment.error': 'Error en el pago. Inténtalo de nuevo.',
+    'payment.note': '¿Preguntas sobre tu pago? Contáctanos en servicioalcliente@balticaeducation.com',
+    'payment.processing': 'Procesando tu pago...',
+    'payment.success': '¡Listo! Tu pago se completó correctamente.',
+    'payment.error': 'Algo no salió bien con el pago. No te preocupes, puedes intentarlo de nuevo.',
+    // Coming soon section
+    'payment.future.title': 'Próximamente',
+    'payment.future.desc': 'Retos de 7 días, 14 días y COMBOS especiales',
 
     // User status
-    'status.suspended': 'Tu acceso está suspendido. Puedes ver tu progreso pero no avanzar en las jornadas. Contacta al equipo de soporte para activar tu cuenta.',
-    'status.expired': 'Tu periodo de acceso ha expirado. Para continuar con las jornadas, renueva tu suscripción.',
-    'status.contactSupport': 'Contactar soporte',
-    'status.repay': 'Renovar acceso',
+    'status.suspended': 'Tu acceso está en pausa por el momento. Puedes ver tu progreso guardado, y cuando estés listo/a, escríbenos para reactivar tu cuenta.',
+    'status.expired': 'Tu tiempo de acceso ha terminado, pero tu progreso sigue aquí. Cuando quieras continuar tu camino, puedes renovar fácilmente.',
+    'status.contactSupport': 'Escríbenos',
+    'status.repay': 'Continuar mi camino',
 
     // How It Works
     'howItWorks.title': '¿Cómo funciona BÁLTICA?',
     'howItWorks.section1.title': 'Todo en un solo lugar',
-    'howItWorks.section1.text': 'Accedes a vídeos, audios y materiales directamente desde la app. Tu experiencia es fluida, sin importar dónde esté alojado el contenido.',
-    'howItWorks.section2.title': 'Tecnología que te respalda',
-    'howItWorks.section2.text': 'La web está alojada en Hostinger (tu dominio). Los vídeos y audios pueden estar en Hostinger o en servidores especializados para mejor rendimiento. No importa dónde estén: tú siempre los ves igual en la app.',
+    'howItWorks.section1.text': 'Accedes a vídeos, audios y materiales directamente desde la app. Tu experiencia es fluida y sin interrupciones.',
+    'howItWorks.section2.title': 'Siempre disponible',
+    'howItWorks.section2.text': 'El contenido está optimizado para que lo puedas ver desde cualquier dispositivo, en cualquier momento. Todo funciona de forma automática para ti.',
     'howItWorks.section3.title': 'Tus datos, seguros',
     'howItWorks.section3.text': 'Tu progreso y datos personales se guardan de forma segura. Nunca compartimos tu información con terceros.',
     'howItWorks.faq1.q': '¿Necesito descargar algo?',
@@ -260,14 +308,20 @@ export const translations = {
     'closure.practice.reminder': 'Recuerda aplicar esto durante el día',
     'closure.next': 'Volver al inicio',
     'closure.share': 'Compartir logro',
-    
+    'closure.nextDay.prefix': 'Mañana: ',
+    'closure.nextDay.day1': 'Anclaje - conectando con el presente',
+    'closure.nextDay.day2': 'Acción con propósito - actuando desde tus valores',
+    'closure.nextDay.day3': 'Cierre con autocompasión - celebrando tu camino',
+
     // Progress
     'progress.title': 'Tu progreso',
     'progress.completed': 'Días completados',
     'progress.streak': 'Racha actual',
     'progress.days': 'días',
     'progress.keep': '¡Sigue así!',
-    
+    'progress.totalPercent': 'Progreso total',
+    'progress.yourJourney': 'Tu recorrido',
+
     // Common
     'common.back': 'Volver',
     'common.next': 'Siguiente',
@@ -275,7 +329,7 @@ export const translations = {
     'common.loading': 'Cargando...',
     'common.error': 'Algo salió mal',
     'common.retry': 'Reintentar',
-    
+
     // Help
     'help.title': 'Estamos aquí para ayudarte',
     'help.faq': 'Preguntas frecuentes',
@@ -302,8 +356,8 @@ export const translations = {
     'notifications.settings.dailyReminderDesc': 'Recibe un aviso cada día para hacer tu práctica',
     'notifications.settings.reminderEnabled': 'Activar recordatorio',
     'notifications.settings.time': 'Hora',
-    'notifications.settings.streakReminder': 'Proteger racha',
-    'notifications.settings.streakReminderDesc': 'Aviso si vas a perder tu racha',
+    'notifications.settings.streakReminder': 'Recordatorio de continuidad',
+    'notifications.settings.streakReminderDesc': 'Un aviso amable para mantener tu rutina',
     'notifications.settings.encouragement': 'Mensajes de ánimo',
     'notifications.settings.encouragementDesc': 'Recibe mensajes motivadores ocasionales',
 
@@ -325,7 +379,7 @@ export const translations = {
     'admin.filter.expired': 'Expirados',
     'admin.addUser': 'Agregar usuario',
     'admin.addUser.title': 'Registrar nuevo usuario',
-    'admin.addUser.desc': 'Crea una cuenta con acceso al programa.',
+    'admin.addUser.desc': 'Crea una cuenta con acceso al reto.',
     'admin.addUser.name': 'Nombre',
     'admin.addUser.email': 'Email',
     'admin.addUser.days': 'Días de acceso',
@@ -391,7 +445,7 @@ export const translations = {
 
     // Landing
     'landing.headline': 'Tu bienestar, un paso a la vez',
-    'landing.subtitle': 'Un programa de 3 días para cultivar hábitos que transforman',
+    'landing.subtitle': 'Un reto de 3 días para cultivar hábitos que transforman',
     'landing.cta': 'Comenzar gratis',
     'landing.tagline': 'Solo 10 minutos al día',
     'landing.feature1.title': 'Breve y efectivo',
@@ -400,6 +454,14 @@ export const translations = {
     'landing.feature2.desc': 'Avanza cuando puedas, retoma donde dejaste',
     'landing.feature3.title': 'Respaldado con cariño',
     'landing.feature3.desc': 'Contenido creado por expertos en bienestar',
+    'landing.comingSoon.title': 'Próximamente',
+    'landing.comingSoon.subtitle': 'Nuevos retos para tu crecimiento',
+    'landing.comingSoon.7day': 'Reto de 7 días',
+    'landing.comingSoon.7dayDesc': 'Profundiza en tu práctica con una semana completa',
+    'landing.comingSoon.14day': 'Reto de 14 días',
+    'landing.comingSoon.14dayDesc': 'Consolida tus hábitos con dos semanas de práctica',
+    'landing.comingSoon.combos': 'Combos especiales',
+    'landing.comingSoon.combosDesc': 'Paquetes personalizados para diferentes necesidades',
 
     // Auth
     'auth.register.title': 'Crea tu cuenta',
@@ -417,6 +479,11 @@ export const translations = {
     'auth.error.password': 'La contraseña debe tener al menos 8 caracteres',
     'auth.error.exists': 'Este correo ya está registrado',
     'auth.error.invalid': 'Email o contraseña incorrectos',
+    'auth.error.terms': 'Debes aceptar los términos para continuar',
+    'auth.tabs.register': 'Registro',
+    'auth.tabs.login': 'Iniciar Sesión',
+    'auth.register.creating': 'Creando cuenta...',
+    'auth.login.signingIn': 'Entrando...',
 
     // Energy selector
     'energy.title': '¿Cómo está tu energía ahora?',
@@ -438,7 +505,7 @@ export const translations = {
     'ethical.footer': 'Contenido educativo y preventivo. No sustituye atención profesional.',
 
     // Onboarding
-    'onboarding.step1.title': 'Un viaje de 3 días',
+    'onboarding.step1.title': 'Un reto de 3 días',
     'onboarding.step1.text': 'Cada día te tomará menos de 10 minutos. Recibirás un video, un audio guiado y una pequeña práctica.',
     'onboarding.step2.title': '¿Cuándo te viene mejor?',
     'onboarding.step2.text': 'Te enviaremos un recordatorio amable para que no olvides tu momento de calma.',
@@ -449,6 +516,13 @@ export const translations = {
     'onboarding.time.afternoon': 'Tarde (14:00)',
     'onboarding.time.evening': 'Noche (20:00)',
     'onboarding.time.custom': 'Personalizar',
+    'onboarding.day0.name': 'Bienvenida',
+    'onboarding.day1.name': 'Anclaje',
+    'onboarding.day2.name': 'Propósito',
+    'onboarding.day3.name': 'Cierre',
+    'onboarding.back': 'Atrás',
+    'onboarding.next': 'Siguiente',
+    'onboarding.skip': 'Saltar introducción',
 
     // Welcome
     'welcome.title': 'Tu camino hacia el bienestar',
@@ -461,11 +535,11 @@ export const translations = {
     'welcome.block0.ready': 'Estoy listo/a para comenzar',
 
     // Ethical Note
-    'ethical.title': 'Nota importante sobre este programa',
+    'ethical.title': 'Nota importante sobre este reto',
     'ethical.shortTitle': 'Nota importante',
-    'ethical.text': 'Este programa es educativo y preventivo. No reemplaza atención profesional de salud mental. Si estás pasando por un momento difícil, te animamos a buscar apoyo profesional.',
+    'ethical.text': 'Este reto es educativo y preventivo. No reemplaza atención profesional de salud mental. Si estás pasando por un momento difícil, te animamos a buscar apoyo profesional.',
     'ethical.link': 'Más información sobre este descargo',
-    'ethical.fullText': 'BÁLTICA es un programa educativo y preventivo de bienestar. No es un tratamiento médico, psicológico ni terapéutico. Este contenido no diagnostica, trata ni cura ninguna condición de salud física o mental. Si estás pasando por un momento difícil o tienes pensamientos que te preocupan, por favor busca apoyo profesional.',
+    'ethical.fullText': 'BÁLTICA es un reto educativo y preventivo de bienestar. No es un tratamiento médico, psicológico ni terapéutico. Este contenido no diagnostica, trata ni cura ninguna condición de salud física o mental. Si estás pasando por un momento difícil o tienes pensamientos que te preocupan, por favor busca apoyo profesional.',
     'ethical.resources': 'Recursos de ayuda',
     'ethical.crisis': 'Línea de atención en crisis',
     'ethical.professional': 'Consulta con un profesional de salud mental',
@@ -525,33 +599,60 @@ export const translations = {
     'activityLog.event.payment_event': 'Evento de pago',
 
     // Payment
-    'payment.title': 'Completa tu acceso',
-    'payment.plan.name': 'Programa BÁLTICA - 3 días',
+    'payment.title': 'Elige tu plan',
+    'payment.subtitle': 'RETO DE 3 DÍAS',
+    'payment.launchBadge': 'Precio de lanzamiento',
+    'payment.launchNote': 'Estos precios especiales no durarán para siempre',
     'payment.plan.includes': 'Incluye',
-    'payment.plan.item1': 'Acceso completo al programa de 3 días',
+    'payment.plan.item1': 'Acceso completo al reto de 3 días',
     'payment.plan.item2': 'Videos y audios guiados',
     'payment.plan.item3': 'Material descargable (PDFs)',
     'payment.plan.item4': 'Recordatorios personalizados',
-    'payment.plan.item5': 'Acceso de por vida al contenido',
+    // Plan Basic
+    'payment.plan.basic.name': 'Básico',
+    'payment.plan.basic.duration': '2 meses',
+    'payment.plan.basic.price': '$22.900',
+    'payment.plan.basic.desc': 'Ideal para comenzar tu viaje',
+    // Plan Medium
+    'payment.plan.medium.name': 'Medio',
+    'payment.plan.medium.duration': '6 meses',
+    'payment.plan.medium.price': '$32.900',
+    'payment.plan.medium.desc': 'El más popular',
+    'payment.plan.medium.badge': 'Más Popular',
+    'payment.plan.medium.bonus': '¡BONUS: Acceso por 1 año completo!',
+    // Plan Premium
+    'payment.plan.premium.name': 'Premium',
+    'payment.plan.premium.duration': '1 año',
+    'payment.plan.premium.price': '$42.900',
+    'payment.plan.premium.desc': 'Acceso total + futuro',
+    'payment.plan.premium.badge': 'Mejor Valor',
+    'payment.plan.premium.bonus': 'Incluye GRATIS: Retos 7d, 14d y 2 Combos',
+    'payment.plan.premium.updates': 'Todas las actualizaciones sin costo',
+    // Common
+    'payment.comingSoon': 'Próximamente',
+    'payment.planComingSoon': 'Este plan estará disponible próximamente. Por ahora, solo el plan de 2 meses está activo.',
+    'payment.selectPlan': 'Elegir plan',
     'payment.provider': 'Pago seguro con Mercado Pago',
     'payment.cta': 'Pagar con Mercado Pago',
-    'payment.note': '¿Preguntas sobre tu pago? Contáctanos en help@baltica.app',
-    'payment.processing': 'Procesando pago...',
-    'payment.success': '¡Pago completado!',
-    'payment.error': 'Error en el pago. Inténtalo de nuevo.',
+    'payment.note': '¿Preguntas sobre tu pago? Contáctanos en servicioalcliente@balticaeducation.com',
+    'payment.processing': 'Procesando tu pago...',
+    'payment.success': '¡Listo! Tu pago se completó correctamente.',
+    'payment.error': 'Algo no salió bien con el pago. No te preocupes, puedes intentarlo de nuevo.',
+    'payment.future.title': 'Próximamente',
+    'payment.future.desc': 'Retos de 7 días, 14 días y COMBOS especiales',
 
     // User status
-    'status.suspended': 'Tu acceso está suspendido. Puedes ver tu progreso pero no avanzar en las jornadas. Contacta al equipo de soporte para activar tu cuenta.',
-    'status.expired': 'Tu periodo de acceso ha expirado. Para continuar con las jornadas, renueva tu suscripción.',
-    'status.contactSupport': 'Contactar soporte',
-    'status.repay': 'Renovar acceso',
+    'status.suspended': 'Tu acceso está en pausa por el momento. Puedes ver tu progreso guardado, y cuando estés listo/a, escríbenos para reactivar tu cuenta.',
+    'status.expired': 'Tu tiempo de acceso ha terminado, pero tu progreso sigue aquí. Cuando quieras continuar tu camino, puedes renovar fácilmente.',
+    'status.contactSupport': 'Escríbenos',
+    'status.repay': 'Continuar mi camino',
 
     // How It Works
     'howItWorks.title': '¿Cómo funciona BÁLTICA?',
     'howItWorks.section1.title': 'Todo en un solo lugar',
-    'howItWorks.section1.text': 'Accedes a videos, audios y materiales directamente desde la app. Tu experiencia es fluida, sin importar dónde esté alojado el contenido.',
-    'howItWorks.section2.title': 'Tecnología que te respalda',
-    'howItWorks.section2.text': 'La web está alojada en Hostinger (tu dominio). Los videos y audios pueden estar en Hostinger o en servidores especializados para mejor rendimiento. No importa dónde estén: tú siempre los ves igual en la app.',
+    'howItWorks.section1.text': 'Accedes a videos, audios y materiales directamente desde la app. Tu experiencia es fluida y sin interrupciones.',
+    'howItWorks.section2.title': 'Siempre disponible',
+    'howItWorks.section2.text': 'El contenido está optimizado para que lo puedas ver desde cualquier dispositivo, en cualquier momento. Todo funciona de forma automática para ti.',
     'howItWorks.section3.title': 'Tus datos, seguros',
     'howItWorks.section3.text': 'Tu progreso y datos personales se guardan de forma segura. Nunca compartimos tu información con terceros.',
     'howItWorks.faq1.q': '¿Necesito descargar algo?',
@@ -633,14 +734,20 @@ export const translations = {
     'closure.practice.reminder': 'Recuerda aplicar esto durante el día',
     'closure.next': 'Volver al inicio',
     'closure.share': 'Compartir logro',
-    
+    'closure.nextDay.prefix': 'Mañana: ',
+    'closure.nextDay.day1': 'Anclaje - conectando con el presente',
+    'closure.nextDay.day2': 'Acción con propósito - actuando desde tus valores',
+    'closure.nextDay.day3': 'Cierre con autocompasión - celebrando tu camino',
+
     // Progress
     'progress.title': 'Tu progreso',
     'progress.completed': 'Días completados',
     'progress.streak': 'Racha actual',
     'progress.days': 'días',
     'progress.keep': '¡Sigue así!',
-    
+    'progress.totalPercent': 'Progreso total',
+    'progress.yourJourney': 'Tu recorrido',
+
     // Common
     'common.back': 'Volver',
     'common.next': 'Siguiente',
@@ -648,7 +755,7 @@ export const translations = {
     'common.loading': 'Cargando...',
     'common.error': 'Algo salió mal',
     'common.retry': 'Reintentar',
-    
+
     // Help
     'help.title': 'Estamos aquí para ayudarte',
     'help.faq': 'Preguntas frecuentes',
@@ -675,8 +782,8 @@ export const translations = {
     'notifications.settings.dailyReminderDesc': 'Recibe un aviso cada día para hacer tu práctica',
     'notifications.settings.reminderEnabled': 'Activar recordatorio',
     'notifications.settings.time': 'Hora',
-    'notifications.settings.streakReminder': 'Proteger racha',
-    'notifications.settings.streakReminderDesc': 'Aviso si vas a perder tu racha',
+    'notifications.settings.streakReminder': 'Recordatorio de continuidad',
+    'notifications.settings.streakReminderDesc': 'Un aviso amable para mantener tu rutina',
     'notifications.settings.encouragement': 'Mensajes de ánimo',
     'notifications.settings.encouragementDesc': 'Recibe mensajes motivadores ocasionales',
 
@@ -698,7 +805,7 @@ export const translations = {
     'admin.filter.expired': 'Expirados',
     'admin.addUser': 'Agregar usuario',
     'admin.addUser.title': 'Registrar nuevo usuario',
-    'admin.addUser.desc': 'Crea una cuenta con acceso al programa.',
+    'admin.addUser.desc': 'Crea una cuenta con acceso al reto.',
     'admin.addUser.name': 'Nombre',
     'admin.addUser.email': 'Email',
     'admin.addUser.days': 'Días de acceso',
@@ -764,7 +871,7 @@ export const translations = {
 
     // Landing
     'landing.headline': 'Your wellbeing, one step at a time',
-    'landing.subtitle': 'A 3-day program to cultivate transformative habits',
+    'landing.subtitle': 'A 3-day challenge to cultivate transformative habits',
     'landing.cta': 'Start for free',
     'landing.tagline': 'Just 10 minutes a day',
     'landing.feature1.title': 'Brief and effective',
@@ -773,6 +880,14 @@ export const translations = {
     'landing.feature2.desc': 'Move forward when you can, pick up where you left off',
     'landing.feature3.title': 'Made with care',
     'landing.feature3.desc': 'Content created by wellness experts',
+    'landing.comingSoon.title': 'Coming Soon',
+    'landing.comingSoon.subtitle': 'New challenges for your growth',
+    'landing.comingSoon.7day': '7-Day Challenge',
+    'landing.comingSoon.7dayDesc': 'Deepen your practice with a full week',
+    'landing.comingSoon.14day': '14-Day Challenge',
+    'landing.comingSoon.14dayDesc': 'Solidify your habits with two weeks of practice',
+    'landing.comingSoon.combos': 'Special Combos',
+    'landing.comingSoon.combosDesc': 'Customized packages for different needs',
 
     // Auth
     'auth.register.title': 'Create your account',
@@ -790,6 +905,11 @@ export const translations = {
     'auth.error.password': 'Password must be at least 8 characters',
     'auth.error.exists': 'This email is already registered',
     'auth.error.invalid': 'Invalid email or password',
+    'auth.error.terms': 'You must accept the terms to continue',
+    'auth.tabs.register': 'Register',
+    'auth.tabs.login': 'Sign In',
+    'auth.register.creating': 'Creating account...',
+    'auth.login.signingIn': 'Signing in...',
 
     // Energy selector
     'energy.title': 'How is your energy right now?',
@@ -811,7 +931,7 @@ export const translations = {
     'ethical.footer': 'Educational and preventive content. Does not replace professional care.',
 
     // Onboarding
-    'onboarding.step1.title': 'A 3-day journey',
+    'onboarding.step1.title': 'A 3-day challenge',
     'onboarding.step1.text': 'Each day will take less than 10 minutes. You will receive a video, guided audio, and a small practice.',
     'onboarding.step2.title': 'When works best for you?',
     'onboarding.step2.text': 'We will send you a gentle reminder so you do not forget your moment of calm.',
@@ -822,6 +942,13 @@ export const translations = {
     'onboarding.time.afternoon': 'Afternoon (2:00 PM)',
     'onboarding.time.evening': 'Evening (8:00 PM)',
     'onboarding.time.custom': 'Custom',
+    'onboarding.day0.name': 'Welcome',
+    'onboarding.day1.name': 'Grounding',
+    'onboarding.day2.name': 'Purpose',
+    'onboarding.day3.name': 'Closure',
+    'onboarding.back': 'Back',
+    'onboarding.next': 'Next',
+    'onboarding.skip': 'Skip introduction',
 
     // Welcome
     'welcome.title': 'Your path to wellbeing',
@@ -834,11 +961,11 @@ export const translations = {
     'welcome.block0.ready': 'I am ready to begin',
 
     // Ethical Note
-    'ethical.title': 'Important note about this program',
+    'ethical.title': 'Important note about this challenge',
     'ethical.shortTitle': 'Important note',
-    'ethical.text': 'This program is educational and preventive. It does not replace professional mental health care. If you are going through a difficult time, we encourage you to seek professional support.',
+    'ethical.text': 'This challenge is educational and preventive. It does not replace professional mental health care. If you are going through a difficult time, we encourage you to seek professional support.',
     'ethical.link': 'More about this disclaimer',
-    'ethical.fullText': 'BÁLTICA is an educational and preventive wellness program. It is not medical, psychological, or therapeutic treatment. This content does not diagnose, treat, or cure any physical or mental health condition. If you are going through a difficult time or have thoughts that concern you, please seek professional support.',
+    'ethical.fullText': 'BÁLTICA is an educational and preventive wellness challenge. It is not medical, psychological, or therapeutic treatment. This content does not diagnose, treat, or cure any physical or mental health condition. If you are going through a difficult time or have thoughts that concern you, please seek professional support.',
     'ethical.resources': 'Help resources',
     'ethical.crisis': 'Crisis hotline',
     'ethical.professional': 'Consult a mental health professional',
@@ -898,33 +1025,60 @@ export const translations = {
     'activityLog.event.payment_event': 'Payment event',
 
     // Payment
-    'payment.title': 'Complete your access',
-    'payment.plan.name': 'BÁLTICA Program - 3 days',
+    'payment.title': 'Choose your plan',
+    'payment.subtitle': '3-DAY CHALLENGE',
+    'payment.launchBadge': 'Launch price',
+    'payment.launchNote': 'These special prices won\'t last forever',
     'payment.plan.includes': 'Includes',
-    'payment.plan.item1': 'Full access to the 3-day program',
+    'payment.plan.item1': 'Full access to the 3-day challenge',
     'payment.plan.item2': 'Guided videos and audios',
     'payment.plan.item3': 'Downloadable materials (PDFs)',
     'payment.plan.item4': 'Personalized reminders',
-    'payment.plan.item5': 'Lifetime access to content',
+    // Plan Basic
+    'payment.plan.basic.name': 'Basic',
+    'payment.plan.basic.duration': '2 months',
+    'payment.plan.basic.price': '$22,900',
+    'payment.plan.basic.desc': 'Ideal to start your journey',
+    // Plan Medium
+    'payment.plan.medium.name': 'Medium',
+    'payment.plan.medium.duration': '6 months',
+    'payment.plan.medium.price': '$32,900',
+    'payment.plan.medium.desc': 'Most popular',
+    'payment.plan.medium.badge': 'Most Popular',
+    'payment.plan.medium.bonus': 'BONUS: Full 1-year access!',
+    // Plan Premium
+    'payment.plan.premium.name': 'Premium',
+    'payment.plan.premium.duration': '1 year',
+    'payment.plan.premium.price': '$42,900',
+    'payment.plan.premium.desc': 'Total access + future',
+    'payment.plan.premium.badge': 'Best Value',
+    'payment.plan.premium.bonus': 'FREE: 7d, 14d Challenges & 2 Combos',
+    'payment.plan.premium.updates': 'All updates at no extra cost',
+    // Common
+    'payment.comingSoon': 'Coming Soon',
+    'payment.planComingSoon': 'This plan will be available soon. For now, only the 2-month plan is active.',
+    'payment.selectPlan': 'Select plan',
     'payment.provider': 'Secure payment with Mercado Pago',
     'payment.cta': 'Pay with Mercado Pago',
-    'payment.note': 'Questions about your payment? Contact us at help@baltica.app',
-    'payment.processing': 'Processing payment...',
-    'payment.success': 'Payment completed!',
-    'payment.error': 'Payment error. Please try again.',
+    'payment.note': 'Questions about your payment? Contact us at servicioalcliente@balticaeducation.com',
+    'payment.processing': 'Processing your payment...',
+    'payment.success': 'All set! Your payment was completed successfully.',
+    'payment.error': 'Something didn\'t go through with the payment. No worries, you can try again.',
+    'payment.future.title': 'Coming Soon',
+    'payment.future.desc': '7-day, 14-day Challenges and special COMBOS',
 
     // User status
-    'status.suspended': 'Your access is suspended. You can view your progress but cannot continue the daily journeys. Contact support to activate your account.',
-    'status.expired': 'Your access period has expired. To continue with the journeys, renew your subscription.',
-    'status.contactSupport': 'Contact support',
-    'status.repay': 'Renew access',
+    'status.suspended': 'Your access is paused for now. You can still see your saved progress, and when you are ready, reach out to us to reactivate your account.',
+    'status.expired': 'Your access time has ended, but your progress is still here. Whenever you want to continue your journey, you can easily renew.',
+    'status.contactSupport': 'Reach out',
+    'status.repay': 'Continue my journey',
 
     // How It Works
     'howItWorks.title': 'How does BÁLTICA work?',
     'howItWorks.section1.title': 'Everything in one place',
-    'howItWorks.section1.text': 'Access videos, audios, and materials directly from the app. Your experience is seamless, no matter where the content is hosted.',
-    'howItWorks.section2.title': 'Technology that supports you',
-    'howItWorks.section2.text': 'The website is hosted on Hostinger (your domain). Videos and audios may be on Hostinger or specialized servers for better performance. No matter where they are: you always see them the same in the app.',
+    'howItWorks.section1.text': 'Access videos, audios, and materials directly from the app. Your experience is smooth and uninterrupted.',
+    'howItWorks.section2.title': 'Always available',
+    'howItWorks.section2.text': 'The content is optimized so you can enjoy it from any device, at any time. Everything works automatically for you.',
     'howItWorks.section3.title': 'Your data, secure',
     'howItWorks.section3.text': 'Your progress and personal data are stored securely. We never share your information with third parties.',
     'howItWorks.faq1.q': 'Do I need to download anything?',
@@ -1006,14 +1160,20 @@ export const translations = {
     'closure.practice.reminder': 'Remember to apply this throughout your day',
     'closure.next': 'Back to home',
     'closure.share': 'Share achievement',
-    
+    'closure.nextDay.prefix': 'Tomorrow: ',
+    'closure.nextDay.day1': 'Grounding - connecting with the present',
+    'closure.nextDay.day2': 'Purposeful action - acting from your values',
+    'closure.nextDay.day3': 'Closing with self-compassion - celebrating your journey',
+
     // Progress
     'progress.title': 'Your progress',
     'progress.completed': 'Days completed',
     'progress.streak': 'Current streak',
     'progress.days': 'days',
     'progress.keep': 'Keep it up!',
-    
+    'progress.totalPercent': 'Total progress',
+    'progress.yourJourney': 'Your journey',
+
     // Common
     'common.back': 'Back',
     'common.next': 'Next',
@@ -1021,7 +1181,7 @@ export const translations = {
     'common.loading': 'Loading...',
     'common.error': 'Something went wrong',
     'common.retry': 'Retry',
-    
+
     // Help
     'help.title': 'We\'re here to help',
     'help.faq': 'FAQ',
@@ -1048,8 +1208,8 @@ export const translations = {
     'notifications.settings.dailyReminderDesc': 'Get a daily reminder to complete your practice',
     'notifications.settings.reminderEnabled': 'Enable reminder',
     'notifications.settings.time': 'Time',
-    'notifications.settings.streakReminder': 'Streak protection',
-    'notifications.settings.streakReminderDesc': 'Get notified if you\'re about to lose your streak',
+    'notifications.settings.streakReminder': 'Continuity reminder',
+    'notifications.settings.streakReminderDesc': 'A gentle nudge to help you keep your routine',
     'notifications.settings.encouragement': 'Encouragement messages',
     'notifications.settings.encouragementDesc': 'Receive occasional motivational messages',
 
@@ -1071,7 +1231,7 @@ export const translations = {
     'admin.filter.expired': 'Expired',
     'admin.addUser': 'Add user',
     'admin.addUser.title': 'Register new user',
-    'admin.addUser.desc': 'Create an account with program access.',
+    'admin.addUser.desc': 'Create an account with challenge access.',
     'admin.addUser.name': 'Name',
     'admin.addUser.email': 'Email',
     'admin.addUser.days': 'Access days',

@@ -24,11 +24,11 @@ export default function AchievementsPage() {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <BalticaLogo variant="isotipo" size={64} className="mx-auto mb-4" />
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+          <BalticaLogo variant="isotipo" size={80} className="mx-auto mb-4" />
+          <h1 className="text-xl md:text-2xl font-bold text-foreground">
             {t('achievements.title')}
           </h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-sm text-muted-foreground mt-2">
             {unlockedCount} {t('achievements.subtitle')} de {achievements.length}
           </p>
         </motion.div>
@@ -67,13 +67,13 @@ export default function AchievementsPage() {
                       }`}
                     >
                       {isUnlocked ? (
-                        <span className="text-2xl">{achievement.icon}</span>
+                        <span className="text-xl">{achievement.icon}</span>
                       ) : (
                         <Lock className="h-6 w-6 text-muted-foreground" />
                       )}
                     </div>
 
-                    <h3 className="font-semibold text-foreground mb-1">
+                    <h3 className="text-sm font-semibold text-foreground mb-1">
                       {title}
                     </h3>
 
@@ -95,7 +95,7 @@ export default function AchievementsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
           >
-            <p className="text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               {unlockedCount === 0
                 ? 'Comienza tu viaje para desbloquear logros'
                 : `¡Sigue así! Te faltan ${achievements.length - unlockedCount} logros`}

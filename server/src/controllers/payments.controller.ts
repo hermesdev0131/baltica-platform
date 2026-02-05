@@ -26,7 +26,7 @@ export async function createPreference(req: Request & { user?: any }, res: Respo
             id: 'baltica-programa-3dias',
             title: 'Báltica - Programa 3 días',
             quantity: 1,
-            unit_price: 29900,
+            unit_price: 22900,
             currency_id: 'COP',
           },
         ],
@@ -67,7 +67,7 @@ export async function verifyPayment(req: Request & { user?: any }, res: Response
     if (result.status === 'approved') {
       // Activate user
       const now = new Date();
-      const expiresAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // 30 days default
+      const expiresAt = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000); // 60 days (2 months)
 
       await pool.query(
         `UPDATE users SET status = 'active', payment_id = $1, access_expires_at = $2 WHERE id = $3`,
@@ -118,7 +118,7 @@ export async function webhook(req: Request, res: Response) {
       if (result.status === 'approved' && result.external_reference) {
         const userId = parseInt(result.external_reference, 10);
         const now = new Date();
-        const expiresAt = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+        const expiresAt = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000); // 60 days (2 months)
 
         // Activate user
         await pool.query(

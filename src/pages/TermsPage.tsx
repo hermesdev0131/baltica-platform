@@ -93,7 +93,7 @@ export default function TermsPage() {
                     ? 'Si tienes preguntas sobre estos términos, contáctanos en:'
                     : 'If you have questions about these terms, contact us at:'}
                 </p>
-                <p className="font-medium text-foreground">contacto@baltica.app</p>
+                <p className="font-medium text-foreground">contacto@balticaeducation.com</p>
               </CardContent>
             </Card>
 

@@ -469,6 +469,12 @@ export default function JourneyPage() {
     }
   };
 
+  const getNextDayPreview = (): string | null => {
+    if (dayNumber >= 3) return null; // No preview after Day 3
+    const nextDay = dayNumber + 1;
+    return `${t('closure.nextDay.prefix' as any)}${t(`closure.nextDay.day${nextDay}` as any)}`;
+  };
+
   const getClosureTitle = (): string => {
     if (dayNumber === 3) return t('day.complete.title');
     return t('closure.title');
@@ -647,6 +653,12 @@ export default function JourneyPage() {
                       <p className="text-foreground mb-3">{getClosureMessage()}</p>
                       {dayContent && (
                         <p className="text-sm text-muted-foreground">{dayContent.practice[localeKey]}</p>
+                      )}
+                      {/* What's Next preview */}
+                      {getNextDayPreview() && (
+                        <div className="mt-4 pt-4 border-t border-border/40">
+                          <p className="text-sm font-medium text-primary">{getNextDayPreview()}</p>
+                        </div>
                       )}
                     </CardContent>
                   </Card>

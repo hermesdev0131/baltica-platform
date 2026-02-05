@@ -157,19 +157,19 @@ export default function OnboardingPage() {
                 </Card>
               )}
 
-              {/* Day preview for step 1 */}
+              {/* Day preview for step 1 - shows Day 0 (Welcome) + 3 days */}
               {currentStep === 1 && (
-                <div className="grid grid-cols-3 gap-3 mb-8">
-                  {[1, 2, 3].map((day) => (
+                <div className="grid grid-cols-4 gap-2 mb-8">
+                  {[0, 1, 2, 3].map((day) => (
                     <Card key={day} className="shadow-card">
-                      <CardContent className="p-4 text-center">
-                        <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center mx-auto mb-2">
-                          <span className="font-bold text-secondary-foreground">{day}</span>
+                      <CardContent className="p-3 text-center">
+                        <div className={`w-9 h-9 rounded-full flex items-center justify-center mx-auto mb-2 ${day === 0 ? 'bg-primary/20' : 'bg-secondary'}`}>
+                          <span className={`font-bold text-sm ${day === 0 ? 'text-primary' : 'text-secondary-foreground'}`}>
+                            {day === 0 ? '✓' : day}
+                          </span>
                         </div>
                         <p className="text-xs text-muted-foreground">
-                          {day === 1 && 'Anclaje'}
-                          {day === 2 && 'Propósito'}
-                          {day === 3 && 'Cierre'}
+                          {t(`onboarding.day${day}.name` as any)}
                         </p>
                       </CardContent>
                     </Card>
@@ -186,7 +186,7 @@ export default function OnboardingPage() {
                     className="flex-1 rounded-full gap-2"
                   >
                     <ArrowLeft className="h-4 w-4" />
-                    Atrás
+                    {t('onboarding.back' as any)}
                   </Button>
                 )}
 
@@ -195,7 +195,7 @@ export default function OnboardingPage() {
                     onClick={handleNext}
                     className="flex-1 rounded-full gap-2"
                   >
-                    Siguiente
+                    {t('onboarding.next' as any)}
                     <ArrowRight className="h-4 w-4" />
                   </Button>
                 ) : (
@@ -217,7 +217,7 @@ export default function OnboardingPage() {
                     onClick={() => setCurrentStep(totalSteps)}
                     className="text-muted-foreground"
                   >
-                    Saltar introducción
+                    {t('onboarding.skip' as any)}
                   </Button>
                 </div>
               )}

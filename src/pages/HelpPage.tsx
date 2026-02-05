@@ -63,6 +63,42 @@ const faqs = {
       question: 'What if I have questions or need help?',
       answer: 'Báltica includes permanent access to a Help section, where you will find guidance and important reminders about responsible use of the platform and when to seek external professional support.',
     },
+    // Payment FAQs
+    {
+      question: 'How do I pay for Báltica?',
+      answer: 'Payments are made securely through Mercado Pago. You can pay with credit card, debit card, or other methods available in your country. The process is simple and secure.',
+    },
+    {
+      question: 'Can I get a refund?',
+      answer: 'If you have questions about refunds, contact us at servicioalcliente@balticaeducation.com within the first 7 days of purchase. Each case will be evaluated individually.',
+    },
+    // Access FAQs
+    {
+      question: 'How do I create my account?',
+      answer: 'Simply enter your email and create a password. After registering, you can start with your free trial or select a plan to begin your challenge.',
+    },
+    {
+      question: 'I forgot my password, what do I do?',
+      answer: 'On the login screen, select "Forgot your password?" and follow the instructions to reset it. If you have issues, contact us at servicioalcliente@balticaeducation.com.',
+    },
+    // Challenge duration FAQs
+    {
+      question: 'How long does each challenge last?',
+      answer: 'The 3-Day Challenge includes 3 complete days of content, plus an initial welcome day (Day 0). Each day takes approximately 10 minutes to complete.',
+    },
+    {
+      question: 'What happens when my access expires?',
+      answer: 'When your access period ends, you can view your progress but cannot access new content. You can renew at any time to continue your journey.',
+    },
+    // Plan FAQs
+    {
+      question: 'What does the 2-month plan include?',
+      answer: 'The 2-month plan includes full access to the 3-Day Challenge with all videos, guided audios, PDF materials, and the ability to repeat the content as many times as you want during that period.',
+    },
+    {
+      question: 'What is the difference between plans?',
+      answer: 'The basic plan (2 months) gives you access to the 3-Day Challenge. Longer plans (coming soon) will include additional challenges like the 7-day and 14-day programs, plus exclusive combos.',
+    },
   ],
   'es-ES': [
     {
@@ -113,6 +149,42 @@ const faqs = {
       question: '¿Qué pasa si tengo dudas o necesito ayuda?',
       answer: 'Báltica incluye un acceso permanente a una sección de Ayuda, donde encontrarás orientación y recordatorios importantes sobre el uso responsable de la plataforma y cuándo buscar apoyo profesional externo.',
     },
+    // FAQs de Pagos
+    {
+      question: '¿Cómo pago Báltica?',
+      answer: 'Los pagos se realizan de forma segura a través de Mercado Pago. Puedes pagar con tarjeta de crédito, débito u otros métodos disponibles en tu país. El proceso es sencillo y seguro.',
+    },
+    {
+      question: '¿Puedo solicitar un reembolso?',
+      answer: 'Si tienes preguntas sobre reembolsos, contáctanos en servicioalcliente@balticaeducation.com dentro de los primeros 7 días de tu compra. Cada caso se evaluará de forma individual.',
+    },
+    // FAQs de Acceso
+    {
+      question: '¿Cómo creo mi cuenta?',
+      answer: 'Simplemente ingresa tu correo electrónico y crea una contraseña. Después de registrarte, puedes comenzar con tu prueba gratuita o seleccionar un plan para iniciar tu reto.',
+    },
+    {
+      question: 'Olvidé mi contraseña, ¿qué hago?',
+      answer: 'En la pantalla de inicio de sesión, selecciona "¿Olvidaste tu contraseña?" y sigue las instrucciones para restablecerla. Si tienes problemas, contáctanos en servicioalcliente@balticaeducation.com.',
+    },
+    // FAQs de Duración del reto
+    {
+      question: '¿Cuánto dura cada reto?',
+      answer: 'El Reto de 3 Días incluye 3 días completos de contenido, más un día inicial de bienvenida (Día 0). Cada día toma aproximadamente 10 minutos en completarse.',
+    },
+    {
+      question: '¿Qué pasa cuando mi acceso expira?',
+      answer: 'Cuando tu período de acceso termine, podrás ver tu progreso pero no podrás acceder a nuevo contenido. Puedes renovar en cualquier momento para continuar tu camino.',
+    },
+    // FAQs de Planes
+    {
+      question: '¿Qué incluye el plan de 2 meses?',
+      answer: 'El plan de 2 meses incluye acceso completo al Reto de 3 Días con todos los vídeos, audios guiados, materiales PDF y la posibilidad de repetir el contenido las veces que quieras durante ese período.',
+    },
+    {
+      question: '¿Cuál es la diferencia entre los planes?',
+      answer: 'El plan básico (2 meses) te da acceso al Reto de 3 Días. Los planes más largos (próximamente) incluirán retos adicionales como los programas de 7 y 14 días, más combos exclusivos.',
+    },
   ],
   'es-LATAM': [
     {
@@ -162,6 +234,42 @@ const faqs = {
     {
       question: '¿Qué pasa si tengo dudas o necesito ayuda?',
       answer: 'Báltica incluye un acceso permanente a una sección de Ayuda, donde encontrarás orientación y recordatorios importantes sobre el uso responsable de la plataforma y cuándo buscar apoyo profesional externo.',
+    },
+    // FAQs de Pagos
+    {
+      question: '¿Cómo pago Báltica?',
+      answer: 'Los pagos se realizan de forma segura a través de Mercado Pago. Puedes pagar con tarjeta de crédito, débito u otros métodos disponibles en tu país. El proceso es sencillo y seguro.',
+    },
+    {
+      question: '¿Puedo pedir un reembolso?',
+      answer: 'Si tienes preguntas sobre reembolsos, contáctanos en servicioalcliente@balticaeducation.com dentro de los primeros 7 días de tu compra. Cada caso se evaluará de forma individual.',
+    },
+    // FAQs de Acceso
+    {
+      question: '¿Cómo creo mi cuenta?',
+      answer: 'Simplemente ingresa tu correo electrónico y crea una contraseña. Después de registrarte, puedes comenzar con tu prueba gratis o seleccionar un plan para iniciar tu reto.',
+    },
+    {
+      question: 'Olvidé mi contraseña, ¿qué hago?',
+      answer: 'En la pantalla de inicio de sesión, selecciona "¿Olvidaste tu contraseña?" y sigue las instrucciones para restablecerla. Si tienes problemas, contáctanos en servicioalcliente@balticaeducation.com.',
+    },
+    // FAQs de Duración del reto
+    {
+      question: '¿Cuánto dura cada reto?',
+      answer: 'El Reto de 3 Días incluye 3 días completos de contenido, más un día inicial de bienvenida (Día 0). Cada día toma aproximadamente 10 minutos en completarse.',
+    },
+    {
+      question: '¿Qué pasa cuando mi acceso expira?',
+      answer: 'Cuando tu período de acceso termine, podrás ver tu progreso pero no podrás acceder a nuevo contenido. Puedes renovar en cualquier momento para continuar tu camino.',
+    },
+    // FAQs de Planes
+    {
+      question: '¿Qué incluye el plan de 2 meses?',
+      answer: 'El plan de 2 meses incluye acceso completo al Reto de 3 Días con todos los videos, audios guiados, materiales PDF y la posibilidad de repetir el contenido las veces que quieras durante ese período.',
+    },
+    {
+      question: '¿Cuál es la diferencia entre los planes?',
+      answer: 'El plan básico (2 meses) te da acceso al Reto de 3 Días. Los planes más largos (próximamente) incluirán retos adicionales como los programas de 7 y 14 días, más combos exclusivos.',
     },
   ],
 };
@@ -267,7 +375,7 @@ export default function HelpPage() {
                 </div>
                 <div>
                   <h3 className="text-sm font-medium text-foreground">Email</h3>
-                  <p className="text-xs text-muted-foreground">help@baltica.app</p>
+                  <p className="text-xs text-muted-foreground">servicioalcliente@balticaeducation.com</p>
                 </div>
               </CardContent>
             </Card>

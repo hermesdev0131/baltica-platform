@@ -42,7 +42,7 @@ export function AccessBlocked({ reason }: AccessBlockedProps) {
 
           <div className="space-y-3">
             <Button variant="outline" className="w-full gap-2" asChild>
-              <a href="mailto:help@baltica.app">
+              <a href="mailto:servicioalcliente@balticaeducation.com">
                 <Mail className="h-4 w-4" /> Contactar soporte
               </a>
             </Button>
