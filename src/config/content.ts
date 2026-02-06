@@ -150,7 +150,7 @@ export const day3Content: DayContent = {
     'en': 'You made it this far. That says a lot about you.',
   },
   video: {
-    url: '/BIENVENIDA.mp4', // Reassigned from Day 0 (Day 0 has no video per PDF spec)
+    url: '/Autocompasion.mp4',
     duration: '2:00',
     title: 'Cierre del programa',
   },
