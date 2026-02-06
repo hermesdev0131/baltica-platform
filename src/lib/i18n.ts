@@ -322,6 +322,25 @@ export const translations = {
     'progress.totalPercent': 'Progreso total',
     'progress.yourJourney': 'Tu recorrido',
 
+    // Methodology
+    'methodology.title': 'La ciencia detrás de Báltica',
+    'methodology.teaser.title': '¿Por qué funciona?',
+    'methodology.teaser.3days': 'Basado en investigación: 3 días es el umbral mínimo para crear un nuevo hábito mental',
+    'methodology.teaser.10min': 'Diseñado para tu ritmo de vida: efectivo sin abrumar',
+    'methodology.teaser.act': 'Respaldado por la Terapia de Aceptación y Compromiso, con evidencia científica',
+    'methodology.teaser.cta': 'Conoce la metodología completa',
+    'methodology.why3days.title': '¿Por qué 3 días?',
+    'methodology.why3days.content': 'Los estudios en psicología del comportamiento muestran que 3 días consecutivos de práctica crean las primeras conexiones neuronales de un nuevo hábito. No es magia: es neuroplasticidad. Elegimos 3 días porque es alcanzable, medible y suficiente para que sientas un cambio real.',
+    'methodology.why10min.title': '¿Por qué 10 minutos?',
+    'methodology.why10min.content': 'La investigación sobre atención indica que 10 minutos es el punto óptimo: suficiente para activar la respuesta de relajación, pero corto para mantener el compromiso. Más tiempo no significa mejor resultado. La consistencia supera a la intensidad.',
+    'methodology.whySound.title': '¿Por qué música y ambiente?',
+    'methodology.whySound.content': 'El sonido ambiental reduce el cortisol y facilita el estado de calma. Los escenarios naturales activan áreas cerebrales asociadas con la recuperación emocional. No es decoración: es parte del diseño terapéutico.',
+    'methodology.whyOrder.title': '¿Por qué este orden?',
+    'methodology.whyOrder.content': 'Seguimos el modelo ACT: primero conectas con el presente (anclaje), luego identificas lo que importa (valores/propósito), y finalmente te tratas con amabilidad (autocompasión). Este orden está validado clínicamente para construir flexibilidad psicológica.',
+    'methodology.whatIsACT.title': '¿Qué es ACT?',
+    'methodology.whatIsACT.content': 'La Terapia de Aceptación y Compromiso (ACT) es un enfoque psicológico con décadas de investigación. No busca eliminar el malestar, sino ayudarte a vivir una vida significativa incluso cuando las cosas son difíciles. Báltica adapta estos principios a un formato accesible y breve.',
+    'methodology.disclaimer': 'Báltica es un programa educativo de bienestar. No reemplaza la atención profesional de salud mental.',
+
     // Common
     'common.back': 'Volver',
     'common.next': 'Siguiente',
@@ -748,6 +767,25 @@ export const translations = {
     'progress.totalPercent': 'Progreso total',
     'progress.yourJourney': 'Tu recorrido',
 
+    // Methodology
+    'methodology.title': 'La ciencia detrás de Báltica',
+    'methodology.teaser.title': '¿Por qué funciona?',
+    'methodology.teaser.3days': 'Basado en investigación: 3 días es el umbral mínimo para crear un nuevo hábito mental',
+    'methodology.teaser.10min': 'Diseñado para tu ritmo de vida: efectivo sin abrumar',
+    'methodology.teaser.act': 'Respaldado por la Terapia de Aceptación y Compromiso, con evidencia científica',
+    'methodology.teaser.cta': 'Conoce la metodología completa',
+    'methodology.why3days.title': '¿Por qué 3 días?',
+    'methodology.why3days.content': 'Los estudios en psicología del comportamiento muestran que 3 días consecutivos de práctica crean las primeras conexiones neuronales de un nuevo hábito. No es magia: es neuroplasticidad. Elegimos 3 días porque es alcanzable, medible y suficiente para que sientas un cambio real.',
+    'methodology.why10min.title': '¿Por qué 10 minutos?',
+    'methodology.why10min.content': 'La investigación sobre atención indica que 10 minutos es el punto óptimo: suficiente para activar la respuesta de relajación, pero corto para mantener el compromiso. Más tiempo no significa mejor resultado. La consistencia supera a la intensidad.',
+    'methodology.whySound.title': '¿Por qué música y ambiente?',
+    'methodology.whySound.content': 'El sonido ambiental reduce el cortisol y facilita el estado de calma. Los escenarios naturales activan áreas cerebrales asociadas con la recuperación emocional. No es decoración: es parte del diseño terapéutico.',
+    'methodology.whyOrder.title': '¿Por qué este orden?',
+    'methodology.whyOrder.content': 'Seguimos el modelo ACT: primero conectas con el presente (anclaje), luego identificas lo que importa (valores/propósito), y finalmente te tratas con amabilidad (autocompasión). Este orden está validado clínicamente para construir flexibilidad psicológica.',
+    'methodology.whatIsACT.title': '¿Qué es ACT?',
+    'methodology.whatIsACT.content': 'La Terapia de Aceptación y Compromiso (ACT) es un enfoque psicológico con décadas de investigación. No busca eliminar el malestar, sino ayudarte a vivir una vida significativa incluso cuando las cosas son difíciles. Báltica adapta estos principios a un formato accesible y breve.',
+    'methodology.disclaimer': 'Báltica es un programa educativo de bienestar. No reemplaza la atención profesional de salud mental.',
+
     // Common
     'common.back': 'Volver',
     'common.next': 'Siguiente',
@@ -1173,6 +1211,25 @@ export const translations = {
     'progress.keep': 'Keep it up!',
     'progress.totalPercent': 'Total progress',
     'progress.yourJourney': 'Your journey',
+
+    // Methodology
+    'methodology.title': 'The science behind Báltica',
+    'methodology.teaser.title': 'Why does it work?',
+    'methodology.teaser.3days': 'Research shows 3 days is the minimum threshold to form a new mental habit',
+    'methodology.teaser.10min': 'Designed for your lifestyle: effective without overwhelming',
+    'methodology.teaser.act': 'Backed by Acceptance and Commitment Therapy, with scientific evidence',
+    'methodology.teaser.cta': 'Learn about our full methodology',
+    'methodology.why3days.title': 'Why 3 days?',
+    'methodology.why3days.content': 'Behavioral psychology studies show that 3 consecutive days of practice create the first neural connections of a new habit. It\'s not magic: it\'s neuroplasticity. We chose 3 days because it\'s achievable, measurable, and enough for you to feel a real change.',
+    'methodology.why10min.title': 'Why 10 minutes?',
+    'methodology.why10min.content': 'Attention research indicates 10 minutes is the sweet spot: enough to activate the relaxation response, but short enough to maintain commitment. More time doesn\'t mean better results. Consistency beats intensity.',
+    'methodology.whySound.title': 'Why music and ambiance?',
+    'methodology.whySound.content': 'Ambient sound reduces cortisol and facilitates a calm state. Natural scenery activates brain areas associated with emotional recovery. It\'s not decoration: it\'s part of the therapeutic design.',
+    'methodology.whyOrder.title': 'Why this order?',
+    'methodology.whyOrder.content': 'We follow the ACT model: first you connect with the present (grounding), then identify what matters (values/purpose), and finally treat yourself with kindness (self-compassion). This sequence is clinically validated to build psychological flexibility.',
+    'methodology.whatIsACT.title': 'What is ACT?',
+    'methodology.whatIsACT.content': 'Acceptance and Commitment Therapy (ACT) is a psychological approach with decades of research. It doesn\'t aim to eliminate discomfort, but helps you live a meaningful life even when things are hard. Báltica adapts these principles into an accessible, brief format.',
+    'methodology.disclaimer': 'Báltica is an educational wellness program. It does not replace professional mental health care.',
 
     // Common
     'common.back': 'Back',

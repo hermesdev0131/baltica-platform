@@ -1,7 +1,7 @@
 import { useApp } from '@/contexts/AppContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Clock, Heart, Sparkles, ArrowRight, Globe, Moon, Sun, Calendar, Package, Rocket } from 'lucide-react';
+import { Clock, Heart, Sparkles, ArrowRight, Globe, Moon, Sun, Calendar, Package, Rocket, Brain, Timer, Music } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import BalticaLogo from '@/components/brand/BalticaLogo';
@@ -194,6 +194,62 @@ export default function LandingPage() {
             >
               Conoce más
             </Button>
+          </div>
+        </motion.section>
+
+        {/* Why It Works - Teaser Section */}
+        <motion.section
+          className="py-16"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.65 }}
+        >
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8 text-center">
+              {t('methodology.teaser.title' as any)}
+            </h2>
+
+            <div className="space-y-4 mb-8">
+              <div className="flex items-start gap-4 p-4 bg-card rounded-xl border border-border/40">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Brain className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm text-foreground font-medium">3 días</p>
+                  <p className="text-sm text-muted-foreground">{t('methodology.teaser.3days' as any)}</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4 p-4 bg-card rounded-xl border border-border/40">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Timer className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm text-foreground font-medium">10 minutos</p>
+                  <p className="text-sm text-muted-foreground">{t('methodology.teaser.10min' as any)}</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4 p-4 bg-card rounded-xl border border-border/40">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <Heart className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm text-foreground font-medium">ACT</p>
+                  <p className="text-sm text-muted-foreground">{t('methodology.teaser.act' as any)}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <Button
+                variant="link"
+                onClick={() => navigate('/metodologia')}
+                className="text-primary"
+              >
+                {t('methodology.teaser.cta' as any)} →
+              </Button>
+            </div>
           </div>
         </motion.section>
 

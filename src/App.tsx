@@ -23,6 +23,7 @@ import HowItWorksPage from "./pages/HowItWorksPage";
 import HelpPage from "./pages/HelpPage";
 import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
+import MethodologyPage from "./pages/MethodologyPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
@@ -172,6 +173,7 @@ function AppRoutes() {
 
       {/* Info pages - accessible to all */}
       <Route path="/how-it-works" element={<HowItWorksPage />} />
+      <Route path="/metodologia" element={<MethodologyPage />} />
       <Route path="/help" element={<HelpPage />} />
       <Route path="/terms" element={<TermsPage />} />
       <Route path="/privacy" element={<PrivacyPage />} />
