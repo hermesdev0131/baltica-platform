@@ -62,7 +62,7 @@ export default function MethodologyPage() {
           </Button>
 
           <Link to="/landing" className="absolute left-1/2 -translate-x-1/2">
-            <BalticaLogo variant="header" size={40} />
+            <BalticaLogo variant="header" size={56} />
           </Link>
 
           <div className="flex items-center gap-1">

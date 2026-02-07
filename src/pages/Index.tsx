@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ProgressRing } from '@/components/journey/ProgressRing';
 import { DayCard } from '@/components/journey/DayCard';
-import { ArrowRight, Clock, Heart, Sparkles, ShieldAlert, Mail } from 'lucide-react';
+import { ArrowRight, Clock, Heart, Sparkles, ShieldAlert, Mail, HelpCircle } from 'lucide-react';
 import BalticaLogo from '@/components/brand/BalticaLogo';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -40,7 +40,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
+      <main className="container mx-auto px-4 py-4 max-w-4xl">
         {/* Status Banner */}
         {isSuspended && (
           <Alert className="mb-6 border-amber-200 bg-amber-50/50 dark:bg-amber-950/20">
@@ -77,18 +77,18 @@ const Index = () => {
         )}
 
         {/* Hero Section */}
-        <motion.section 
-          className="text-center py-12 md:py-20"
+        <motion.section
+          className="text-center py-6 md:py-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           {hasStarted ? (
             <>
-              <p className="text-lg text-muted-foreground mb-2">
+              <p className="text-base text-muted-foreground mb-1">
                 {getGreeting()}{userName && `, ${userName}`}
               </p>
-              <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6">
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
                 {t('journey.day')} {progress.currentDay} {t('journey.of')} {totalDays}
               </h1>
             </>
@@ -98,14 +98,14 @@ const Index = () => {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.2, type: 'spring' }}
-                className="inline-block mb-6"
+                className="inline-block mb-4"
               >
-                <BalticaLogo variant="isotipo" size={80} className="mx-auto" />
+                <BalticaLogo variant="isotipo" size={64} className="mx-auto" />
               </motion.div>
-              <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-4">
+              <h1 className="text-2xl md:text-4xl font-bold text-foreground mb-2">
                 {t('welcome.title')}
               </h1>
-              <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-lg mx-auto">
+              <p className="text-base md:text-lg text-muted-foreground mb-6 max-w-lg mx-auto">
                 {t('welcome.subtitle')}
               </p>
             </>
@@ -113,18 +113,18 @@ const Index = () => {
 
           {/* Progress Ring */}
           {hasStarted && (
-            <motion.div 
-              className="flex justify-center mb-8"
+            <motion.div
+              className="flex justify-center mb-4"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.3 }}
             >
-              <ProgressRing progress={progressPercent} size={160} strokeWidth={12}>
+              <ProgressRing progress={progressPercent} size={120} strokeWidth={10}>
                 <div className="text-center">
-                  <span className="text-3xl font-bold text-primary">
+                  <span className="text-2xl font-bold text-primary">
                     {progress.completedDays.length}
                   </span>
-                  <span className="text-muted-foreground text-sm block">
+                  <span className="text-muted-foreground text-xs block">
                     / {totalDays}
                   </span>
                 </div>
@@ -150,7 +150,7 @@ const Index = () => {
               <ArrowRight className="h-5 w-5" />
             </Button>
             
-            <p className="text-sm text-muted-foreground mt-4 flex items-center justify-center gap-2">
+            <p className="text-sm text-muted-foreground mt-3 flex items-center justify-center gap-2">
               <Clock className="h-4 w-4" />
               {t('welcome.tagline')}
             </p>
@@ -159,24 +159,24 @@ const Index = () => {
 
         {/* Features */}
         {!hasStarted && (
-          <motion.section 
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 py-12"
+          <motion.section
+            className="grid grid-cols-3 gap-3 py-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
           >
             {[
-              { icon: Clock, title: '10 min', desc: 'Experiencias diarias breves' },
-              { icon: Heart, title: '3 días', desc: 'Un programa que transforma' },
+              { icon: Clock, title: '10 min', desc: 'Experiencias breves' },
+              { icon: Heart, title: '3 días', desc: 'Programa transformador' },
               { icon: Sparkles, title: 'Tu ritmo', desc: 'Avanza a tu manera' },
             ].map((feature, i) => (
-              <div 
+              <div
                 key={i}
-                className="bg-card rounded-2xl p-6 text-center shadow-card"
+                className="bg-card rounded-xl p-4 text-center shadow-card"
               >
-                <feature.icon className="h-8 w-8 text-primary mx-auto mb-3" />
-                <h3 className="font-semibold text-foreground mb-1">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">{feature.desc}</p>
+                <feature.icon className="h-6 w-6 text-primary mx-auto mb-2" />
+                <h3 className="font-semibold text-foreground text-sm mb-1">{feature.title}</h3>
+                <p className="text-xs text-muted-foreground">{feature.desc}</p>
               </div>
             ))}
           </motion.section>
@@ -185,12 +185,12 @@ const Index = () => {
         {/* Day Grid - MVP 4 days (Welcome + 3 days) */}
         {hasStarted && (
           <motion.section
-            className="py-8"
+            className="py-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            <h2 className="text-xl font-semibold text-foreground mb-6 text-center">
+            <h2 className="text-lg font-semibold text-foreground mb-4 text-center">
               {t('progress.title')}
             </h2>
             <div className="grid grid-cols-4 gap-3 md:gap-4 max-w-md mx-auto">
@@ -208,19 +208,30 @@ const Index = () => {
 
         {/* Streak */}
         {progress.streak > 0 && (
-          <motion.div 
-            className="mt-8 p-6 bg-accent/30 rounded-2xl text-center"
+          <motion.div
+            className="mt-4 p-4 bg-accent/30 rounded-xl text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
           >
-            <p className="text-lg font-medium text-foreground">
+            <p className="text-base font-medium text-foreground">
               🔥 {progress.streak} {t('progress.days')} {t('progress.streak').toLowerCase()}
             </p>
-            <p className="text-muted-foreground">{t('progress.keep')}</p>
+            <p className="text-sm text-muted-foreground">{t('progress.keep')}</p>
           </motion.div>
         )}
       </main>
+
+      {/* Floating Help Button - bottom right */}
+      <Button
+        variant="outline"
+        size="icon"
+        className="fixed bottom-6 right-6 h-12 w-12 rounded-full shadow-lg bg-background/90 backdrop-blur-sm border-border/60 hover:bg-accent"
+        onClick={() => navigate('/help')}
+      >
+        <HelpCircle className="h-5 w-5 text-muted-foreground" />
+        <span className="sr-only">{t('nav.help')}</span>
+      </Button>
     </div>
   );
 };

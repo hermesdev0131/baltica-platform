@@ -34,21 +34,20 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  const navItems = !isAuthenticated || userRole === 'admin'
-    ? []
-    : [
-        { path: '/', label: t('nav.home'), icon: Home },
-        { path: '/progress', label: t('nav.progress'), icon: BarChart3 },
-        { path: '/achievements', label: t('nav.achievements'), icon: Trophy },
-        { path: '/help', label: t('nav.help'), icon: HelpCircle },
-      ];
+  // MVP: Nav items hidden for cleaner UI. Uncomment for future use.
+  // const navItemsFuture = [
+  //   { path: '/', label: t('nav.home'), icon: Home },
+  //   { path: '/progress', label: t('nav.progress'), icon: BarChart3 },
+  //   { path: '/achievements', label: t('nav.achievements'), icon: Trophy },
+  // ];
+  const navItems: { path: string; label: string; icon: any }[] = [];
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link to="/" className="flex items-center">
-          <BalticaLogo variant="header" size={40} />
+          <BalticaLogo variant="header" size={56} />
         </Link>
 
         {/* Desktop Navigation */}
@@ -88,28 +87,6 @@ export function Header() {
               />
             </>
           )}
-
-          {/* Language Selector */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-9 w-9">
-                <Globe className="h-4 w-4" />
-                <span className="sr-only">{t('settings.language')}</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {locales.map(loc => (
-                <DropdownMenuItem
-                  key={loc.code}
-                  onClick={() => setLocale(loc.code)}
-                  className={cn(locale === loc.code && 'bg-accent')}
-                >
-                  <span className="mr-2">{loc.flag}</span>
-                  {loc.label}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
 
           {/* Theme Toggle */}
           <Button

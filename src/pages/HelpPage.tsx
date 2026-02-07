@@ -1,7 +1,6 @@
 import { useApp } from '@/contexts/AppContext';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Header } from '@/components/layout/Header';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
   Accordion,
@@ -12,264 +11,358 @@ import {
 import { Mail, MessageCircle, HelpCircle, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-// FAQ alineado con la identidad BÁLTICA: humano, claro, no clínico
-const faqs = {
-  en: [
+// FAQ estructurado por secciones - RETO DE 3 DÍAS
+type FaqSection = {
+  title: string;
+  faqs: { question: string; answer: string }[];
+};
+
+const faqSections: Record<string, FaqSection[]> = {
+  'es-LATAM': [
+    // 1. INSCRIPCIÓN - PRIMERO
     {
-      question: 'What is Báltica?',
-      answer: 'Báltica is a platform for daily micro-experiences of self-care and habit formation, designed to accompany you with brief, clear, and sustainable practices. Each session takes less than 10 minutes and is designed to fit easily into your daily routine.',
+      title: 'Inscripción',
+      faqs: [
+        {
+          question: '¿Cómo creo mi cuenta?',
+          answer: 'Simplemente ingresa tu correo electrónico y crea una contraseña. Después de registrarte, puedes comenzar con el curso.',
+        },
+        {
+          question: '¿Qué pasa cuando mi acceso expira?',
+          answer: 'Cuando tu período termine, tu cuenta quedará bloqueada y no podrás acceder al contenido. Puedes renovar en cualquier momento para empezar nuevamente TU RETO DE 3 DÍAS.',
+        },
+        {
+          question: '¿Hay reembolsos disponibles?',
+          answer: 'Después de registrarte con tu correo electrónico no hay derecho a reembolso.',
+        },
+      ],
     },
+    // 2. ¿QUÉ ES EL RETO DE 3 DÍAS?
     {
-      question: 'Is Báltica a therapy or does it replace psychological care?',
-      answer: 'No. Báltica is not a therapy and does not replace psychological or medical care. It is an educational and preventive tool that seeks to help you pause, reflect, and practice small self-care habits. If you are experiencing intense or persistent discomfort, it is always important to seek professional support.',
+      title: '¿Qué es el Reto de 3 Días?',
+      faqs: [
+        {
+          question: '¿Qué es el RETO DE 3 DÍAS?',
+          answer: 'El RETO DE 3 DÍAS es un programa de micro-experiencias diarias de autocuidado y formación de hábitos, pensado para acompañarte con prácticas breves, claras y sostenibles. Incluye 3 días completos de contenido, más un día inicial de bienvenida (Día 0).',
+        },
+        {
+          question: '¿El RETO DE 3 DÍAS es una terapia?',
+          answer: 'No, es un programa educativo y preventivo que busca ayudarte a pausar, reflexionar y practicar pequeños hábitos de autocuidado. Sí estás atravesando un malestar intenso o persistente, siempre es importante buscar acompañamiento profesional.',
+        },
+        {
+          question: '¿Cuánto tiempo necesito por día?',
+          answer: 'Muy poco. Cada jornada está pensada para durar entre 10 y 15 minutos, incluyendo video, audio y una práctica sencilla. La idea no es exigir, sino acompañar de forma amable y realista.',
+        },
+        {
+          question: '¿Qué pasa si un día no puedo completar la jornada?',
+          answer: 'No pasa nada. Puedes retomar en cualquier momento, o repetir el día. Este ejercicio es para ti. Continúa desde donde lo dejaste y avanza a tu propio ritmo. Esto es para TI.',
+        },
+        {
+          question: '¿Qué tipo de contenidos incluye?',
+          answer: 'Cada jornada incluye: un video breve, un audio guiado, un material de apoyo (PDF) y una práctica concreta y sencilla. Todo el contenido está diseñado con un lenguaje claro, humano y no clínico.',
+        },
+        {
+          question: '¿Puedo usar el RETO DE 3 DÍAS en el celular?',
+          answer: 'Pensamos en todo. Este programa está diseñado para usarse cómodamente desde el celular o la computadora, con un diseño simple, claro y adaptable a distintos dispositivos.',
+        },
+        {
+          question: '¿Mis avances quedan guardados?',
+          answer: 'Sí. Guardamos tu progreso para que puedas retomar tus jornadas, revisar lo que hiciste y continuar sin perder información. Esta información es para tu conocimiento.',
+        },
+        {
+          question: '¿Qué incluye el plan de 2 meses?',
+          answer: 'El plan de 2 meses incluye acceso completo al Reto de 3 Días con todos los videos, audios guiados, materiales PDF y la posibilidad de repetir el contenido las veces que quieras durante ese período.',
+        },
+        {
+          question: '¿El programa tiene logros o celebraciones?',
+          answer: '¡Felicitaciones por preguntar! Muy buena iniciativa. Sí, la plataforma reconoce hitos importantes, como la constancia o las rachas de uso, con mensajes y animaciones de celebración suaves, pensadas para motivar sin generar presión.',
+        },
+      ],
     },
+    // 3. FORMAS DE PAGO - DETALLADO
     {
-      question: 'How much time do I need per day?',
-      answer: 'Very little. Each session is designed to last between 5 and 10 minutes, including video, audio, and a simple practice. The idea is not to demand, but to accompany you in a kind and realistic way.',
+      title: 'Formas de Pago',
+      faqs: [
+        {
+          question: '¿Cómo pago este programa "RETO DE 3 DÍAS"?',
+          answer: 'Los pagos se realizan de forma segura a través de una plataforma muy conocida, Mercado Pago, que ofrece un abanico completo de opciones:\n\n1. Tarjetas de Crédito y Débito\nMercado Pago acepta las principales franquicias con acreditación instantánea:\n• Crédito: Visa, Mastercard, American Express, Diners Club y Codensa.\n• Débito: Tarjetas con cupo de débito (Visa y Mastercard) que tengan código de seguridad (CVV) para compras online.\n\n2. Transferencias Bancarias (PSE)\n• Botón PSE: Permite pagar desde cualquier cuenta de ahorros o corriente de todos los bancos del país.\n• Nequi y Daviplata: Se puede pagar a través de la opción de PSE seleccionando "Nequi" o "Daviplata" en la lista de bancos.\n\n3. Efectivo (Puntos de Recaudo)\n• Efecty: El sistema genera un número de convenio y una referencia. El cliente va a cualquier punto Efecty del país, paga en efectivo y el sistema te notifica automáticamente cuando el pago sea exitoso.',
+        },
+        {
+          question: '¿Puedo pagar con Nequi o Daviplata?',
+          answer: 'Sí. Puedes pagar con Nequi o Daviplata a través de la opción PSE. Al momento de pagar, selecciona PSE y luego elige "Nequi" o "Daviplata" en la lista de bancos.',
+        },
+        {
+          question: '¿Puedo pagar con tarjeta de crédito?',
+          answer: 'Sí. Aceptamos las principales tarjetas de crédito: Visa, Mastercard, American Express, Diners Club y Codensa. La acreditación es instantánea.',
+        },
+        {
+          question: '¿Puedo pagar en Efecty?',
+          answer: 'Sí. Al seleccionar pago en efectivo, el sistema genera un número de convenio y una referencia. Ve a cualquier punto Efecty del país, paga en efectivo y el sistema te notificará automáticamente cuando el pago sea exitoso.',
+        },
+        {
+          question: '¿Puedo pagar por transferencia bancaria?',
+          answer: 'Sí. Mediante el botón PSE puedes pagar desde cualquier cuenta de ahorros o corriente de todos los bancos del país.',
+        },
+        {
+          question: '¿Qué pasa si mi pago falla?',
+          answer: 'Si tu pago falla, verifica los datos de tu tarjeta, asegúrate de tener fondos suficientes e intenta de nuevo. Si el problema persiste, prueba con otro método de pago. Mercado Pago te mostrará el error específico para ayudarte a resolverlo.',
+        },
+        {
+          question: '¿Mi información de pago está segura?',
+          answer: 'Sí. Usamos Mercado Pago, una de las plataformas de pago más confiables de Latinoamérica. Nunca almacenamos los datos de tu tarjeta - todo el procesamiento de pagos lo maneja directamente Mercado Pago con seguridad de nivel bancario.',
+        },
+        {
+          question: '¿Recibiré un comprobante?',
+          answer: 'Sí. Mercado Pago enviará un comprobante a tu correo electrónico después de cada pago exitoso. También puedes ver tu historial de pagos en tu cuenta de Mercado Pago.',
+        },
+      ],
     },
+    // 4. PRÓXIMOS CURSOS
     {
-      question: 'What happens if I cannot complete a session one day?',
-      answer: 'Nothing happens. Báltica does not work like an exam or an obligation. You can resume the session whenever you want, continue from where you left off, and progress at your own pace.',
+      title: 'Próximos Cursos',
+      faqs: [
+        {
+          question: '¿Qué otros cursos tienen?',
+          answer: 'Se vienen próximamente retos de 7 y 14 días, cápsulas informativas, y combinaciones especiales para profundizar en tu proceso de autocuidado.',
+        },
+      ],
     },
+    // 5. CONTACTO Y AYUDA
     {
-      question: 'What type of content does Báltica include?',
-      answer: 'Each session includes: a brief video, a guided audio, support material (PDF), and a concrete and simple practice. All content is designed with clear, human, and non-clinical language.',
+      title: 'Contacto y Ayuda',
+      faqs: [
+        {
+          question: '¿Qué pasa si tengo dudas o necesito ayuda?',
+          answer: 'Este programa tiene 2 formas de solucionar tus dudas: una es haciendo clic en AYUDA donde encontrarás un amplio listado de preguntas frecuentes, y también tenemos una línea de WhatsApp +57 3182644725 a la que te podrás contactar en caso de no encontrar la respuesta.',
+        },
+      ],
     },
+    // 6. IDIOMAS - ÚLTIMO
     {
-      question: 'Are my responses and progress saved?',
-      answer: 'Yes. Báltica saves your progress so you can resume your sessions, review what you have done, and continue without losing information. Accesses and progress are also recorded securely for the proper functioning of the service.',
-    },
-    {
-      question: 'What type of records does the platform keep?',
-      answer: 'Basically and responsibly, we record: access dates and times, sessions started and completed, and content usage (for example, audio or video playback). These records serve to improve the experience and as backup for service usage. They are not used for clinical or diagnostic purposes.',
-    },
-    {
-      question: 'How do reminders work?',
-      answer: 'You can activate friendly daily reminders, at the time you choose, to help you maintain the habit. They are not invasive or mandatory, and you can deactivate them whenever you want.',
-    },
-    {
-      question: 'Does Báltica have achievements or celebrations?',
-      answer: 'Yes. The platform recognizes important milestones, such as consistency or usage streaks, with soft celebration messages and animations, designed to motivate without creating pressure.',
-    },
-    {
-      question: 'Can I use Báltica from my phone?',
-      answer: 'Yes. Báltica is designed to be used comfortably from your phone or computer, with a simple, clear design that adapts to different devices.',
-    },
-    {
-      question: 'Is it available in other languages?',
-      answer: 'Currently the main language is Spanish, and the platform is prepared to incorporate other languages in the future, such as English, without affecting the experience.',
-    },
-    {
-      question: 'What if I have questions or need help?',
-      answer: 'Báltica includes permanent access to a Help section, where you will find guidance and important reminders about responsible use of the platform and when to seek external professional support.',
-    },
-    // Payment FAQs
-    {
-      question: 'How do I pay for Báltica?',
-      answer: 'Payments are made securely through Mercado Pago. You can pay with credit card, debit card, or other methods available in your country. The process is simple and secure.',
-    },
-    {
-      question: 'Can I get a refund?',
-      answer: 'If you have questions about refunds, contact us at servicioalcliente@balticaeducation.com within the first 7 days of purchase. Each case will be evaluated individually.',
-    },
-    // Access FAQs
-    {
-      question: 'How do I create my account?',
-      answer: 'Simply enter your email and create a password. After registering, you can start with your free trial or select a plan to begin your challenge.',
-    },
-    {
-      question: 'I forgot my password, what do I do?',
-      answer: 'On the login screen, select "Forgot your password?" and follow the instructions to reset it. If you have issues, contact us at servicioalcliente@balticaeducation.com.',
-    },
-    // Challenge duration FAQs
-    {
-      question: 'How long does each challenge last?',
-      answer: 'The 3-Day Challenge includes 3 complete days of content, plus an initial welcome day (Day 0). Each day takes approximately 10 minutes to complete.',
-    },
-    {
-      question: 'What happens when my access expires?',
-      answer: 'When your access period ends, you can view your progress but cannot access new content. You can renew at any time to continue your journey.',
-    },
-    // Plan FAQs
-    {
-      question: 'What does the 2-month plan include?',
-      answer: 'The 2-month plan includes full access to the 3-Day Challenge with all videos, guided audios, PDF materials, and the ability to repeat the content as many times as you want during that period.',
-    },
-    {
-      question: 'What is the difference between plans?',
-      answer: 'The basic plan (2 months) gives you access to the 3-Day Challenge. Longer plans (coming soon) will include additional challenges like the 7-day and 14-day programs, plus exclusive combos.',
+      title: 'Idiomas',
+      faqs: [
+        {
+          question: '¿Está disponible en otros idiomas?',
+          answer: 'Actualmente el idioma principal es español, y la plataforma está preparada para incorporar otros idiomas en el futuro, como inglés, sin afectar la experiencia.',
+        },
+      ],
     },
   ],
   'es-ES': [
+    // Same structure for es-ES
     {
-      question: '¿Qué es Báltica?',
-      answer: 'Báltica es una plataforma de micro-experiencias diarias de autocuidado y formación de hábitos, pensada para acompañarte con prácticas breves, claras y sostenibles. Cada jornada dura menos de 10 minutos y está diseñada para integrarse fácilmente en tu rutina diaria.',
+      title: 'Inscripción',
+      faqs: [
+        {
+          question: '¿Cómo creo mi cuenta?',
+          answer: 'Simplemente ingresa tu correo electrónico y crea una contraseña. Después de registrarte, puedes comenzar con el curso.',
+        },
+        {
+          question: '¿Qué pasa cuando mi acceso expira?',
+          answer: 'Cuando tu período termine, tu cuenta quedará bloqueada y no podrás acceder al contenido. Puedes renovar en cualquier momento para empezar nuevamente TU RETO DE 3 DÍAS.',
+        },
+        {
+          question: '¿Hay reembolsos disponibles?',
+          answer: 'Después de registrarte con tu correo electrónico no hay derecho a reembolso.',
+        },
+      ],
     },
     {
-      question: '¿Báltica es una terapia o reemplaza atención psicológica?',
-      answer: 'No. Báltica no es una terapia ni reemplaza atención psicológica o médica. Es una herramienta educativa y preventiva que busca ayudarte a pausar, reflexionar y practicar pequeños hábitos de autocuidado. Si estás atravesando un malestar intenso o persistente, siempre es importante buscar acompañamiento profesional.',
+      title: '¿Qué es el Reto de 3 Días?',
+      faqs: [
+        {
+          question: '¿Qué es el RETO DE 3 DÍAS?',
+          answer: 'El RETO DE 3 DÍAS es un programa de micro-experiencias diarias de autocuidado y formación de hábitos, pensado para acompañarte con prácticas breves, claras y sostenibles. Incluye 3 días completos de contenido, más un día inicial de bienvenida (Día 0).',
+        },
+        {
+          question: '¿El RETO DE 3 DÍAS es una terapia?',
+          answer: 'No, es un programa educativo y preventivo que busca ayudarte a pausar, reflexionar y practicar pequeños hábitos de autocuidado. Sí estás atravesando un malestar intenso o persistente, siempre es importante buscar acompañamiento profesional.',
+        },
+        {
+          question: '¿Cuánto tiempo necesito por día?',
+          answer: 'Muy poco. Cada jornada está pensada para durar entre 10 y 15 minutos, incluyendo vídeo, audio y una práctica sencilla. La idea no es exigir, sino acompañar de forma amable y realista.',
+        },
+        {
+          question: '¿Qué pasa si un día no puedo completar la jornada?',
+          answer: 'No pasa nada. Puedes retomar en cualquier momento, o repetir el día. Este ejercicio es para ti. Continúa desde donde lo dejaste y avanza a tu propio ritmo. Esto es para TI.',
+        },
+        {
+          question: '¿Qué tipo de contenidos incluye?',
+          answer: 'Cada jornada incluye: un vídeo breve, un audio guiado, un material de apoyo (PDF) y una práctica concreta y sencilla. Todo el contenido está diseñado con un lenguaje claro, humano y no clínico.',
+        },
+        {
+          question: '¿Puedo usar el RETO DE 3 DÍAS en el móvil?',
+          answer: 'Pensamos en todo. Este programa está diseñado para usarse cómodamente desde el móvil o el ordenador, con un diseño simple, claro y adaptable a distintos dispositivos.',
+        },
+        {
+          question: '¿Mis avances quedan guardados?',
+          answer: 'Sí. Guardamos tu progreso para que puedas retomar tus jornadas, revisar lo que hiciste y continuar sin perder información. Esta información es para tu conocimiento.',
+        },
+        {
+          question: '¿Qué incluye el plan de 2 meses?',
+          answer: 'El plan de 2 meses incluye acceso completo al Reto de 3 Días con todos los vídeos, audios guiados, materiales PDF y la posibilidad de repetir el contenido las veces que quieras durante ese período.',
+        },
+        {
+          question: '¿El programa tiene logros o celebraciones?',
+          answer: '¡Felicitaciones por preguntar! Muy buena iniciativa. Sí, la plataforma reconoce hitos importantes, como la constancia o las rachas de uso, con mensajes y animaciones de celebración suaves, pensadas para motivar sin generar presión.',
+        },
+      ],
     },
     {
-      question: '¿Cuánto tiempo necesito por día?',
-      answer: 'Muy poco. Cada jornada está pensada para durar entre 5 y 10 minutos, incluyendo vídeo, audio y una práctica sencilla. La idea no es exigir, sino acompañar de forma amable y realista.',
+      title: 'Formas de Pago',
+      faqs: [
+        {
+          question: '¿Cómo pago el RETO DE 3 DÍAS?',
+          answer: 'Los pagos se realizan de forma segura a través de Mercado Pago, que ofrece múltiples opciones de pago incluyendo tarjetas de crédito, débito y otros métodos disponibles en tu país.',
+        },
+        {
+          question: '¿Qué pasa si mi pago falla?',
+          answer: 'Si tu pago falla, verifica los datos de tu tarjeta, asegúrate de tener fondos suficientes e intenta de nuevo. Si el problema persiste, prueba con otro método de pago.',
+        },
+        {
+          question: '¿Mi información de pago está segura?',
+          answer: 'Sí. Usamos Mercado Pago, una de las plataformas de pago más confiables. Nunca almacenamos los datos de tu tarjeta.',
+        },
+        {
+          question: '¿Recibiré un comprobante?',
+          answer: 'Sí. Mercado Pago enviará un comprobante a tu correo electrónico después de cada pago exitoso.',
+        },
+      ],
     },
     {
-      question: '¿Qué pasa si un día no puedo completar la jornada?',
-      answer: 'No pasa nada. Báltica no funciona como un examen ni como una obligación. Puedes retomar la jornada cuando quieras, continuar desde donde la dejaste y avanzar a tu propio ritmo.',
+      title: 'Próximos Cursos',
+      faqs: [
+        {
+          question: '¿Qué otros cursos tienen?',
+          answer: 'Se vienen próximamente retos de 7 y 14 días, cápsulas informativas, y combinaciones especiales para profundizar en tu proceso de autocuidado.',
+        },
+      ],
     },
     {
-      question: '¿Qué tipo de contenidos incluye Báltica?',
-      answer: 'Cada jornada incluye: un vídeo breve, un audio guiado, un material de apoyo (PDF) y una práctica concreta y sencilla. Todo el contenido está diseñado con un lenguaje claro, humano y no clínico.',
+      title: 'Contacto y Ayuda',
+      faqs: [
+        {
+          question: '¿Qué pasa si tengo dudas o necesito ayuda?',
+          answer: 'Este programa tiene 2 formas de solucionar tus dudas: una es haciendo clic en AYUDA donde encontrarás un amplio listado de preguntas frecuentes, y también tenemos una línea de WhatsApp +57 3182644725 a la que te podrás contactar en caso de no encontrar la respuesta.',
+        },
+      ],
     },
     {
-      question: '¿Mis respuestas y avances quedan guardados?',
-      answer: 'Sí. Báltica guarda tu progreso para que puedas retomar tus jornadas, revisar lo que hiciste y continuar sin perder información. También se registran accesos y avances de forma segura para el correcto funcionamiento del servicio.',
-    },
-    {
-      question: '¿Qué tipo de registros guarda la plataforma?',
-      answer: 'De forma básica y responsable, se registran: fechas y horas de acceso, jornadas iniciadas y completadas, y uso de contenidos (por ejemplo, reproducción de audios o vídeos). Estos registros sirven para mejorar la experiencia y como respaldo del uso del servicio. No se utilizan con fines clínicos ni diagnósticos.',
-    },
-    {
-      question: '¿Cómo funcionan los recordatorios?',
-      answer: 'Puedes activar recordatorios diarios amables, en el horario que elijas, para ayudarte a mantener el hábito. No son invasivos ni obligatorios, y puedes desactivarlos cuando quieras.',
-    },
-    {
-      question: '¿Báltica tiene logros o celebraciones?',
-      answer: 'Sí. La plataforma reconoce hitos importantes, como la constancia o las rachas de uso, con mensajes y animaciones de celebración suaves, pensadas para motivar sin generar presión.',
-    },
-    {
-      question: '¿Puedo usar Báltica desde el móvil?',
-      answer: 'Sí. Báltica está pensada para usarse cómodamente desde el móvil o el ordenador, con un diseño simple, claro y adaptable a distintos dispositivos.',
-    },
-    {
-      question: '¿Está disponible en otros idiomas?',
-      answer: 'Actualmente el idioma principal es español, y la plataforma está preparada para incorporar otros idiomas en el futuro, como inglés, sin afectar la experiencia.',
-    },
-    {
-      question: '¿Qué pasa si tengo dudas o necesito ayuda?',
-      answer: 'Báltica incluye un acceso permanente a una sección de Ayuda, donde encontrarás orientación y recordatorios importantes sobre el uso responsable de la plataforma y cuándo buscar apoyo profesional externo.',
-    },
-    // FAQs de Pagos
-    {
-      question: '¿Cómo pago Báltica?',
-      answer: 'Los pagos se realizan de forma segura a través de Mercado Pago. Puedes pagar con tarjeta de crédito, débito u otros métodos disponibles en tu país. El proceso es sencillo y seguro.',
-    },
-    {
-      question: '¿Puedo solicitar un reembolso?',
-      answer: 'Si tienes preguntas sobre reembolsos, contáctanos en servicioalcliente@balticaeducation.com dentro de los primeros 7 días de tu compra. Cada caso se evaluará de forma individual.',
-    },
-    // FAQs de Acceso
-    {
-      question: '¿Cómo creo mi cuenta?',
-      answer: 'Simplemente ingresa tu correo electrónico y crea una contraseña. Después de registrarte, puedes comenzar con tu prueba gratuita o seleccionar un plan para iniciar tu reto.',
-    },
-    {
-      question: 'Olvidé mi contraseña, ¿qué hago?',
-      answer: 'En la pantalla de inicio de sesión, selecciona "¿Olvidaste tu contraseña?" y sigue las instrucciones para restablecerla. Si tienes problemas, contáctanos en servicioalcliente@balticaeducation.com.',
-    },
-    // FAQs de Duración del reto
-    {
-      question: '¿Cuánto dura cada reto?',
-      answer: 'El Reto de 3 Días incluye 3 días completos de contenido, más un día inicial de bienvenida (Día 0). Cada día toma aproximadamente 10 minutos en completarse.',
-    },
-    {
-      question: '¿Qué pasa cuando mi acceso expira?',
-      answer: 'Cuando tu período de acceso termine, podrás ver tu progreso pero no podrás acceder a nuevo contenido. Puedes renovar en cualquier momento para continuar tu camino.',
-    },
-    // FAQs de Planes
-    {
-      question: '¿Qué incluye el plan de 2 meses?',
-      answer: 'El plan de 2 meses incluye acceso completo al Reto de 3 Días con todos los vídeos, audios guiados, materiales PDF y la posibilidad de repetir el contenido las veces que quieras durante ese período.',
-    },
-    {
-      question: '¿Cuál es la diferencia entre los planes?',
-      answer: 'El plan básico (2 meses) te da acceso al Reto de 3 Días. Los planes más largos (próximamente) incluirán retos adicionales como los programas de 7 y 14 días, más combos exclusivos.',
+      title: 'Idiomas',
+      faqs: [
+        {
+          question: '¿Está disponible en otros idiomas?',
+          answer: 'Actualmente el idioma principal es español, y la plataforma está preparada para incorporar otros idiomas en el futuro, como inglés, sin afectar la experiencia.',
+        },
+      ],
     },
   ],
-  'es-LATAM': [
+  en: [
     {
-      question: '¿Qué es Báltica?',
-      answer: 'Báltica es una plataforma de micro-experiencias diarias de autocuidado y formación de hábitos, pensada para acompañarte con prácticas breves, claras y sostenibles. Cada jornada dura menos de 10 minutos y está diseñada para integrarse fácilmente en tu rutina diaria.',
+      title: 'Registration',
+      faqs: [
+        {
+          question: 'How do I create my account?',
+          answer: 'Simply enter your email and create a password. After registering, you can start with the course.',
+        },
+        {
+          question: 'What happens when my access expires?',
+          answer: 'When your period ends, your account will be blocked and you will not be able to access the content. You can renew at any time to start your 3-DAY CHALLENGE again.',
+        },
+        {
+          question: 'Are refunds available?',
+          answer: 'After registering with your email, there is no right to a refund.',
+        },
+      ],
     },
     {
-      question: '¿Báltica es una terapia o reemplaza atención psicológica?',
-      answer: 'No. Báltica no es una terapia ni reemplaza atención psicológica o médica. Es una herramienta educativa y preventiva que busca ayudarte a pausar, reflexionar y practicar pequeños hábitos de autocuidado. Si estás atravesando un malestar intenso o persistente, siempre es importante buscar acompañamiento profesional.',
+      title: 'What is the 3-Day Challenge?',
+      faqs: [
+        {
+          question: 'What is the 3-DAY CHALLENGE?',
+          answer: 'The 3-DAY CHALLENGE is a program of daily micro-experiences of self-care and habit formation, designed to accompany you with brief, clear, and sustainable practices. It includes 3 complete days of content, plus an initial welcome day (Day 0).',
+        },
+        {
+          question: 'Is the 3-DAY CHALLENGE a therapy?',
+          answer: 'No, it is an educational and preventive program that seeks to help you pause, reflect, and practice small self-care habits. If you are experiencing intense or persistent discomfort, it is always important to seek professional support.',
+        },
+        {
+          question: 'How much time do I need per day?',
+          answer: 'Very little. Each session is designed to last between 10 and 15 minutes, including video, audio, and a simple practice. The idea is not to demand, but to accompany you in a kind and realistic way.',
+        },
+        {
+          question: 'What happens if I cannot complete a session one day?',
+          answer: 'Nothing happens. You can resume at any time, or repeat the day. This exercise is for you. Continue from where you left off and progress at your own pace. This is for YOU.',
+        },
+        {
+          question: 'What type of content does it include?',
+          answer: 'Each session includes: a brief video, a guided audio, support material (PDF), and a concrete and simple practice. All content is designed with clear, human, and non-clinical language.',
+        },
+        {
+          question: 'Can I use the 3-DAY CHALLENGE on my phone?',
+          answer: 'We thought of everything. This program is designed to be used comfortably from your phone or computer, with a simple, clear design that adapts to different devices.',
+        },
+        {
+          question: 'Is my progress saved?',
+          answer: 'Yes. We save your progress so you can resume your sessions, review what you did, and continue without losing information. This information is for your knowledge.',
+        },
+        {
+          question: 'What does the 2-month plan include?',
+          answer: 'The 2-month plan includes full access to the 3-Day Challenge with all videos, guided audios, PDF materials, and the ability to repeat the content as many times as you want during that period.',
+        },
+        {
+          question: 'Does the program have achievements or celebrations?',
+          answer: 'Congratulations for asking! Great initiative. Yes, the platform recognizes important milestones, such as consistency or usage streaks, with soft celebration messages and animations, designed to motivate without creating pressure.',
+        },
+      ],
     },
     {
-      question: '¿Cuánto tiempo necesito por día?',
-      answer: 'Muy poco. Cada jornada está pensada para durar entre 5 y 10 minutos, incluyendo video, audio y una práctica sencilla. La idea no es exigir, sino acompañar de forma amable y realista.',
+      title: 'Payment Methods',
+      faqs: [
+        {
+          question: 'How do I pay for the 3-DAY CHALLENGE?',
+          answer: 'Payments are made securely through Mercado Pago, a well-known platform that offers a complete range of options:\n\n• Credit Cards: Visa, Mastercard, American Express, Diners Club (instant accreditation)\n• Debit Cards: With debit balance (Visa and Mastercard) that have security code (CVV)\n• Bank Transfers (PSE): From any savings or checking account\n• Nequi and Daviplata: Through the PSE option, selecting "Nequi" or "Daviplata" in the bank list\n• Cash (Efecty): A reference number is generated to pay at any Efecty point in the country',
+        },
+        {
+          question: 'What if my payment fails?',
+          answer: 'If your payment fails, verify your card details, ensure you have sufficient funds, and try again. If the problem persists, try a different payment method. Mercado Pago will show you the specific error to help resolve it.',
+        },
+        {
+          question: 'Is my payment information secure?',
+          answer: 'Yes. We use Mercado Pago, one of the most trusted payment platforms in Latin America. We never store your card details - all payment processing is handled directly by Mercado Pago with bank-level security.',
+        },
+        {
+          question: 'Will I receive a receipt?',
+          answer: 'Yes. Mercado Pago will send a receipt to your email after each successful payment. You can also view your payment history in your Mercado Pago account.',
+        },
+      ],
     },
     {
-      question: '¿Qué pasa si un día no puedo completar la jornada?',
-      answer: 'No pasa nada. Báltica no funciona como un examen ni como una obligación. Puedes retomar la jornada cuando quieras, continuar desde donde la dejaste y avanzar a tu propio ritmo.',
+      title: 'Coming Courses',
+      faqs: [
+        {
+          question: 'What other courses do you have?',
+          answer: 'Coming soon: 7-day and 14-day challenges, informative capsules, and special combinations to deepen your self-care process.',
+        },
+      ],
     },
     {
-      question: '¿Qué tipo de contenidos incluye Báltica?',
-      answer: 'Cada jornada incluye: un video breve, un audio guiado, un material de apoyo (PDF) y una práctica concreta y sencilla. Todo el contenido está diseñado con un lenguaje claro, humano y no clínico.',
+      title: 'Contact and Help',
+      faqs: [
+        {
+          question: 'What if I have questions or need help?',
+          answer: 'This program has 2 ways to solve your doubts: one is by clicking on HELP where you will find a comprehensive list of frequently asked questions, and we also have a WhatsApp line +57 3182644725 that you can contact if you do not find the answer.',
+        },
+      ],
     },
     {
-      question: '¿Mis respuestas y avances quedan guardados?',
-      answer: 'Sí. Báltica guarda tu progreso para que puedas retomar tus jornadas, revisar lo que hiciste y continuar sin perder información. También se registran accesos y avances de forma segura para el correcto funcionamiento del servicio.',
-    },
-    {
-      question: '¿Qué tipo de registros guarda la plataforma?',
-      answer: 'De forma básica y responsable, se registran: fechas y horas de acceso, jornadas iniciadas y completadas, y uso de contenidos (por ejemplo, reproducción de audios o videos). Estos registros sirven para mejorar la experiencia y como respaldo del uso del servicio. No se utilizan con fines clínicos ni diagnósticos.',
-    },
-    {
-      question: '¿Cómo funcionan los recordatorios?',
-      answer: 'Puedes activar recordatorios diarios amables, en el horario que elijas, para ayudarte a mantener el hábito. No son invasivos ni obligatorios, y puedes desactivarlos cuando quieras.',
-    },
-    {
-      question: '¿Báltica tiene logros o celebraciones?',
-      answer: 'Sí. La plataforma reconoce hitos importantes, como la constancia o las rachas de uso, con mensajes y animaciones de celebración suaves, pensadas para motivar sin generar presión.',
-    },
-    {
-      question: '¿Puedo usar Báltica desde el celular?',
-      answer: 'Sí. Báltica está pensada para usarse cómodamente desde el celular o la computadora, con un diseño simple, claro y adaptable a distintos dispositivos.',
-    },
-    {
-      question: '¿Está disponible en otros idiomas?',
-      answer: 'Actualmente el idioma principal es español, y la plataforma está preparada para incorporar otros idiomas en el futuro, como inglés, sin afectar la experiencia.',
-    },
-    {
-      question: '¿Qué pasa si tengo dudas o necesito ayuda?',
-      answer: 'Báltica incluye un acceso permanente a una sección de Ayuda, donde encontrarás orientación y recordatorios importantes sobre el uso responsable de la plataforma y cuándo buscar apoyo profesional externo.',
-    },
-    // FAQs de Pagos
-    {
-      question: '¿Cómo pago Báltica?',
-      answer: 'Los pagos se realizan de forma segura a través de Mercado Pago. Puedes pagar con tarjeta de crédito, débito u otros métodos disponibles en tu país. El proceso es sencillo y seguro.',
-    },
-    {
-      question: '¿Puedo pedir un reembolso?',
-      answer: 'Si tienes preguntas sobre reembolsos, contáctanos en servicioalcliente@balticaeducation.com dentro de los primeros 7 días de tu compra. Cada caso se evaluará de forma individual.',
-    },
-    // FAQs de Acceso
-    {
-      question: '¿Cómo creo mi cuenta?',
-      answer: 'Simplemente ingresa tu correo electrónico y crea una contraseña. Después de registrarte, puedes comenzar con tu prueba gratis o seleccionar un plan para iniciar tu reto.',
-    },
-    {
-      question: 'Olvidé mi contraseña, ¿qué hago?',
-      answer: 'En la pantalla de inicio de sesión, selecciona "¿Olvidaste tu contraseña?" y sigue las instrucciones para restablecerla. Si tienes problemas, contáctanos en servicioalcliente@balticaeducation.com.',
-    },
-    // FAQs de Duración del reto
-    {
-      question: '¿Cuánto dura cada reto?',
-      answer: 'El Reto de 3 Días incluye 3 días completos de contenido, más un día inicial de bienvenida (Día 0). Cada día toma aproximadamente 10 minutos en completarse.',
-    },
-    {
-      question: '¿Qué pasa cuando mi acceso expira?',
-      answer: 'Cuando tu período de acceso termine, podrás ver tu progreso pero no podrás acceder a nuevo contenido. Puedes renovar en cualquier momento para continuar tu camino.',
-    },
-    // FAQs de Planes
-    {
-      question: '¿Qué incluye el plan de 2 meses?',
-      answer: 'El plan de 2 meses incluye acceso completo al Reto de 3 Días con todos los videos, audios guiados, materiales PDF y la posibilidad de repetir el contenido las veces que quieras durante ese período.',
-    },
-    {
-      question: '¿Cuál es la diferencia entre los planes?',
-      answer: 'El plan básico (2 meses) te da acceso al Reto de 3 Días. Los planes más largos (próximamente) incluirán retos adicionales como los programas de 7 y 14 días, más combos exclusivos.',
+      title: 'Languages',
+      faqs: [
+        {
+          question: 'Is it available in other languages?',
+          answer: 'Currently the main language is Spanish, and the platform is prepared to incorporate other languages in the future, such as English, without affecting the experience.',
+        },
+      ],
     },
   ],
 };
@@ -278,12 +371,10 @@ export default function HelpPage() {
   const { t, locale } = useApp();
   const location = useLocation();
   const navigate = useNavigate();
+  const currentSections = faqSections[locale] || faqSections.en;
 
-  // Get return path from navigation state (H.2 per PDF spec - return to previous point)
+  // Get return path from navigation state
   const returnTo = (location.state as { returnTo?: string })?.returnTo;
-  const isFromJourney = returnTo?.startsWith('/journey');
-
-  const currentFaqs = faqs[locale] || faqs.en;
 
   const handleReturn = () => {
     if (returnTo) {
@@ -295,27 +386,7 @@ export default function HelpPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
-
       <main className="container mx-auto px-4 py-8 max-w-2xl">
-        {/* Return button when coming from journey (H.2) */}
-        {isFromJourney && (
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="mb-6"
-          >
-            <Button
-              variant="ghost"
-              onClick={handleReturn}
-              className="gap-2"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              {locale.startsWith('es') ? 'Volver a mi jornada' : 'Return to my journey'}
-            </Button>
-          </motion.div>
-        )}
-
         {/* Title */}
         <motion.div
           className="text-center mb-10"
@@ -330,32 +401,39 @@ export default function HelpPage() {
           </h1>
         </motion.div>
 
-        {/* FAQ */}
-        <motion.section 
-          className="mb-10"
+        {/* FAQ Sections */}
+        <motion.section
+          className="mb-10 space-y-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <h2 className="text-lg font-semibold text-foreground mb-4">
-            {t('help.faq')}
-          </h2>
-          <Accordion type="single" collapsible className="space-y-2">
-            {currentFaqs.map((faq, i) => (
-              <AccordionItem 
-                key={i} 
-                value={`faq-${i}`}
-                className="bg-card rounded-xl border shadow-card px-4"
-              >
-                <AccordionTrigger className="text-left text-sm hover:no-underline">
-                  {faq.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          {currentSections.map((section, sectionIndex) => (
+            <div key={sectionIndex}>
+              <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center font-bold">
+                  {sectionIndex + 1}
+                </span>
+                {section.title}
+              </h2>
+              <Accordion type="single" collapsible className="space-y-2">
+                {section.faqs.map((faq, faqIndex) => (
+                  <AccordionItem
+                    key={faqIndex}
+                    value={`section-${sectionIndex}-faq-${faqIndex}`}
+                    className="bg-card rounded-xl border shadow-card px-4"
+                  >
+                    <AccordionTrigger className="text-left text-sm hover:no-underline">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-muted-foreground whitespace-pre-line">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </div>
+          ))}
         </motion.section>
 
         {/* Contact */}
@@ -370,29 +448,39 @@ export default function HelpPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Card className="shadow-card">
               <CardContent className="p-6 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Mail className="h-6 w-6 text-primary" />
+                <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center">
+                  <MessageCircle className="h-6 w-6 text-green-600" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-foreground">Email</h3>
-                  <p className="text-xs text-muted-foreground">servicioalcliente@balticaeducation.com</p>
+                  <h3 className="text-sm font-medium text-foreground">WhatsApp</h3>
+                  <p className="text-xs text-muted-foreground">+57 3182644725</p>
                 </div>
               </CardContent>
             </Card>
             <Card className="shadow-card">
               <CardContent className="p-6 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center">
-                  <MessageCircle className="h-6 w-6 text-secondary-foreground" />
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Mail className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-foreground">Chat</h3>
-                  <p className="text-xs text-muted-foreground">Disponible 24/7</p>
+                  <h3 className="text-sm font-medium text-foreground">Email</h3>
+                  <p className="text-xs text-muted-foreground">logistica@balticaeducation.com</p>
                 </div>
               </CardContent>
             </Card>
           </div>
         </motion.section>
       </main>
+
+      {/* Floating Back Button - top left */}
+      <Button
+        variant="default"
+        className="fixed top-4 left-4 h-10 rounded-full shadow-lg gap-2 px-4"
+        onClick={handleReturn}
+      >
+        <ArrowLeft className="h-4 w-4" />
+        {locale.startsWith('es') ? 'Volver' : 'Back'}
+      </Button>
     </div>
   );
 }

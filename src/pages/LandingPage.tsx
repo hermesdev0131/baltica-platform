@@ -50,7 +50,7 @@ export default function LandingPage() {
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link to="/" className="flex items-center">
-            <BalticaLogo variant="header" size={40} />
+            <BalticaLogo variant="header" size={56} />
           </Link>
 
           <div className="flex items-center gap-1">

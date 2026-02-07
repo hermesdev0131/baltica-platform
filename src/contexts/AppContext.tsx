@@ -122,17 +122,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return (localStorage.getItem('userRole') as 'user' | 'admin') || 'user';
   });
 
-  const [locale, setLocale] = useState<Locale>(() => {
-    const saved = localStorage.getItem('locale');
-    if (saved && ['es-ES', 'es-LATAM', 'en'].includes(saved)) {
-      return saved as Locale;
-    }
-    const browserLang = navigator.language;
-    if (browserLang.startsWith('es')) {
-      return browserLang.includes('ES') ? 'es-ES' : 'es-LATAM';
-    }
-    return 'en';
-  });
+  // MVP: Fixed to Spanish (Latin America) only
+  const [locale, setLocale] = useState<Locale>('es-LATAM');
 
   const [theme, setThemeState] = useState<'light' | 'dark' | 'system'>(() => {
     return (localStorage.getItem('theme') as 'light' | 'dark' | 'system') || 'system';

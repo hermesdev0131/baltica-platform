@@ -23,10 +23,10 @@ export async function createPreference(req: Request & { user?: any }, res: Respo
       body: {
         items: [
           {
-            id: 'baltica-programa-3dias',
-            title: 'Báltica - Programa 3 días',
+            id: 'baltica-programa-basico',
+            title: 'Báltica - Plan Básico',
             quantity: 1,
-            unit_price: 22900,
+            unit_price: 32900,
             currency_id: 'COP',
           },
         ],

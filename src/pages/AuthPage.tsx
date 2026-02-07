@@ -164,7 +164,7 @@ export default function AuthPage() {
         >
           {/* Logo */}
           <div className="text-center mb-8">
-            <BalticaLogo variant="full" size={100} className="mx-auto drop-shadow-lg" />
+            <BalticaLogo variant="full" size={120} className="mx-auto drop-shadow-lg" />
           </div>
 
           {/* Auth Card */}
