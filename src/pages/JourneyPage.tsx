@@ -10,7 +10,6 @@ import { VideoPlayer } from '@/components/journey/VideoPlayer';
 import { AudioPlayer } from '@/components/journey/AudioPlayer';
 import { MoodSelector } from '@/components/journey/MoodSelector';
 import { EnergySelector, Energy } from '@/components/journey/EnergySelector';
-import { EthicalNote } from '@/components/EthicalNote';
 import { EthicalFooter } from '@/components/EthicalFooter';
 import { FloatingHelp } from '@/components/FloatingHelp';
 import { InactivityModal } from '@/components/InactivityModal';
@@ -24,9 +23,13 @@ import { Label } from '@/components/ui/label';
 import { ArrowLeft, ArrowRight, Download, CheckCircle, Share2, Sparkles } from 'lucide-react';
 import BalticaLogo from '@/components/brand/BalticaLogo';
 import { motion, AnimatePresence } from 'framer-motion';
-import { dayContents, actionOptions, valueOptions, timeSlotOptions } from '@/config/content';
+import { dayContents, day0ExtendedContent, actionOptions, valueOptions, timeSlotOptions } from '@/config/content';
 
 type JourneyStep = Step;
+
+// Day 0 sub-steps (independent of the generic Step type used by Days 1-3)
+const DAY0_SUBSTEPS = ['start', 'welcome-video', 'survey-before', 'intro-video', 'download', 'survey-after', 'closure'] as const;
+type Day0SubStep = typeof DAY0_SUBSTEPS[number];
 
 export default function JourneyPage() {
   const { day } = useParams<{ day: string }>();
@@ -36,6 +39,7 @@ export default function JourneyPage() {
   const { celebration, closeCelebration, checkAndTriggerCelebration } = useCelebration();
   const [currentStep, setCurrentStep] = useState<JourneyStep>('start');
   const [completedSteps, setCompletedSteps] = useState<JourneyStep[]>([]);
+  const [day0Step, setDay0Step] = useState(0);
 
   const dayNumber = parseInt(day || '0', 10);
   const dayContent = dayContents[dayNumber];
@@ -68,6 +72,10 @@ export default function JourneyPage() {
     dayNumber === 0 ? (dayAnswers.welcome?.energy || '') : (dayAnswers.day3?.energy || '')
   );
 
+  // Day 0 Survey 2 (after) state
+  const [moodAfter, setMoodAfter] = useState<string>(dayAnswers.welcome?.moodAfter || '');
+  const [energyAfter, setEnergyAfter] = useState<Energy | ''>(dayAnswers.welcome?.energyAfter || '');
+
   // Inactivity modal state
   const [showInactivityModal, setShowInactivityModal] = useState(false);
 
@@ -85,11 +93,15 @@ export default function JourneyPage() {
   };
 
   const nextStep = () => {
-    // Day 0 (Block 0) per PDF spec: greeting → measurements → ethical → CTA (no video/audio/download)
+    if (dayNumber === 0) {
+      // Day 0 uses its own sub-step system
+      if (day0Step < DAY0_SUBSTEPS.length - 1) {
+        setDay0Step(day0Step + 1);
+      }
+      return;
+    }
     // Days 1-3: full flow with video, audio, download, survey
-    const steps: JourneyStep[] = dayNumber === 0
-      ? ['start', 'survey', 'closure']
-      : ['start', 'video', 'audio', 'download', 'survey', 'closure'];
+    const steps: JourneyStep[] = ['start', 'video', 'audio', 'download', 'survey', 'closure'];
     const currentIndex = steps.indexOf(currentStep);
     if (currentIndex < steps.length - 1) {
       markStepComplete(currentStep);
@@ -97,9 +109,30 @@ export default function JourneyPage() {
     }
   };
 
+  const prevStep = () => {
+    if (dayNumber === 0) {
+      if (day0Step > 0) {
+        setDay0Step(day0Step - 1);
+      } else {
+        navigate('/');
+      }
+      return;
+    }
+    const steps: JourneyStep[] = ['start', 'video', 'audio', 'download', 'survey', 'closure'];
+    const currentIndex = steps.indexOf(currentStep);
+    if (currentIndex > 0) {
+      setCurrentStep(steps[currentIndex - 1]);
+    } else {
+      navigate('/');
+    }
+  };
+
   const canProceedFromSurvey = (): boolean => {
     switch (dayNumber) {
       case 0:
+        if (DAY0_SUBSTEPS[day0Step] === 'survey-after') {
+          return !!moodAfter && !!energyAfter;
+        }
         return !!selectedMood && !!selectedEnergy;
       case 1:
         return words.every(w => w.trim()) && !!selectedAction && !!selectedTimeSlot;
@@ -116,7 +149,13 @@ export default function JourneyPage() {
     const now = new Date().toISOString();
     switch (dayNumber) {
       case 0:
-        saveDayAnswers({ welcome: { mood: selectedMood, energy: selectedEnergy as Energy, ethicalNoteViewed: true, completedAt: now } });
+        saveDayAnswers({ welcome: {
+          mood: selectedMood, energy: selectedEnergy as Energy,
+          moodBefore: selectedMood, energyBefore: selectedEnergy as Energy,
+          moodAfter, energyAfter: energyAfter as Energy,
+          ethicalNoteViewed: true, welcomeVideoWatched: true, introVideoWatched: true,
+          completedAt: now,
+        } });
         break;
       case 1:
         saveDayAnswers({ day1: { words, action: selectedAction, timeSlot: selectedTimeSlot as any, videoWatched: true, audioCompleted: true, completedAt: now } });
@@ -186,29 +225,55 @@ export default function JourneyPage() {
   };
 
   const renderWelcomeSurvey = () => (
-    <div className="py-6 space-y-8">
-      <EthicalNote variant="inline" />
-
+    <div className="py-4 space-y-6">
       <div>
         <h2 className="text-xl font-semibold text-foreground mb-2 text-center">
           {t('day.0.checkin')}
         </h2>
-        <p className="text-muted-foreground text-center mb-6">
+        <p className="text-muted-foreground text-center mb-4">
           {locale.startsWith('es')
             ? 'Tu respuesta es solo para ti. No hay respuestas correctas o incorrectas.'
             : 'Your answer is just for you. There are no right or wrong answers.'}
         </p>
-        <MoodSelector onSelect={setSelectedMood as any} selectedMood={selectedMood as any} />
+        <MoodSelector onSelect={setSelectedMood as any} selectedMood={selectedMood as any} showResponse={false} />
       </div>
 
       <div>
-        <h3 className="text-lg font-medium text-foreground mb-4 text-center">
+        <h3 className="text-lg font-medium text-foreground mb-3 text-center">
           {t('energy.title' as any)}
         </h3>
-        <EnergySelector onSelect={setSelectedEnergy} selectedEnergy={selectedEnergy} />
+        <EnergySelector onSelect={setSelectedEnergy} selectedEnergy={selectedEnergy} showResponse={false} />
       </div>
 
-      <div className="flex justify-center mt-8">
+      <div className="flex justify-center mt-6">
+        <Button onClick={nextStep} disabled={!canProceedFromSurvey()} className="gap-2 rounded-full px-8">
+          {t('welcome.block0.ready')}
+          <ArrowRight className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+  );
+
+  const renderWelcomeSurveyAfter = () => (
+    <div className="py-4 space-y-6">
+      <div>
+        <h2 className="text-xl font-semibold text-foreground mb-2 text-center">
+          {t('day.0.surveyAfter.title' as any)}
+        </h2>
+        <p className="text-muted-foreground text-center mb-4">
+          {t('day.0.surveyAfter.subtitle' as any)}
+        </p>
+        <MoodSelector onSelect={setMoodAfter as any} selectedMood={moodAfter as any} showResponse={false} />
+      </div>
+
+      <div>
+        <h3 className="text-lg font-medium text-foreground mb-3 text-center">
+          {t('energy.title' as any)}
+        </h3>
+        <EnergySelector onSelect={setEnergyAfter} selectedEnergy={energyAfter} showResponse={false} />
+      </div>
+
+      <div className="flex justify-center mt-6">
         <Button onClick={nextStep} disabled={!canProceedFromSurvey()} className="gap-2 rounded-full px-8">
           {t('welcome.block0.ready')}
           <ArrowRight className="h-4 w-4" />
@@ -218,7 +283,7 @@ export default function JourneyPage() {
   );
 
   const renderDay1Survey = () => (
-    <div className="py-6 space-y-8">
+    <div className="py-4 space-y-4">
       <Card className="shadow-card">
         <CardHeader>
           <CardTitle className="text-lg">{t('day.1.words.title')}</CardTitle>
@@ -250,7 +315,7 @@ export default function JourneyPage() {
         <CardContent>
           <RadioGroup value={selectedAction} onValueChange={setSelectedAction}>
             {actionOptions[localeKey].map(option => (
-              <div key={option.value} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted/50">
+              <div key={option.value} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50">
                 <RadioGroupItem value={option.value} id={`action-${option.value}`} />
                 <Label htmlFor={`action-${option.value}`} className="cursor-pointer flex-1">
                   {option.label}
@@ -268,7 +333,7 @@ export default function JourneyPage() {
         <CardContent>
           <RadioGroup value={selectedTimeSlot} onValueChange={setSelectedTimeSlot}>
             {timeSlotOptions[localeKey].map(option => (
-              <div key={option.value} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted/50">
+              <div key={option.value} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50">
                 <RadioGroupItem value={option.value} id={`time-${option.value}`} />
                 <Label htmlFor={`time-${option.value}`} className="cursor-pointer flex-1">
                   {option.label}
@@ -279,7 +344,7 @@ export default function JourneyPage() {
         </CardContent>
       </Card>
 
-      <div className="flex justify-center mt-8">
+      <div className="flex justify-center mt-4">
         <Button onClick={nextStep} disabled={!canProceedFromSurvey()} className="gap-2 rounded-full px-8">
           {t('survey.submit')}
           <ArrowRight className="h-4 w-4" />
@@ -289,7 +354,7 @@ export default function JourneyPage() {
   );
 
   const renderDay2Survey = () => (
-    <div className="py-6 space-y-8">
+    <div className="py-4 space-y-4">
       <Card className="shadow-card">
         <CardHeader>
           <CardTitle className="text-lg">{t('day.2.value.title')}</CardTitle>
@@ -298,14 +363,14 @@ export default function JourneyPage() {
         <CardContent>
           <RadioGroup value={selectedValue} onValueChange={(v) => { setSelectedValue(v); setCustomValue(''); }}>
             {valueOptions[localeKey].map(option => (
-              <div key={option.value} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted/50">
+              <div key={option.value} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50">
                 <RadioGroupItem value={option.value} id={`value-${option.value}`} />
                 <Label htmlFor={`value-${option.value}`} className="cursor-pointer flex-1">
                   {option.label}
                 </Label>
               </div>
             ))}
-            <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted/50">
+            <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50">
               <RadioGroupItem value="other" id="value-other" />
               <Label htmlFor="value-other" className="cursor-pointer">{t('day.2.value.other')}</Label>
             </div>
@@ -336,7 +401,7 @@ export default function JourneyPage() {
         <CardContent>
           <RadioGroup value={day2TimeSlot} onValueChange={setDay2TimeSlot}>
             {timeSlotOptions[localeKey].map(option => (
-              <div key={option.value} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-muted/50">
+              <div key={option.value} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50">
                 <RadioGroupItem value={option.value} id={`d2time-${option.value}`} />
                 <Label htmlFor={`d2time-${option.value}`} className="cursor-pointer flex-1">{option.label}</Label>
               </div>
@@ -369,7 +434,7 @@ export default function JourneyPage() {
         </CardContent>
       </Card>
 
-      <div className="flex justify-center mt-8">
+      <div className="flex justify-center mt-4">
         <Button onClick={nextStep} disabled={!canProceedFromSurvey()} className="gap-2 rounded-full px-8">
           {t('survey.submit')}
           <ArrowRight className="h-4 w-4" />
@@ -379,7 +444,7 @@ export default function JourneyPage() {
   );
 
   const renderDay3Survey = () => (
-    <div className="py-6 space-y-8">
+    <div className="py-4 space-y-4">
       {/* 3.4: Ejercicio interactivo (gratitudes + phrase + action) - FIRST per PDF */}
       <Card className="shadow-card">
         <CardHeader>
@@ -438,7 +503,7 @@ export default function JourneyPage() {
         <EnergySelector onSelect={setSelectedEnergy} selectedEnergy={selectedEnergy} />
       </div>
 
-      <div className="flex justify-center mt-8">
+      <div className="flex justify-center mt-4">
         <Button onClick={nextStep} disabled={!canProceedFromSurvey()} className="gap-2 rounded-full px-8">
           {t('survey.submit')}
           <ArrowRight className="h-4 w-4" />
@@ -511,9 +576,9 @@ export default function JourneyPage() {
       <div className="min-h-screen bg-background pb-16">
         <Header />
 
-        <main className="container mx-auto px-4 py-6 max-w-2xl">
-          <div className="flex items-center justify-between mb-6">
-            <Button variant="ghost" size="sm" onClick={() => navigate('/')} className="gap-2">
+        <main className="container mx-auto px-4 py-4 max-w-2xl">
+          <div className="flex items-center justify-between mb-4">
+            <Button variant="ghost" size="sm" onClick={prevStep} className="gap-2">
               <ArrowLeft className="h-4 w-4" />
               {t('common.back')}
             </Button>
@@ -525,201 +590,355 @@ export default function JourneyPage() {
             <StepIndicator currentStep={currentStep} completedSteps={completedSteps} />
           )}
 
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentStep}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              {currentStep === 'start' && (
-                <div className="text-center py-12">
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: 'spring', delay: 0.2 }}
-                    className="mb-8"
-                  >
-                    {dayNumber === 0 ? (
-                      <BalticaLogo variant="isotipo" size={96} className="mx-auto" />
-                    ) : (
-                      <div className="w-24 h-24 rounded-full gradient-warm flex items-center justify-center mx-auto shadow-soft">
-                        <span className="text-4xl font-bold text-primary-foreground">{dayNumber}</span>
-                      </div>
-                    )}
-                  </motion.div>
-                  <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-4">{getDayTitle()}</h1>
-                  <p className="text-lg text-muted-foreground mb-8 max-w-md mx-auto">{getDaySubtitle()}</p>
-                  <Button size="lg" onClick={nextStep} className="gap-2 rounded-full px-8">
-                    {t('journey.start')}
-                    <ArrowRight className="h-5 w-5" />
-                  </Button>
-                </div>
-              )}
-
-              {currentStep === 'video' && (
-                <div className="py-6">
-                  <h2 className="text-xl font-semibold text-foreground mb-2 text-center">{t('content.video')}</h2>
-                  <p className="text-muted-foreground text-center mb-6">{dayContent?.video.title || t('video.title')}</p>
-                  <VideoPlayer src={dayContent?.video.url} title={dayContent?.video.title || ''} duration={dayContent?.video.duration || '1:30'} onComplete={() => markStepComplete('video')} />
-                  <div className="flex justify-center mt-8">
-                    <Button onClick={nextStep} className="gap-2 rounded-full px-8">
-                      {t('video.next')}
-                      <ArrowRight className="h-4 w-4" />
+          {dayNumber === 0 ? (
+            /* Day 0: Custom sub-step flow with dual videos and dual surveys */
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={day0Step}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                {DAY0_SUBSTEPS[day0Step] === 'start' && (
+                  <div className="text-center py-12">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: 'spring', delay: 0.2 }}
+                      className="mb-8"
+                    >
+                      <BalticaLogo variant="isotipo" size={160} className="mx-auto" />
+                    </motion.div>
+                    <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-4">{getDayTitle()}</h1>
+                    <p className="text-lg text-muted-foreground mb-8 max-w-md mx-auto">{getDaySubtitle()}</p>
+                    <Button size="lg" onClick={nextStep} className="gap-2 rounded-full px-8">
+                      {t('journey.start')}
+                      <ArrowRight className="h-5 w-5" />
                     </Button>
                   </div>
-                </div>
-              )}
+                )}
 
-              {currentStep === 'audio' && (
-                <div className="py-6">
-                  <h2 className="text-xl font-semibold text-foreground mb-2 text-center">{t('content.audio')}</h2>
-                  <p className="text-muted-foreground text-center mb-8">{dayContent?.audio.title || t('audio.title')}</p>
-                  <AudioPlayer title={dayContent?.audio.title || ''} subtitle={t('audio.title')} duration={dayContent?.audio.duration || '5:00'} audioSrc={dayContent?.audio.url} onComplete={() => markStepComplete('audio')} />
-                  <div className="flex justify-center mt-8">
-                    <Button onClick={nextStep} className="gap-2 rounded-full px-8">
-                      {t('audio.next')}
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
+                {DAY0_SUBSTEPS[day0Step] === 'welcome-video' && (
+                  <div className="py-4">
+                    <h2 className="text-xl font-semibold text-foreground mb-2 text-center">{t('day.0.welcomeVideo.title' as any)}</h2>
+                    <p className="text-muted-foreground text-center mb-4">{t('day.0.welcomeVideo.subtitle' as any)}</p>
+                    <VideoPlayer src={day0ExtendedContent.welcomeVideo.url} title={day0ExtendedContent.welcomeVideo.title || ''} duration={day0ExtendedContent.welcomeVideo.duration} />
+                    <div className="flex justify-center mt-6">
+                      <Button onClick={nextStep} className="gap-2 rounded-full px-8">
+                        {t('video.next')}
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {currentStep === 'download' && (
-                <div className="py-6">
-                  <h2 className="text-xl font-semibold text-foreground mb-6 text-center">{t('content.download')}</h2>
-                  <Card className="shadow-card">
-                    <CardHeader className="text-center">
-                      <div className="w-16 h-16 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
-                        <Download className="h-8 w-8 text-secondary-foreground" />
-                      </div>
-                      <CardTitle>{dayContent?.pdf.title || ''}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="text-center">
-                      <p className="text-muted-foreground mb-6">
-                        {locale.startsWith('es') ? 'Material complementario para tu práctica' : 'Complementary material for your practice'}
-                      </p>
-                      {dayContent?.pdf.url && (
-                        <a href={dayContent.pdf.url} target="_blank" rel="noopener noreferrer">
+                {DAY0_SUBSTEPS[day0Step] === 'survey-before' && renderWelcomeSurvey()}
+
+                {DAY0_SUBSTEPS[day0Step] === 'intro-video' && (
+                  <div className="py-4">
+                    <h2 className="text-xl font-semibold text-foreground mb-2 text-center">{t('day.0.introVideo.title' as any)}</h2>
+                    <p className="text-muted-foreground text-center mb-4">{t('day.0.introVideo.subtitle' as any)}</p>
+                    <VideoPlayer src={day0ExtendedContent.introVideo.url} title={day0ExtendedContent.introVideo.title || ''} duration={day0ExtendedContent.introVideo.duration} />
+                    <div className="flex justify-center mt-6">
+                      <Button onClick={nextStep} className="gap-2 rounded-full px-8">
+                        {t('video.next')}
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {DAY0_SUBSTEPS[day0Step] === 'download' && (
+                  <div className="py-4">
+                    <h2 className="text-xl font-semibold text-foreground mb-4 text-center">{t('content.download')}</h2>
+                    <Card className="shadow-card">
+                      <CardHeader className="text-center pb-2">
+                        <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
+                          <Download className="h-6 w-6 text-secondary-foreground" />
+                        </div>
+                        <CardTitle>{day0ExtendedContent.welcomePdf.title}</CardTitle>
+                      </CardHeader>
+                      <CardContent className="text-center">
+                        <p className="text-muted-foreground mb-4">
+                          {locale.startsWith('es') ? 'Material complementario de bienvenida' : 'Welcome complementary material'}
+                        </p>
+                        <a href={day0ExtendedContent.welcomePdf.url!} target="_blank" rel="noopener noreferrer">
                           <Button variant="outline" className="gap-2">
                             <Download className="h-4 w-4" />
                             {locale.startsWith('es') ? 'Descargar PDF' : 'Download PDF'}
                           </Button>
                         </a>
-                      )}
-                    </CardContent>
-                  </Card>
-                  <div className="flex justify-center mt-8">
-                    <Button onClick={nextStep} className="gap-2 rounded-full px-8">
-                      {t('common.next')}
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-              {currentStep === 'survey' && renderSurveyContent()}
-
-              {currentStep === 'closure' && (
-                <div className="py-8 text-center">
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: 'spring', delay: 0.2 }}
-                    className="w-24 h-24 rounded-full bg-accent/30 flex items-center justify-center mx-auto mb-6"
-                  >
-                    <CheckCircle className="h-12 w-12 text-primary" />
-                  </motion.div>
-
-                  <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">{getClosureTitle()}</h1>
-
-                  {dayNumber === 3 && (
-                    <p className="text-lg text-muted-foreground mb-4">{t('day.complete.subtitle')}</p>
-                  )}
-
-                  <Card className="shadow-card mb-8 text-left">
-                    <CardHeader>
-                      <div className="flex items-center gap-3">
-                        <BalticaLogo variant="isotipo" size={40} />
-                        <CardTitle className="text-lg">
-                          {dayNumber === 3
-                            ? (locale.startsWith('es') ? 'Mensaje final' : 'Final message')
-                            : t('closure.practice.title')}
-                        </CardTitle>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-foreground mb-3">{getClosureMessage()}</p>
-                      {dayContent && (
-                        <p className="text-sm text-muted-foreground">{dayContent.practice[localeKey]}</p>
-                      )}
-                      {/* What's Next preview */}
-                      {getNextDayPreview() && (
-                        <div className="mt-4 pt-4 border-t border-border/40">
-                          <p className="text-sm font-medium text-primary">{getNextDayPreview()}</p>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-
-                  {/* Before/after emotional comparison for Day 3 */}
-                  {dayNumber === 3 && dayAnswers.welcome?.mood && selectedMood && (
-                    <Card className="shadow-card mb-8 text-left">
-                      <CardHeader>
-                        <CardTitle className="text-lg">
-                          {locale.startsWith('es') ? 'Tu viaje emocional' : 'Your emotional journey'}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="flex items-center justify-around">
-                          <div className="text-center">
-                            <p className="text-sm text-muted-foreground mb-1">
-                              {locale.startsWith('es') ? 'Al comenzar' : 'At the start'}
-                            </p>
-                            <p className="text-lg font-medium">{t(`mood.${dayAnswers.welcome.mood}` as any)}</p>
-                            {dayAnswers.welcome.energy && (
-                              <p className="text-sm text-muted-foreground">{t(`energy.${dayAnswers.welcome.energy}` as any)}</p>
-                            )}
-                          </div>
-                          <ArrowRight className="h-5 w-5 text-muted-foreground" />
-                          <div className="text-center">
-                            <p className="text-sm text-muted-foreground mb-1">
-                              {locale.startsWith('es') ? 'Al finalizar' : 'At the end'}
-                            </p>
-                            <p className="text-lg font-medium">{t(`mood.${selectedMood}` as any)}</p>
-                            {selectedEnergy && (
-                              <p className="text-sm text-muted-foreground">{t(`energy.${selectedEnergy}` as any)}</p>
-                            )}
-                          </div>
-                        </div>
                       </CardContent>
                     </Card>
-                  )}
-
-                  {/* Ethical note for Day 3 closure (node 3.8 per PDF spec) */}
-                  {dayNumber === 3 && (
-                    <div className="mb-8">
-                      <EthicalNote variant="inline" />
+                    <div className="flex justify-center mt-6">
+                      <Button onClick={nextStep} className="gap-2 rounded-full px-8">
+                        {t('common.next')}
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                    <Button onClick={handleComplete} size="lg" className="gap-2 rounded-full px-8">
-                      {dayNumber === 3
-                        ? (locale.startsWith('es') ? 'Ver mi progreso completo' : 'See my full progress')
-                        : t('closure.next')}
+                {DAY0_SUBSTEPS[day0Step] === 'survey-after' && renderWelcomeSurveyAfter()}
+
+                {DAY0_SUBSTEPS[day0Step] === 'closure' && (
+                  <div className="py-4 text-center">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: 'spring', delay: 0.2 }}
+                      className="w-16 h-16 rounded-full bg-accent/30 flex items-center justify-center mx-auto mb-3"
+                    >
+                      <CheckCircle className="h-8 w-8 text-primary" />
+                    </motion.div>
+
+                    <h1 className="text-2xl font-bold text-foreground mb-3">{getClosureTitle()}</h1>
+
+                    <Card className="shadow-card mb-4 text-left">
+                      <CardHeader className="pb-2">
+                        <div className="flex items-center gap-2">
+                          <BalticaLogo variant="isotipo" size={28} />
+                          <CardTitle className="text-base">{t('closure.practice.title')}</CardTitle>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <p className="text-sm text-foreground mb-2">{getClosureMessage()}</p>
+                        {dayContent && (
+                          <p className="text-xs text-muted-foreground">{dayContent.practice[localeKey]}</p>
+                        )}
+                        {getNextDayPreview() && (
+                          <div className="mt-2 pt-2 border-t border-border/40">
+                            <p className="text-sm font-medium text-primary">{getNextDayPreview()}</p>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+
+                    {/* Before/after emotional comparison for Day 0 */}
+                    {selectedMood && moodAfter && (
+                      <Card className="shadow-card mb-4 text-left">
+                        <CardContent className="pt-4 pb-4">
+                          <p className="text-base font-semibold mb-3">{t('day.0.comparison.title' as any)}</p>
+                          <div className="flex items-center justify-around">
+                            <div className="text-center">
+                              <p className="text-xs text-muted-foreground mb-1">{t('day.0.comparison.before' as any)}</p>
+                              <p className="text-base font-medium">{t(`mood.${selectedMood}` as any)}</p>
+                              {selectedEnergy && (
+                                <p className="text-xs text-muted-foreground">{t(`energy.${selectedEnergy}` as any)}</p>
+                              )}
+                            </div>
+                            <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                            <div className="text-center">
+                              <p className="text-xs text-muted-foreground mb-1">{t('day.0.comparison.after' as any)}</p>
+                              <p className="text-base font-medium">{t(`mood.${moodAfter}` as any)}</p>
+                              {energyAfter && (
+                                <p className="text-xs text-muted-foreground">{t(`energy.${energyAfter}` as any)}</p>
+                              )}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+
+                    <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                      <Button onClick={handleComplete} size="lg" className="gap-2 rounded-full px-8">
+                        {t('closure.next')}
+                        <ArrowRight className="h-5 w-5" />
+                      </Button>
+                      <Button variant="outline" size="lg" className="gap-2 rounded-full">
+                        <Share2 className="h-4 w-4" />
+                        {t('closure.share')}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          ) : (
+            /* Days 1-3: Standard step flow */
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentStep}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                {currentStep === 'start' && (
+                  <div className="text-center py-12">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: 'spring', delay: 0.2 }}
+                      className="mb-8"
+                    >
+                      <div className="w-24 h-24 rounded-full gradient-warm flex items-center justify-center mx-auto shadow-soft">
+                        <span className="text-4xl font-bold text-primary-foreground">{dayNumber}</span>
+                      </div>
+                    </motion.div>
+                    <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-4">{getDayTitle()}</h1>
+                    <p className="text-lg text-muted-foreground mb-8 max-w-md mx-auto">{getDaySubtitle()}</p>
+                    <Button size="lg" onClick={nextStep} className="gap-2 rounded-full px-8">
+                      {t('journey.start')}
                       <ArrowRight className="h-5 w-5" />
                     </Button>
-                    <Button variant="outline" size="lg" className="gap-2 rounded-full">
-                      <Share2 className="h-4 w-4" />
-                      {t('closure.share')}
-                    </Button>
                   </div>
-                </div>
-              )}
-            </motion.div>
-          </AnimatePresence>
+                )}
+
+                {currentStep === 'video' && (
+                  <div className="py-4">
+                    <h2 className="text-xl font-semibold text-foreground mb-2 text-center">{t('content.video')}</h2>
+                    <p className="text-muted-foreground text-center mb-4">{dayContent?.video.title || t('video.title')}</p>
+                    <VideoPlayer src={dayContent?.video.url} title={dayContent?.video.title || ''} duration={dayContent?.video.duration || '1:30'} onComplete={() => markStepComplete('video')} />
+                    <div className="flex justify-center mt-6">
+                      <Button onClick={nextStep} className="gap-2 rounded-full px-8">
+                        {t('video.next')}
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {currentStep === 'audio' && (
+                  <div className="py-4">
+                    <h2 className="text-xl font-semibold text-foreground mb-2 text-center">{t('content.audio')}</h2>
+                    <p className="text-muted-foreground text-center mb-4">{dayContent?.audio.title || t('audio.title')}</p>
+                    <AudioPlayer title={dayContent?.audio.title || ''} subtitle={t('audio.title')} duration={dayContent?.audio.duration || '5:00'} audioSrc={dayContent?.audio.url} onComplete={() => markStepComplete('audio')} />
+                    <div className="flex justify-center mt-6">
+                      <Button onClick={nextStep} className="gap-2 rounded-full px-8">
+                        {t('audio.next')}
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {currentStep === 'download' && (
+                  <div className="py-4">
+                    <h2 className="text-xl font-semibold text-foreground mb-4 text-center">{t('content.download')}</h2>
+                    <Card className="shadow-card">
+                      <CardHeader className="text-center pb-2">
+                        <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
+                          <Download className="h-6 w-6 text-secondary-foreground" />
+                        </div>
+                        <CardTitle>{dayContent?.pdf.title || ''}</CardTitle>
+                      </CardHeader>
+                      <CardContent className="text-center">
+                        <p className="text-muted-foreground mb-4">
+                          {locale.startsWith('es') ? 'Material complementario para tu práctica' : 'Complementary material for your practice'}
+                        </p>
+                        {dayContent?.pdf.url && (
+                          <a href={dayContent.pdf.url} target="_blank" rel="noopener noreferrer">
+                            <Button variant="outline" className="gap-2">
+                              <Download className="h-4 w-4" />
+                              {locale.startsWith('es') ? 'Descargar PDF' : 'Download PDF'}
+                            </Button>
+                          </a>
+                        )}
+                      </CardContent>
+                    </Card>
+                    <div className="flex justify-center mt-6">
+                      <Button onClick={nextStep} className="gap-2 rounded-full px-8">
+                        {t('common.next')}
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {currentStep === 'survey' && renderSurveyContent()}
+
+                {currentStep === 'closure' && (
+                  <div className="py-4 text-center">
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ type: 'spring', delay: 0.2 }}
+                      className="w-16 h-16 rounded-full bg-accent/30 flex items-center justify-center mx-auto mb-3"
+                    >
+                      <CheckCircle className="h-8 w-8 text-primary" />
+                    </motion.div>
+
+                    <h1 className="text-2xl font-bold text-foreground mb-3">{getClosureTitle()}</h1>
+
+                    {dayNumber === 3 && (
+                      <p className="text-muted-foreground mb-3">{t('day.complete.subtitle')}</p>
+                    )}
+
+                    <Card className="shadow-card mb-4 text-left">
+                      <CardHeader className="pb-2">
+                        <div className="flex items-center gap-2">
+                          <BalticaLogo variant="isotipo" size={28} />
+                          <CardTitle className="text-base">
+                            {dayNumber === 3
+                              ? (locale.startsWith('es') ? 'Mensaje final' : 'Final message')
+                              : t('closure.practice.title')}
+                          </CardTitle>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="pt-0">
+                        <p className="text-sm text-foreground mb-2">{getClosureMessage()}</p>
+                        {dayContent && (
+                          <p className="text-xs text-muted-foreground">{dayContent.practice[localeKey]}</p>
+                        )}
+                        {getNextDayPreview() && (
+                          <div className="mt-2 pt-2 border-t border-border/40">
+                            <p className="text-sm font-medium text-primary">{getNextDayPreview()}</p>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+
+                    {/* Before/after emotional comparison for Day 3 */}
+                    {dayNumber === 3 && dayAnswers.welcome?.mood && selectedMood && (
+                      <Card className="shadow-card mb-4 text-left">
+                        <CardContent className="pt-4 pb-4">
+                          <p className="text-base font-semibold mb-3">
+                            {locale.startsWith('es') ? 'Tu viaje emocional' : 'Your emotional journey'}
+                          </p>
+                          <div className="flex items-center justify-around">
+                            <div className="text-center">
+                              <p className="text-xs text-muted-foreground mb-1">
+                                {locale.startsWith('es') ? 'Al comenzar' : 'At the start'}
+                              </p>
+                              <p className="text-base font-medium">{t(`mood.${dayAnswers.welcome.mood}` as any)}</p>
+                              {dayAnswers.welcome.energy && (
+                                <p className="text-xs text-muted-foreground">{t(`energy.${dayAnswers.welcome.energy}` as any)}</p>
+                              )}
+                            </div>
+                            <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                            <div className="text-center">
+                              <p className="text-xs text-muted-foreground mb-1">
+                                {locale.startsWith('es') ? 'Al finalizar' : 'At the end'}
+                              </p>
+                              <p className="text-base font-medium">{t(`mood.${selectedMood}` as any)}</p>
+                              {selectedEnergy && (
+                                <p className="text-xs text-muted-foreground">{t(`energy.${selectedEnergy}` as any)}</p>
+                              )}
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
+
+                    <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                      <Button onClick={handleComplete} size="lg" className="gap-2 rounded-full px-8">
+                        {dayNumber === 3
+                          ? (locale.startsWith('es') ? 'Ver mi progreso completo' : 'See my full progress')
+                          : t('closure.next')}
+                        <ArrowRight className="h-5 w-5" />
+                      </Button>
+                      <Button variant="outline" size="lg" className="gap-2 rounded-full">
+                        <Share2 className="h-4 w-4" />
+                        {t('closure.share')}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          )}
         </main>
 
         <FloatingHelp />

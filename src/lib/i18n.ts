@@ -75,7 +75,7 @@ export const translations = {
     'floatingHelp.help': 'Ayuda y recursos',
 
     // Ethical footer
-    'ethical.footer': 'Contenido educativo y preventivo. No sustituye atención profesional.',
+    'ethical.footer': 'Programa educativo y preventivo. No sustituye atención profesional.',
 
     // Onboarding
     'onboarding.step1.title': 'Un reto de 3 días',
@@ -103,20 +103,31 @@ export const translations = {
     'welcome.cta': 'Comenzar mi viaje',
     'welcome.continue': 'Continuar mi viaje',
     'welcome.tagline': 'Solo 10 minutos al día',
-    'welcome.block0.title': 'Bienvenido/a a tu espacio',
+    'welcome.block0.title': 'Bienvenido/a tu espacio',
     'welcome.block0.subtitle': 'Antes de comenzar, toma un momento para ti',
     'welcome.block0.ready': 'Estoy listo/a para comenzar',
 
     // Ethical Note
-    'ethical.title': 'Nota importante sobre este reto',
+    'ethical.title': 'Nota importante',
     'ethical.shortTitle': 'Nota importante',
-    'ethical.text': 'Este reto es educativo y preventivo. No reemplaza atención profesional de salud mental. Si estás pasando por un momento difícil, te animamos a buscar apoyo profesional.',
-    'ethical.link': 'Más información sobre este descargo',
-    'ethical.fullText': 'BÁLTICA es un reto educativo y preventivo de bienestar. No es un tratamiento médico, psicológico ni terapéutico. Este contenido no diagnostica, trata ni cura ninguna condición de salud física o mental. Si estás pasando por un momento difícil o tienes pensamientos que te preocupan, por favor busca apoyo profesional.',
-    'ethical.resources': 'Recursos de ayuda',
+    'ethical.text': 'El Reto de 3 Días es un programa educativo y preventivo de bienestar. No reemplaza atención profesional de salud mental.',
+    'ethical.link': 'Más información',
+    'ethical.fullText': 'El Reto de 3 Días es un programa educativo y preventivo. Comienza con una introducción de bienvenida, y cada jornada incluye un video, un audio guiado y material de apoyo en PDF.\n\nNo es un tratamiento médico, psicológico ni terapéutico.\n\nEste programa no diagnostica, trata ni cura ninguna condición de salud física o mental.\n\nSi estás pasando por un momento difícil o tienes pensamientos que te preocupan, por favor busca apoyo profesional.',
+    'ethical.resources': 'Te recomendamos buscar:',
     'ethical.crisis': 'Línea de atención en crisis',
     'ethical.professional': 'Consulta con un profesional de salud mental',
     'ethical.close': 'Entendido',
+
+    // Day 0 extended flow
+    'day.0.welcomeVideo.title': 'Bienvenida',
+    'day.0.welcomeVideo.subtitle': 'Conoce tu espacio',
+    'day.0.introVideo.title': 'Introducción',
+    'day.0.introVideo.subtitle': 'Cómo funciona el programa',
+    'day.0.surveyAfter.title': '¿Cómo te sientes ahora?',
+    'day.0.surveyAfter.subtitle': 'Después de ver los videos, toma un momento para notar cómo te sientes.',
+    'day.0.comparison.title': 'Tu estado emocional',
+    'day.0.comparison.before': 'Al llegar',
+    'day.0.comparison.after': 'Después',
 
     // Day specific content
     'day.0.title': 'Bienvenida',
@@ -506,7 +517,7 @@ export const translations = {
     'floatingHelp.help': 'Ayuda y recursos',
 
     // Ethical footer
-    'ethical.footer': 'Contenido educativo y preventivo. No sustituye atención profesional.',
+    'ethical.footer': 'Programa educativo y preventivo. No sustituye atención profesional.',
 
     // Onboarding
     'onboarding.step1.title': 'Un reto de 3 días',
@@ -534,20 +545,31 @@ export const translations = {
     'welcome.cta': 'Comenzar mi viaje',
     'welcome.continue': 'Continuar mi viaje',
     'welcome.tagline': 'Solo 10 minutos al día',
-    'welcome.block0.title': 'Bienvenido/a a tu espacio',
+    'welcome.block0.title': 'Bienvenido/a tu espacio',
     'welcome.block0.subtitle': 'Antes de comenzar, toma un momento para ti',
     'welcome.block0.ready': 'Estoy listo/a para comenzar',
 
     // Ethical Note
-    'ethical.title': 'Nota importante sobre este reto',
+    'ethical.title': 'Nota importante',
     'ethical.shortTitle': 'Nota importante',
-    'ethical.text': 'Este reto es educativo y preventivo. No reemplaza atención profesional de salud mental. Si estás pasando por un momento difícil, te animamos a buscar apoyo profesional.',
-    'ethical.link': 'Más información sobre este descargo',
-    'ethical.fullText': 'BÁLTICA es un reto educativo y preventivo de bienestar. No es un tratamiento médico, psicológico ni terapéutico. Este contenido no diagnostica, trata ni cura ninguna condición de salud física o mental. Si estás pasando por un momento difícil o tienes pensamientos que te preocupan, por favor busca apoyo profesional.',
-    'ethical.resources': 'Recursos de ayuda',
+    'ethical.text': 'El Reto de 3 Días es un programa educativo y preventivo de bienestar. No reemplaza atención profesional de salud mental.',
+    'ethical.link': 'Más información',
+    'ethical.fullText': 'El Reto de 3 Días es un programa educativo y preventivo. Comienza con una introducción de bienvenida, y cada jornada incluye un video, un audio guiado y material de apoyo en PDF.\n\nNo es un tratamiento médico, psicológico ni terapéutico.\n\nEste programa no diagnostica, trata ni cura ninguna condición de salud física o mental.\n\nSi estás pasando por un momento difícil o tienes pensamientos que te preocupan, por favor busca apoyo profesional.',
+    'ethical.resources': 'Te recomendamos buscar:',
     'ethical.crisis': 'Línea de atención en crisis',
     'ethical.professional': 'Consulta con un profesional de salud mental',
     'ethical.close': 'Entendido',
+
+    // Day 0 extended flow
+    'day.0.welcomeVideo.title': 'Bienvenida',
+    'day.0.welcomeVideo.subtitle': 'Conoce tu espacio',
+    'day.0.introVideo.title': 'Introducción',
+    'day.0.introVideo.subtitle': 'Cómo funciona el programa',
+    'day.0.surveyAfter.title': '¿Cómo te sientes ahora?',
+    'day.0.surveyAfter.subtitle': 'Después de ver los videos, toma un momento para notar cómo te sientes.',
+    'day.0.comparison.title': 'Tu estado emocional',
+    'day.0.comparison.before': 'Al llegar',
+    'day.0.comparison.after': 'Después',
 
     // Day specific content
     'day.0.title': 'Bienvenida',
@@ -936,7 +958,7 @@ export const translations = {
     'floatingHelp.help': 'Help and resources',
 
     // Ethical footer
-    'ethical.footer': 'Educational and preventive content. Does not replace professional care.',
+    'ethical.footer': 'Educational and preventive program. Does not replace professional care.',
 
     // Onboarding
     'onboarding.step1.title': 'A 3-day challenge',
@@ -969,15 +991,26 @@ export const translations = {
     'welcome.block0.ready': 'I am ready to begin',
 
     // Ethical Note
-    'ethical.title': 'Important note about this challenge',
+    'ethical.title': 'Important note',
     'ethical.shortTitle': 'Important note',
-    'ethical.text': 'This challenge is educational and preventive. It does not replace professional mental health care. If you are going through a difficult time, we encourage you to seek professional support.',
-    'ethical.link': 'More about this disclaimer',
-    'ethical.fullText': 'BÁLTICA is an educational and preventive wellness challenge. It is not medical, psychological, or therapeutic treatment. This content does not diagnose, treat, or cure any physical or mental health condition. If you are going through a difficult time or have thoughts that concern you, please seek professional support.',
-    'ethical.resources': 'Help resources',
+    'ethical.text': 'The 3-Day Challenge is an educational and preventive wellness program. It does not replace professional mental health care.',
+    'ethical.link': 'More information',
+    'ethical.fullText': 'The 3-Day Challenge is an educational and preventive program. It begins with a welcome introduction, and each session includes a video, a guided audio, and PDF support material.\n\nIt is not medical, psychological, or therapeutic treatment.\n\nThis program does not diagnose, treat, or cure any physical or mental health condition.\n\nIf you are going through a difficult time or have thoughts that concern you, please seek professional support.',
+    'ethical.resources': 'We recommend seeking:',
     'ethical.crisis': 'Crisis hotline',
     'ethical.professional': 'Consult a mental health professional',
     'ethical.close': 'I understand',
+
+    // Day 0 extended flow
+    'day.0.welcomeVideo.title': 'Welcome',
+    'day.0.welcomeVideo.subtitle': 'Get to know your space',
+    'day.0.introVideo.title': 'Introduction',
+    'day.0.introVideo.subtitle': 'How the program works',
+    'day.0.surveyAfter.title': 'How do you feel now?',
+    'day.0.surveyAfter.subtitle': 'After watching the videos, take a moment to notice how you feel.',
+    'day.0.comparison.title': 'Your emotional state',
+    'day.0.comparison.before': 'On arrival',
+    'day.0.comparison.after': 'After',
 
     // Day specific content
     'day.0.title': 'Welcome',

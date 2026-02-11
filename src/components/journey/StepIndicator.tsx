@@ -23,7 +23,7 @@ export function StepIndicator({ currentStep, completedSteps = [] }: StepIndicato
   const currentIndex = steps.findIndex(s => s.key === currentStep);
 
   return (
-    <div className="flex items-center justify-center gap-2 py-4">
+    <div className="flex items-center justify-center gap-2 py-2">
       {steps.map((step, index) => {
         const isCompleted = completedSteps.includes(step.key) || index < currentIndex;
         const isCurrent = step.key === currentStep;
@@ -33,7 +33,7 @@ export function StepIndicator({ currentStep, completedSteps = [] }: StepIndicato
           <div key={step.key} className="flex items-center">
             <div
               className={cn(
-                'w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300',
+                'w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300',
                 isCompleted && 'bg-primary text-primary-foreground',
                 isCurrent && !isCompleted && 'bg-primary/20 text-primary border-2 border-primary',
                 !isCompleted && !isCurrent && 'bg-muted text-muted-foreground'

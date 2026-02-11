@@ -12,9 +12,15 @@ interface JourneyProgress {
 
 // Day answers per the pedagogical spec
 export interface WelcomeAnswers {
-  mood: string;
-  energy?: 'high' | 'medium' | 'low';
+  mood: string;                              // kept for backward compat (= moodBefore)
+  energy?: 'high' | 'medium' | 'low';       // kept for backward compat (= energyBefore)
+  moodBefore?: string;
+  energyBefore?: 'high' | 'medium' | 'low';
+  moodAfter?: string;
+  energyAfter?: 'high' | 'medium' | 'low';
   ethicalNoteViewed: boolean;
+  welcomeVideoWatched?: boolean;
+  introVideoWatched?: boolean;
   completedAt?: string;
 }
 

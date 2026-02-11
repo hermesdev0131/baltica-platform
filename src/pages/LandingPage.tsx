@@ -105,7 +105,7 @@ export default function LandingPage() {
             transition={{ delay: 0.2, type: 'spring' }}
             className="inline-block mb-8"
           >
-            <BalticaLogo variant="full" size={160} className="mx-auto drop-shadow-lg" />
+            <BalticaLogo variant="full" size={200} className="mx-auto drop-shadow-lg" />
           </motion.div>
 
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 max-w-3xl mx-auto">

@@ -30,13 +30,20 @@ export interface DayContent {
   };
 }
 
-// Day 0 (Block 0) per PDF spec: NO video, audio, or download - only greeting + measurements + ethical note
+// Day 0 extended content: dual videos + PDF (no audio)
+export const day0ExtendedContent = {
+  welcomeVideo: { url: '/BIENVENIDA.mp4', duration: '2:00', title: 'Bienvenida' } as MediaAsset,
+  introVideo: { url: '/INTRODUCCION.mp4', duration: '2:30', title: 'Introducción' } as MediaAsset,
+  welcomePdf: { url: '/PDF Bienvenida.pdf', duration: '', title: 'PDF Bienvenida' } as MediaAsset,
+};
+
+// Day 0 (Block 0) base content for backward compat
 export const welcomeContent: DayContent = {
   id: 0,
   key: 'welcome',
   title: {
-    'es-LATAM': 'Bienvenido/a a tu espacio',
-    'es-ES': 'Bienvenido/a a tu espacio',
+    'es-LATAM': 'Bienvenido/a tu espacio',
+    'es-ES': 'Bienvenido/a tu espacio',
     'en': 'Welcome to your space',
   },
   subtitle: {

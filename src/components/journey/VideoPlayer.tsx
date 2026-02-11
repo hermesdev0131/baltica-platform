@@ -129,10 +129,10 @@ export function VideoPlayer({ src, title, duration, thumbnailUrl, onComplete }: 
         </button>
       )}
 
-      {/* Controls */}
+      {/* Controls - z-10 to stay above the click-to-play overlay */}
       <div
         className={cn(
-          'absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-300',
+          'absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent transition-opacity duration-300 z-10',
           showControls || !isPlaying ? 'opacity-100' : 'opacity-0'
         )}
       >
