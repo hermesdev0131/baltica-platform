@@ -26,7 +26,7 @@ export interface WelcomeAnswers {
 
 export interface Day1Answers {
   words: [string, string, string];
-  action: string;
+  action?: string;
   timeSlot: 'morning' | 'afternoon' | 'evening';
   videoWatched: boolean;
   audioCompleted: boolean;
@@ -37,7 +37,7 @@ export interface Day2Answers {
   value: string;
   customValue?: string;
   action: string;
-  timeSlot: 'morning' | 'afternoon' | 'evening';
+  timeSlot: string;
   wordsAfter: [string, string, string];
   videoWatched: boolean;
   audioCompleted: boolean;

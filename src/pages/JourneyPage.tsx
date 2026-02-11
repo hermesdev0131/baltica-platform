@@ -23,7 +23,7 @@ import { Label } from '@/components/ui/label';
 import { ArrowLeft, ArrowRight, Download, CheckCircle, Share2, Sparkles } from 'lucide-react';
 import BalticaLogo from '@/components/brand/BalticaLogo';
 import { motion, AnimatePresence } from 'framer-motion';
-import { dayContents, day0ExtendedContent, actionOptions, valueOptions, timeSlotOptions } from '@/config/content';
+import { dayContents, day0ExtendedContent, valueOptions, timeSlotOptions } from '@/config/content';
 
 type JourneyStep = Step;
 
@@ -52,7 +52,6 @@ export default function JourneyPage() {
   const [words, setWords] = useState<[string, string, string]>(
     dayAnswers.day1?.words || ['', '', '']
   );
-  const [selectedAction, setSelectedAction] = useState(dayAnswers.day1?.action || '');
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(dayAnswers.day1?.timeSlot || '');
   const [selectedValue, setSelectedValue] = useState(dayAnswers.day2?.value || '');
   const [customValue, setCustomValue] = useState(dayAnswers.day2?.customValue || '');
@@ -135,9 +134,9 @@ export default function JourneyPage() {
         }
         return !!selectedMood && !!selectedEnergy;
       case 1:
-        return words.every(w => w.trim()) && !!selectedAction && !!selectedTimeSlot;
+        return words.every(w => w.trim()) && !!selectedTimeSlot;
       case 2:
-        return (!!selectedValue || !!customValue.trim()) && !!day2Action.trim() && !!day2TimeSlot;
+        return !!customValue.trim() && !!day2Action.trim() && !!day2TimeSlot.trim();
       case 3:
         return !!selectedMood && !!selectedEnergy && gratitudes.every(g => g.trim()) && !!kindPhrase.trim() && !!nextAction.trim();
       default:
@@ -158,10 +157,10 @@ export default function JourneyPage() {
         } });
         break;
       case 1:
-        saveDayAnswers({ day1: { words, action: selectedAction, timeSlot: selectedTimeSlot as any, videoWatched: true, audioCompleted: true, completedAt: now } });
+        saveDayAnswers({ day1: { words, timeSlot: selectedTimeSlot as any, videoWatched: true, audioCompleted: true, completedAt: now } });
         break;
       case 2:
-        saveDayAnswers({ day2: { value: selectedValue || customValue, customValue, action: day2Action, timeSlot: day2TimeSlot as any, wordsAfter, videoWatched: true, audioCompleted: true, completedAt: now } });
+        saveDayAnswers({ day2: { value: customValue, customValue, action: day2Action, timeSlot: day2TimeSlot as any, wordsAfter, videoWatched: true, audioCompleted: true, completedAt: now } });
         break;
       case 3:
         saveDayAnswers({ day3: { mood: selectedMood, energy: selectedEnergy as Energy, gratitudes, kindPhrase, nextAction, videoWatched: true, audioCompleted: true, completedAt: now } });
@@ -283,7 +282,7 @@ export default function JourneyPage() {
   );
 
   const renderDay1Survey = () => (
-    <div className="py-4 space-y-4">
+    <div className="py-4">
       <Card className="shadow-card">
         <CardHeader>
           <CardTitle className="text-lg">{t('day.1.words.title')}</CardTitle>
@@ -305,42 +304,20 @@ export default function JourneyPage() {
               className="text-center"
             />
           ))}
-        </CardContent>
-      </Card>
 
-      <Card className="shadow-card">
-        <CardHeader>
-          <CardTitle className="text-lg">{t('day.1.action.title')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <RadioGroup value={selectedAction} onValueChange={setSelectedAction}>
-            {actionOptions[localeKey].map(option => (
-              <div key={option.value} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50">
-                <RadioGroupItem value={option.value} id={`action-${option.value}`} />
-                <Label htmlFor={`action-${option.value}`} className="cursor-pointer flex-1">
-                  {option.label}
-                </Label>
-              </div>
-            ))}
-          </RadioGroup>
-        </CardContent>
-      </Card>
-
-      <Card className="shadow-card">
-        <CardHeader>
-          <CardTitle className="text-lg">{t('day.1.timeslot')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <RadioGroup value={selectedTimeSlot} onValueChange={setSelectedTimeSlot}>
-            {timeSlotOptions[localeKey].map(option => (
-              <div key={option.value} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50">
-                <RadioGroupItem value={option.value} id={`time-${option.value}`} />
-                <Label htmlFor={`time-${option.value}`} className="cursor-pointer flex-1">
-                  {option.label}
-                </Label>
-              </div>
-            ))}
-          </RadioGroup>
+          <div className="border-t border-border/40 pt-4 mt-4">
+            <p className="text-lg font-semibold text-foreground mb-3">{t('day.1.timeslot')}</p>
+            <RadioGroup value={selectedTimeSlot} onValueChange={setSelectedTimeSlot}>
+              {timeSlotOptions[localeKey].map(option => (
+                <div key={option.value} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50">
+                  <RadioGroupItem value={option.value} id={`time-${option.value}`} />
+                  <Label htmlFor={`time-${option.value}`} className="cursor-pointer flex-1">
+                    {option.label}
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
+          </div>
         </CardContent>
       </Card>
 
@@ -354,83 +331,65 @@ export default function JourneyPage() {
   );
 
   const renderDay2Survey = () => (
-    <div className="py-4 space-y-4">
+    <div className="py-4">
       <Card className="shadow-card">
         <CardHeader>
           <CardTitle className="text-lg">{t('day.2.value.title')}</CardTitle>
           <p className="text-sm text-muted-foreground">{t('day.2.value.instruction')}</p>
         </CardHeader>
-        <CardContent>
-          <RadioGroup value={selectedValue} onValueChange={(v) => { setSelectedValue(v); setCustomValue(''); }}>
-            {valueOptions[localeKey].map(option => (
-              <div key={option.value} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50">
-                <RadioGroupItem value={option.value} id={`value-${option.value}`} />
-                <Label htmlFor={`value-${option.value}`} className="cursor-pointer flex-1">
-                  {option.label}
-                </Label>
-              </div>
-            ))}
-            <div className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50">
-              <RadioGroupItem value="other" id="value-other" />
-              <Label htmlFor="value-other" className="cursor-pointer">{t('day.2.value.other')}</Label>
-            </div>
-          </RadioGroup>
-          {selectedValue === 'other' && (
-            <Input className="mt-3" placeholder={t('day.2.value.other')} value={customValue} onChange={e => setCustomValue(e.target.value)} />
-          )}
-        </CardContent>
-      </Card>
-
-      <Card className="shadow-card">
-        <CardHeader>
-          <CardTitle className="text-lg">{t('day.2.action.title')}</CardTitle>
-          <p className="text-sm text-muted-foreground">{t('day.2.action.instruction')}</p>
-        </CardHeader>
-        <CardContent>
-          <Textarea
-            placeholder={locale.startsWith('es') ? 'Escribe tu acción...' : 'Write your action...'}
-            value={day2Action} onChange={e => setDay2Action(e.target.value)} rows={3}
-          />
-        </CardContent>
-      </Card>
-
-      <Card className="shadow-card">
-        <CardHeader>
-          <CardTitle className="text-lg">{t('day.1.timeslot')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <RadioGroup value={day2TimeSlot} onValueChange={setDay2TimeSlot}>
-            {timeSlotOptions[localeKey].map(option => (
-              <div key={option.value} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50">
-                <RadioGroupItem value={option.value} id={`d2time-${option.value}`} />
-                <Label htmlFor={`d2time-${option.value}`} className="cursor-pointer flex-1">{option.label}</Label>
-              </div>
-            ))}
-          </RadioGroup>
-        </CardContent>
-      </Card>
-
-      <Card className="shadow-card">
-        <CardHeader>
-          <CardTitle className="text-lg">{t('day.2.words.title')}</CardTitle>
-          <p className="text-sm text-muted-foreground">{t('day.2.words.instruction')}</p>
-        </CardHeader>
         <CardContent className="space-y-3">
-          {[0, 1, 2].map(i => (
-            <Input
-              key={i}
-              placeholder={locale.startsWith('es')
-                ? `${['Primera', 'Segunda', 'Tercera'][i]} palabra`
-                : `${['First', 'Second', 'Third'][i]} word`}
-              value={wordsAfter[i]}
-              onChange={e => {
-                const newWords = [...wordsAfter] as [string, string, string];
-                newWords[i] = e.target.value;
-                setWordsAfter(newWords);
-              }}
-              className="text-center"
+          {/* Value + Timeslot side by side */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <Label className="text-sm font-medium mb-1 block">{locale.startsWith('es') ? 'Tu valor' : 'Your value'}</Label>
+              <Input
+                placeholder={locale.startsWith('es') ? 'Escribe aquí...' : 'Write here...'}
+                value={customValue}
+                onChange={e => { setCustomValue(e.target.value); setSelectedValue(''); }}
+                className="text-center"
+              />
+            </div>
+            <div>
+              <Label className="text-sm font-medium mb-1 block">{t('day.1.timeslot')}</Label>
+              <Input
+                placeholder={locale.startsWith('es') ? 'Ej: En la mañana...' : 'E.g.: Morning...'}
+                value={day2TimeSlot}
+                onChange={e => setDay2TimeSlot(e.target.value)}
+                className="text-center"
+              />
+            </div>
+          </div>
+
+          {/* Action */}
+          <div>
+            <Label className="text-sm font-medium mb-1 block">{t('day.2.action.title')}</Label>
+            <Textarea
+              placeholder={locale.startsWith('es') ? 'Escribe tu acción...' : 'Write your action...'}
+              value={day2Action} onChange={e => setDay2Action(e.target.value)} rows={2}
             />
-          ))}
+          </div>
+
+          {/* 3 Words in a row */}
+          <div>
+            <Label className="text-sm font-medium mb-1 block">{t('day.2.words.title')}</Label>
+            <div className="grid grid-cols-3 gap-2">
+              {[0, 1, 2].map(i => (
+                <Input
+                  key={i}
+                  placeholder={locale.startsWith('es')
+                    ? `${['1ra', '2da', '3ra'][i]} palabra`
+                    : `${['1st', '2nd', '3rd'][i]} word`}
+                  value={wordsAfter[i]}
+                  onChange={e => {
+                    const newWords = [...wordsAfter] as [string, string, string];
+                    newWords[i] = e.target.value;
+                    setWordsAfter(newWords);
+                  }}
+                  className="text-center"
+                />
+              ))}
+            </div>
+          </div>
         </CardContent>
       </Card>
 
@@ -444,63 +403,56 @@ export default function JourneyPage() {
   );
 
   const renderDay3Survey = () => (
-    <div className="py-4 space-y-4">
-      {/* 3.4: Ejercicio interactivo (gratitudes + phrase + action) - FIRST per PDF */}
-      <Card className="shadow-card">
-        <CardHeader>
-          <CardTitle className="text-lg">{t('day.3.gratitude.title')}</CardTitle>
-          <p className="text-sm text-muted-foreground">{t('day.3.gratitude.instruction')}</p>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {[0, 1, 2].map(i => (
-            <Input
-              key={i}
-              placeholder={locale.startsWith('es')
-                ? `${['Primera', 'Segunda', 'Tercera'][i]} gratitud...`
-                : `${['First', 'Second', 'Third'][i]} gratitude...`}
-              value={gratitudes[i]}
-              onChange={e => {
-                const g = [...gratitudes] as [string, string, string];
-                g[i] = e.target.value;
-                setGratitudes(g);
-              }}
-            />
-          ))}
-        </CardContent>
-      </Card>
+    <div className="py-4">
+      <div className="grid grid-cols-1 md:grid-cols-[5fr,3fr] gap-4">
+        {/* Left column (full width on mobile): exercises */}
+        <Card className="shadow-card">
+          <CardHeader>
+            <CardTitle className="text-lg">{t('day.3.gratitude.title')}</CardTitle>
+            <p className="text-sm text-muted-foreground">{t('day.3.gratitude.instruction')}</p>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="grid grid-cols-3 gap-2">
+              {[0, 1, 2].map(i => (
+                <Input
+                  key={i}
+                  placeholder={locale.startsWith('es')
+                    ? `${['1ra', '2da', '3ra'][i]} gratitud`
+                    : `${['1st', '2nd', '3rd'][i]} gratitude`}
+                  value={gratitudes[i]}
+                  onChange={e => {
+                    const g = [...gratitudes] as [string, string, string];
+                    g[i] = e.target.value;
+                    setGratitudes(g);
+                  }}
+                  className="text-center"
+                />
+              ))}
+            </div>
 
-      <Card className="shadow-card">
-        <CardHeader>
-          <CardTitle className="text-lg">{t('day.3.phrase.title')}</CardTitle>
-          <p className="text-sm text-muted-foreground">{t('day.3.phrase.instruction')}</p>
-        </CardHeader>
-        <CardContent>
-          <Textarea placeholder={t('day.3.phrase.placeholder')} value={kindPhrase} onChange={e => setKindPhrase(e.target.value)} rows={3} />
-        </CardContent>
-      </Card>
+            <div>
+              <Label className="text-sm font-medium mb-1 block">{t('day.3.phrase.title')}</Label>
+              <Textarea placeholder={t('day.3.phrase.placeholder')} value={kindPhrase} onChange={e => setKindPhrase(e.target.value)} rows={2} />
+            </div>
 
-      <Card className="shadow-card">
-        <CardHeader>
-          <CardTitle className="text-lg">{t('day.3.next.title')}</CardTitle>
-          <p className="text-sm text-muted-foreground">{t('day.3.next.instruction')}</p>
-        </CardHeader>
-        <CardContent>
-          <Textarea placeholder={t('day.3.next.placeholder')} value={nextAction} onChange={e => setNextAction(e.target.value)} rows={2} />
-        </CardContent>
-      </Card>
+            <div>
+              <Label className="text-sm font-medium mb-1 block">{t('day.3.next.title')}</Label>
+              <Textarea placeholder={t('day.3.next.placeholder')} value={nextAction} onChange={e => setNextAction(e.target.value)} rows={2} />
+            </div>
+          </CardContent>
+        </Card>
 
-      {/* 3.5: Medición 1 (mood) - AFTER exercises per PDF */}
-      <div>
-        <h2 className="text-xl font-semibold text-foreground mb-2 text-center">{t('survey.title')}</h2>
-        <MoodSelector onSelect={setSelectedMood as any} selectedMood={selectedMood as any} />
-      </div>
-
-      {/* 3.6: Medición 2 (energy) */}
-      <div>
-        <h3 className="text-lg font-medium text-foreground mb-4 text-center">
-          {t('energy.title' as any)}
-        </h3>
-        <EnergySelector onSelect={setSelectedEnergy} selectedEnergy={selectedEnergy} />
+        {/* Right column: Mood + Energy stacked */}
+        <div className="flex flex-col items-center justify-center gap-4">
+          <div className="text-center">
+            <h2 className="text-sm font-semibold text-foreground mb-2">{t('survey.title')}</h2>
+            <MoodSelector onSelect={setSelectedMood as any} selectedMood={selectedMood as any} showResponse={false} />
+          </div>
+          <div className="text-center">
+            <h3 className="text-sm font-semibold text-foreground mb-2">{t('energy.title' as any)}</h3>
+            <EnergySelector onSelect={setSelectedEnergy} selectedEnergy={selectedEnergy} showResponse={false} />
+          </div>
+        </div>
       </div>
 
       <div className="flex justify-center mt-4">
@@ -576,8 +528,8 @@ export default function JourneyPage() {
       <div className="min-h-screen bg-background pb-16">
         <Header />
 
-        <main className="container mx-auto px-4 py-4 max-w-2xl">
-          <div className="flex items-center justify-between mb-4">
+        <main className="container mx-auto px-4 py-2 max-w-4xl">
+          <div className="flex items-center justify-between mb-2">
             <Button variant="ghost" size="sm" onClick={prevStep} className="gap-2">
               <ArrowLeft className="h-4 w-4" />
               {t('common.back')}
@@ -620,11 +572,13 @@ export default function JourneyPage() {
                 )}
 
                 {DAY0_SUBSTEPS[day0Step] === 'welcome-video' && (
-                  <div className="py-4">
-                    <h2 className="text-xl font-semibold text-foreground mb-2 text-center">{t('day.0.welcomeVideo.title' as any)}</h2>
-                    <p className="text-muted-foreground text-center mb-4">{t('day.0.welcomeVideo.subtitle' as any)}</p>
-                    <VideoPlayer src={day0ExtendedContent.welcomeVideo.url} title={day0ExtendedContent.welcomeVideo.title || ''} duration={day0ExtendedContent.welcomeVideo.duration} />
-                    <div className="flex justify-center mt-6">
+                  <div>
+                    <h2 className="text-lg font-semibold text-foreground mb-1 text-center">{t('day.0.welcomeVideo.title' as any)}</h2>
+                    <p className="text-muted-foreground text-center mb-2 text-sm">{t('day.0.welcomeVideo.subtitle' as any)}</p>
+                    <div className="mx-auto" style={{ maxWidth: 'calc((100vh - 19rem) * 1.778)' }}>
+                      <VideoPlayer src={day0ExtendedContent.welcomeVideo.url} title={day0ExtendedContent.welcomeVideo.title || ''} duration={day0ExtendedContent.welcomeVideo.duration} />
+                    </div>
+                    <div className="flex justify-center mt-3">
                       <Button onClick={nextStep} className="gap-2 rounded-full px-8">
                         {t('video.next')}
                         <ArrowRight className="h-4 w-4" />
@@ -636,11 +590,13 @@ export default function JourneyPage() {
                 {DAY0_SUBSTEPS[day0Step] === 'survey-before' && renderWelcomeSurvey()}
 
                 {DAY0_SUBSTEPS[day0Step] === 'intro-video' && (
-                  <div className="py-4">
-                    <h2 className="text-xl font-semibold text-foreground mb-2 text-center">{t('day.0.introVideo.title' as any)}</h2>
-                    <p className="text-muted-foreground text-center mb-4">{t('day.0.introVideo.subtitle' as any)}</p>
-                    <VideoPlayer src={day0ExtendedContent.introVideo.url} title={day0ExtendedContent.introVideo.title || ''} duration={day0ExtendedContent.introVideo.duration} />
-                    <div className="flex justify-center mt-6">
+                  <div>
+                    <h2 className="text-lg font-semibold text-foreground mb-1 text-center">{t('day.0.introVideo.title' as any)}</h2>
+                    <p className="text-muted-foreground text-center mb-2 text-sm">{t('day.0.introVideo.subtitle' as any)}</p>
+                    <div className="mx-auto" style={{ maxWidth: 'calc((100vh - 19rem) * 1.778)' }}>
+                      <VideoPlayer src={day0ExtendedContent.introVideo.url} title={day0ExtendedContent.introVideo.title || ''} duration={day0ExtendedContent.introVideo.duration} />
+                    </div>
+                    <div className="flex justify-center mt-3">
                       <Button onClick={nextStep} className="gap-2 rounded-full px-8">
                         {t('video.next')}
                         <ArrowRight className="h-4 w-4" />
@@ -787,11 +743,13 @@ export default function JourneyPage() {
                 )}
 
                 {currentStep === 'video' && (
-                  <div className="py-4">
-                    <h2 className="text-xl font-semibold text-foreground mb-2 text-center">{t('content.video')}</h2>
-                    <p className="text-muted-foreground text-center mb-4">{dayContent?.video.title || t('video.title')}</p>
-                    <VideoPlayer src={dayContent?.video.url} title={dayContent?.video.title || ''} duration={dayContent?.video.duration || '1:30'} onComplete={() => markStepComplete('video')} />
-                    <div className="flex justify-center mt-6">
+                  <div>
+                    <h2 className="text-lg font-semibold text-foreground mb-1 text-center">{t('content.video')}</h2>
+                    <p className="text-muted-foreground text-center mb-2 text-sm">{dayContent?.video.title || t('video.title')}</p>
+                    <div className="mx-auto" style={{ maxWidth: 'calc((100vh - 22rem) * 1.778)' }}>
+                      <VideoPlayer src={dayContent?.video.url} title={dayContent?.video.title || ''} duration={dayContent?.video.duration || '1:30'} onComplete={() => markStepComplete('video')} />
+                    </div>
+                    <div className="flex justify-center mt-3">
                       <Button onClick={nextStep} className="gap-2 rounded-full px-8">
                         {t('video.next')}
                         <ArrowRight className="h-4 w-4" />
@@ -801,11 +759,11 @@ export default function JourneyPage() {
                 )}
 
                 {currentStep === 'audio' && (
-                  <div className="py-4">
-                    <h2 className="text-xl font-semibold text-foreground mb-2 text-center">{t('content.audio')}</h2>
-                    <p className="text-muted-foreground text-center mb-4">{dayContent?.audio.title || t('audio.title')}</p>
+                  <div className="py-2">
+                    <h2 className="text-lg font-semibold text-foreground mb-1 text-center">{t('content.audio')}</h2>
+                    <p className="text-muted-foreground text-center mb-2 text-sm">{dayContent?.audio.title || t('audio.title')}</p>
                     <AudioPlayer title={dayContent?.audio.title || ''} subtitle={t('audio.title')} duration={dayContent?.audio.duration || '5:00'} audioSrc={dayContent?.audio.url} onComplete={() => markStepComplete('audio')} />
-                    <div className="flex justify-center mt-6">
+                    <div className="flex justify-center mt-3">
                       <Button onClick={nextStep} className="gap-2 rounded-full px-8">
                         {t('audio.next')}
                         <ArrowRight className="h-4 w-4" />

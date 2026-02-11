@@ -89,7 +89,7 @@ export function VideoPlayer({ src, title, duration, thumbnailUrl, onComplete }: 
   // If no src provided, show placeholder
   if (!src) {
     return (
-      <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-muted shadow-soft">
+      <div className="relative w-full aspect-video max-h-full rounded-2xl overflow-hidden bg-muted shadow-soft">
         <div className="w-full h-full gradient-calm flex items-center justify-center">
           <div className="text-center">
             <Play className="h-16 w-16 text-primary opacity-30 mx-auto mb-2" />
@@ -103,7 +103,7 @@ export function VideoPlayer({ src, title, duration, thumbnailUrl, onComplete }: 
   return (
     <div
       ref={containerRef}
-      className="relative w-full aspect-video rounded-2xl overflow-hidden bg-black shadow-soft"
+      className="relative w-full aspect-video max-h-full rounded-2xl overflow-hidden bg-black shadow-soft"
       onMouseEnter={() => setShowControls(true)}
       onMouseLeave={() => isPlaying && setShowControls(false)}
     >
