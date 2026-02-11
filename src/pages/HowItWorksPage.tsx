@@ -1,4 +1,5 @@
 import { useApp } from '@/contexts/AppContext';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { Header } from '@/components/layout/Header';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -12,6 +13,7 @@ import { motion } from 'framer-motion';
 
 export default function HowItWorksPage() {
   const { t } = useApp();
+  usePageTitle('Cómo Funciona');
 
   const sections = [
     {

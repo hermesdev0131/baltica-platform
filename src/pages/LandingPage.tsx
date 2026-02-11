@@ -1,4 +1,5 @@
 import { useApp } from '@/contexts/AppContext';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Clock, Heart, Sparkles, ArrowRight, Globe, Moon, Sun, Calendar, Package, Rocket, Brain, Timer, Music } from 'lucide-react';
@@ -25,6 +26,7 @@ import { cn } from '@/lib/utils';
 export default function LandingPage() {
   const { t, locale, setLocale, theme, setTheme } = useApp();
   const navigate = useNavigate();
+  usePageTitle('Programa de Bienestar en 3 Días');
 
   const features = [
     {

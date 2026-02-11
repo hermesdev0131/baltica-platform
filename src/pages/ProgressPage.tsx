@@ -1,4 +1,5 @@
 import { useApp } from '@/contexts/AppContext';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { Header } from '@/components/layout/Header';
 import { ProgressRing } from '@/components/journey/ProgressRing';
 import { DayCard } from '@/components/journey/DayCard';
@@ -10,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 export default function ProgressPage() {
   const { t, progress, totalDays } = useApp();
   const navigate = useNavigate();
+  usePageTitle('Mi Progreso');
   
   const progressPercent = (progress.completedDays.length / totalDays) * 100;
 

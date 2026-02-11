@@ -23,6 +23,7 @@ import { Label } from '@/components/ui/label';
 import { ArrowLeft, ArrowRight, Download, CheckCircle, Share2, Sparkles } from 'lucide-react';
 import BalticaLogo from '@/components/brand/BalticaLogo';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { dayContents, day0ExtendedContent, valueOptions, timeSlotOptions } from '@/config/content';
 
 type JourneyStep = Step;
@@ -43,6 +44,7 @@ export default function JourneyPage() {
 
   const dayNumber = parseInt(day || '0', 10);
   const dayContent = dayContents[dayNumber];
+  usePageTitle(`Día ${dayNumber}`);
   const localeKey = locale as 'es-LATAM' | 'es-ES' | 'en';
 
   // Local form state for each day's exercises

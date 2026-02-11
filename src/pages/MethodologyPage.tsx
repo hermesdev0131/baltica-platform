@@ -1,4 +1,5 @@
 import { useApp } from '@/contexts/AppContext';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft, Globe, Moon, Sun, Brain, Timer, Music, ListOrdered, Sparkles } from 'lucide-react';
@@ -17,6 +18,7 @@ import { cn } from '@/lib/utils';
 export default function MethodologyPage() {
   const { t, locale, setLocale, theme, setTheme } = useApp();
   const navigate = useNavigate();
+  usePageTitle('Metodología');
 
   const sections = [
     {

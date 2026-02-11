@@ -1,10 +1,12 @@
 import { useApp } from '@/contexts/AppContext';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { Header } from '@/components/layout/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 
 export default function TermsPage() {
   const { locale } = useApp();
+  usePageTitle('Términos y Condiciones');
   const isSpanish = locale.startsWith('es');
 
   return (

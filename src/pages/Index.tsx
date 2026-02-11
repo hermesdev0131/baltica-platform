@@ -1,5 +1,6 @@
 import { useApp } from '@/contexts/AppContext';
 import { useAdmin } from '@/contexts/AdminContext';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { Header } from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -14,6 +15,7 @@ const Index = () => {
   const { t, locale, progress, totalDays, userName, setUserName, userEmail, paymentCompleted } = useApp();
   const { getUserStatus } = useAdmin();
   const navigate = useNavigate();
+  usePageTitle('Mi Programa');
   const userStatus = getUserStatus(userEmail);
   const isSuspended = userStatus?.status === 'suspended';
   const isExpired = userStatus?.status === 'expired';

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useApp } from '@/contexts/AppContext';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { useNotificationContext } from '@/contexts/NotificationContext';
 import { api } from '@/lib/api';
 import { Header } from '@/components/layout/Header';
@@ -45,6 +46,7 @@ export default function SettingsPage() {
   const { t, locale, setLocale, theme, setTheme, userName, setUserName, userEmail, userRole, logout } = useApp();
   const { settings, updateSettings } = useNotificationContext();
   const navigate = useNavigate();
+  usePageTitle('Configuración');
 
   // Password change state
   const [currentPassword, setCurrentPassword] = useState('');

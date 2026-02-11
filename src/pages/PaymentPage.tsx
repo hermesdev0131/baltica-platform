@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { useAdmin } from '@/contexts/AdminContext';
 import { api } from '@/lib/api';
 import { Header } from '@/components/layout/Header';
@@ -30,6 +31,7 @@ export default function PaymentPage() {
   const { getUserStatus, addLog, reactivateUser } = useAdmin();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  usePageTitle('Pago');
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 

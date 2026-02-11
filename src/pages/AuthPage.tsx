@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { useAdmin } from '@/contexts/AdminContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -27,6 +28,7 @@ export default function AuthPage() {
   const navigate = useNavigate();
   const { t, login, locale, setLocale, theme, setTheme } = useApp();
   const { addLog } = useAdmin();
+  usePageTitle('Iniciar Sesión');
 
   const defaultTab = searchParams.get('mode') === 'login' ? 'login' : 'register';
   const [activeTab, setActiveTab] = useState(defaultTab);

@@ -1,4 +1,5 @@
 import { useApp } from '@/contexts/AppContext';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,6 +25,10 @@ const faqSections: Record<string, FaqSection[]> = {
       title: 'Inscripción',
       faqs: [
         {
+          question: '¿Cómo ingreso al RETO DE 3 DÍAS?',
+          answer: 'Primero, regístrate ingresando tu correo electrónico y creando una contraseña. Luego, realiza el pago de forma segura a través de Mercado Pago. Una vez confirmado el pago, ya puedes comenzar el reto de inmediato.',
+        },
+        {
           question: '¿Cómo creo mi cuenta?',
           answer: 'Simplemente ingresa tu correo electrónico y crea una contraseña. Después de registrarte, puedes comenzar con el curso.',
         },
@@ -43,10 +48,10 @@ const faqSections: Record<string, FaqSection[]> = {
       faqs: [
         {
           question: '¿Qué es el RETO DE 3 DÍAS?',
-          answer: 'El RETO DE 3 DÍAS es un programa de micro-experiencias diarias de autocuidado y formación de hábitos, pensado para acompañarte con prácticas breves, claras y sostenibles. Incluye 3 días completos de contenido, más un día inicial de bienvenida (Día 0).',
+          answer: 'El RETO DE 3 DÍAS es un programa de micro-experiencias diarias de autocuidado y formación de hábitos, pensado para acompañarte con prácticas breves, claras y sostenibles. Incluye 3 días completos de contenido bajo la misma estructura (Video – Audio – PDF), una bienvenida y una introducción que muestra el contenido y desarrollo del programa.',
         },
         {
-          question: '¿El RETO DE 3 DÍAS es una terapia?',
+          question: '¿El RETO DE 3 DÍAS es una terapia médica?',
           answer: 'No, es un programa educativo y preventivo que busca ayudarte a pausar, reflexionar y practicar pequeños hábitos de autocuidado. Sí estás atravesando un malestar intenso o persistente, siempre es importante buscar acompañamiento profesional.',
         },
         {
@@ -59,10 +64,10 @@ const faqSections: Record<string, FaqSection[]> = {
         },
         {
           question: '¿Qué tipo de contenidos incluye?',
-          answer: 'Cada jornada incluye: un video breve, un audio guiado, un material de apoyo (PDF) y una práctica concreta y sencilla. Todo el contenido está diseñado con un lenguaje claro, humano y no clínico.',
+          answer: 'Cada día incluye: un video breve, un audio guiado, un material de apoyo (PDF) y una práctica concreta y sencilla. Todo el contenido está desarrollado con las mejores y más avanzadas técnicas psicológicas, con lenguaje claro, humano y no clínico.',
         },
         {
-          question: '¿Puedo usar el RETO DE 3 DÍAS en el celular?',
+          question: '¿Puedo usar el RETO DE 3 DÍAS en el celular o Tablet?',
           answer: 'Pensamos en todo. Este programa está diseñado para usarse cómodamente desde el celular o la computadora, con un diseño simple, claro y adaptable a distintos dispositivos.',
         },
         {
@@ -75,7 +80,7 @@ const faqSections: Record<string, FaqSection[]> = {
         },
         {
           question: '¿El programa tiene logros o celebraciones?',
-          answer: '¡Felicitaciones por preguntar! Muy buena iniciativa. Sí, la plataforma reconoce hitos importantes, como la constancia o las rachas de uso, con mensajes y animaciones de celebración suaves, pensadas para motivar sin generar presión.',
+          answer: 'Sí, la plataforma reconoce tus hitos con mensajes y animaciones de celebración suaves, pensadas para motivar sin generar presión. Por ejemplo: al completar cada día recibes una felicitación, al llegar a la mitad del programa se reconoce tu avance, al completar rachas de días consecutivos se celebra tu constancia, y al finalizar el reto completo recibes una celebración especial.',
         },
       ],
     },
@@ -85,7 +90,7 @@ const faqSections: Record<string, FaqSection[]> = {
       faqs: [
         {
           question: '¿Cómo pago este programa "RETO DE 3 DÍAS"?',
-          answer: 'Los pagos se realizan de forma segura a través de una plataforma muy conocida, Mercado Pago, que ofrece un abanico completo de opciones:\n\n1. Tarjetas de Crédito y Débito\nMercado Pago acepta las principales franquicias con acreditación instantánea:\n• Crédito: Visa, Mastercard, American Express, Diners Club y Codensa.\n• Débito: Tarjetas con cupo de débito (Visa y Mastercard) que tengan código de seguridad (CVV) para compras online.\n\n2. Transferencias Bancarias (PSE)\n• Botón PSE: Permite pagar desde cualquier cuenta de ahorros o corriente de todos los bancos del país.\n• Nequi y Daviplata: Se puede pagar a través de la opción de PSE seleccionando "Nequi" o "Daviplata" en la lista de bancos.\n\n3. Efectivo (Puntos de Recaudo)\n• Efecty: El sistema genera un número de convenio y una referencia. El cliente va a cualquier punto Efecty del país, paga en efectivo y el sistema te notifica automáticamente cuando el pago sea exitoso.',
+          answer: 'Los pagos se realizan de forma segura a través de Mercado Pago, que ofrece las siguientes opciones:\n\n• Tarjetas de Crédito y Débito\n• Transferencias Bancarias (PSE)\n• Nequi y Daviplata\n• Efectivo (Efecty)',
         },
         {
           question: '¿Puedo pagar con Nequi o Daviplata?',
@@ -129,11 +134,11 @@ const faqSections: Record<string, FaqSection[]> = {
     },
     // 5. CONTACTO Y AYUDA
     {
-      title: 'Contacto y Ayuda',
+      title: 'Contacto',
       faqs: [
         {
           question: '¿Qué pasa si tengo dudas o necesito ayuda?',
-          answer: 'Este programa tiene 2 formas de solucionar tus dudas: una es haciendo clic en AYUDA donde encontrarás un amplio listado de preguntas frecuentes, y también tenemos una línea de WhatsApp +57 3182644725 a la que te podrás contactar en caso de no encontrar la respuesta.',
+          answer: 'Puedes contactarnos directamente por WhatsApp al +57 3182644725. Estaremos encantados de ayudarte.',
         },
       ],
     },
@@ -154,6 +159,10 @@ const faqSections: Record<string, FaqSection[]> = {
       title: 'Inscripción',
       faqs: [
         {
+          question: '¿Cómo ingreso al RETO DE 3 DÍAS?',
+          answer: 'Primero, regístrate ingresando tu correo electrónico y creando una contraseña. Luego, realiza el pago de forma segura a través de Mercado Pago. Una vez confirmado el pago, ya puedes comenzar el reto de inmediato.',
+        },
+        {
           question: '¿Cómo creo mi cuenta?',
           answer: 'Simplemente ingresa tu correo electrónico y crea una contraseña. Después de registrarte, puedes comenzar con el curso.',
         },
@@ -172,10 +181,10 @@ const faqSections: Record<string, FaqSection[]> = {
       faqs: [
         {
           question: '¿Qué es el RETO DE 3 DÍAS?',
-          answer: 'El RETO DE 3 DÍAS es un programa de micro-experiencias diarias de autocuidado y formación de hábitos, pensado para acompañarte con prácticas breves, claras y sostenibles. Incluye 3 días completos de contenido, más un día inicial de bienvenida (Día 0).',
+          answer: 'El RETO DE 3 DÍAS es un programa de micro-experiencias diarias de autocuidado y formación de hábitos, pensado para acompañarte con prácticas breves, claras y sostenibles. Incluye 3 días completos de contenido bajo la misma estructura (Video – Audio – PDF), una bienvenida y una introducción que muestra el contenido y desarrollo del programa.',
         },
         {
-          question: '¿El RETO DE 3 DÍAS es una terapia?',
+          question: '¿El RETO DE 3 DÍAS es una terapia médica?',
           answer: 'No, es un programa educativo y preventivo que busca ayudarte a pausar, reflexionar y practicar pequeños hábitos de autocuidado. Sí estás atravesando un malestar intenso o persistente, siempre es importante buscar acompañamiento profesional.',
         },
         {
@@ -191,7 +200,7 @@ const faqSections: Record<string, FaqSection[]> = {
           answer: 'Cada jornada incluye: un vídeo breve, un audio guiado, un material de apoyo (PDF) y una práctica concreta y sencilla. Todo el contenido está diseñado con un lenguaje claro, humano y no clínico.',
         },
         {
-          question: '¿Puedo usar el RETO DE 3 DÍAS en el móvil?',
+          question: '¿Puedo usar el RETO DE 3 DÍAS en el celular o Tablet?',
           answer: 'Pensamos en todo. Este programa está diseñado para usarse cómodamente desde el móvil o el ordenador, con un diseño simple, claro y adaptable a distintos dispositivos.',
         },
         {
@@ -204,7 +213,7 @@ const faqSections: Record<string, FaqSection[]> = {
         },
         {
           question: '¿El programa tiene logros o celebraciones?',
-          answer: '¡Felicitaciones por preguntar! Muy buena iniciativa. Sí, la plataforma reconoce hitos importantes, como la constancia o las rachas de uso, con mensajes y animaciones de celebración suaves, pensadas para motivar sin generar presión.',
+          answer: 'Sí, la plataforma reconoce tus hitos con mensajes y animaciones de celebración suaves, pensadas para motivar sin generar presión. Por ejemplo: al completar cada día recibes una felicitación, al llegar a la mitad del programa se reconoce tu avance, al completar rachas de días consecutivos se celebra tu constancia, y al finalizar el reto completo recibes una celebración especial.',
         },
       ],
     },
@@ -239,11 +248,11 @@ const faqSections: Record<string, FaqSection[]> = {
       ],
     },
     {
-      title: 'Contacto y Ayuda',
+      title: 'Contacto',
       faqs: [
         {
           question: '¿Qué pasa si tengo dudas o necesito ayuda?',
-          answer: 'Este programa tiene 2 formas de solucionar tus dudas: una es haciendo clic en AYUDA donde encontrarás un amplio listado de preguntas frecuentes, y también tenemos una línea de WhatsApp +57 3182644725 a la que te podrás contactar en caso de no encontrar la respuesta.',
+          answer: 'Puedes contactarnos directamente por WhatsApp al +57 3182644725. Estaremos encantados de ayudarte.',
         },
       ],
     },
@@ -261,6 +270,10 @@ const faqSections: Record<string, FaqSection[]> = {
     {
       title: 'Registration',
       faqs: [
+        {
+          question: 'How do I access the 3-DAY CHALLENGE?',
+          answer: 'First, register by entering your email and creating a password. Then, complete your payment securely through Mercado Pago. Once the payment is confirmed, you can start the challenge right away.',
+        },
         {
           question: 'How do I create my account?',
           answer: 'Simply enter your email and create a password. After registering, you can start with the course.',
@@ -280,10 +293,10 @@ const faqSections: Record<string, FaqSection[]> = {
       faqs: [
         {
           question: 'What is the 3-DAY CHALLENGE?',
-          answer: 'The 3-DAY CHALLENGE is a program of daily micro-experiences of self-care and habit formation, designed to accompany you with brief, clear, and sustainable practices. It includes 3 complete days of content, plus an initial welcome day (Day 0).',
+          answer: 'The 3-DAY CHALLENGE is a program of daily micro-experiences of self-care and habit formation, designed to accompany you with brief, clear, and sustainable practices. It includes 3 complete days of content following the same structure (Video – Audio – PDF), a welcome, and an introduction that shows the content and development of the program.',
         },
         {
-          question: 'Is the 3-DAY CHALLENGE a therapy?',
+          question: 'Is the 3-DAY CHALLENGE a medical therapy?',
           answer: 'No, it is an educational and preventive program that seeks to help you pause, reflect, and practice small self-care habits. If you are experiencing intense or persistent discomfort, it is always important to seek professional support.',
         },
         {
@@ -296,10 +309,10 @@ const faqSections: Record<string, FaqSection[]> = {
         },
         {
           question: 'What type of content does it include?',
-          answer: 'Each session includes: a brief video, a guided audio, support material (PDF), and a concrete and simple practice. All content is designed with clear, human, and non-clinical language.',
+          answer: 'Each day includes: a brief video, a guided audio, support material (PDF), and a concrete and simple practice. All content is developed with the best and most advanced psychological techniques, with clear, human, and non-clinical language.',
         },
         {
-          question: 'Can I use the 3-DAY CHALLENGE on my phone?',
+          question: 'Can I use the 3-DAY CHALLENGE on my phone or Tablet?',
           answer: 'We thought of everything. This program is designed to be used comfortably from your phone or computer, with a simple, clear design that adapts to different devices.',
         },
         {
@@ -312,7 +325,7 @@ const faqSections: Record<string, FaqSection[]> = {
         },
         {
           question: 'Does the program have achievements or celebrations?',
-          answer: 'Congratulations for asking! Great initiative. Yes, the platform recognizes important milestones, such as consistency or usage streaks, with soft celebration messages and animations, designed to motivate without creating pressure.',
+          answer: 'Yes, the platform recognizes your milestones with soft celebration messages and animations, designed to motivate without creating pressure. For example: you receive a congratulation when completing each day, your progress is recognized at the halfway point, streaks of consecutive days celebrate your consistency, and completing the full challenge triggers a special celebration.',
         },
       ],
     },
@@ -321,7 +334,7 @@ const faqSections: Record<string, FaqSection[]> = {
       faqs: [
         {
           question: 'How do I pay for the 3-DAY CHALLENGE?',
-          answer: 'Payments are made securely through Mercado Pago, a well-known platform that offers a complete range of options:\n\n• Credit Cards: Visa, Mastercard, American Express, Diners Club (instant accreditation)\n• Debit Cards: With debit balance (Visa and Mastercard) that have security code (CVV)\n• Bank Transfers (PSE): From any savings or checking account\n• Nequi and Daviplata: Through the PSE option, selecting "Nequi" or "Daviplata" in the bank list\n• Cash (Efecty): A reference number is generated to pay at any Efecty point in the country',
+          answer: 'Payments are made securely through Mercado Pago, which offers the following options:\n\n• Credit and Debit Cards\n• Bank Transfers (PSE)\n• Nequi and Daviplata\n• Cash (Efecty)',
         },
         {
           question: 'What if my payment fails?',
@@ -347,11 +360,11 @@ const faqSections: Record<string, FaqSection[]> = {
       ],
     },
     {
-      title: 'Contact and Help',
+      title: 'Contact',
       faqs: [
         {
           question: 'What if I have questions or need help?',
-          answer: 'This program has 2 ways to solve your doubts: one is by clicking on HELP where you will find a comprehensive list of frequently asked questions, and we also have a WhatsApp line +57 3182644725 that you can contact if you do not find the answer.',
+          answer: 'You can contact us directly via WhatsApp at +57 3182644725. We will be happy to help you.',
         },
       ],
     },
@@ -371,6 +384,7 @@ export default function HelpPage() {
   const { t, locale } = useApp();
   const location = useLocation();
   const navigate = useNavigate();
+  usePageTitle('Ayuda');
   const currentSections = faqSections[locale] || faqSections.en;
 
   // Get return path from navigation state
@@ -436,40 +450,6 @@ export default function HelpPage() {
           ))}
         </motion.section>
 
-        {/* Contact */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <h2 className="text-lg font-semibold text-foreground mb-4">
-            {t('help.contact')}
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Card className="shadow-card">
-              <CardContent className="p-6 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center">
-                  <MessageCircle className="h-6 w-6 text-green-600" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium text-foreground">WhatsApp</h3>
-                  <p className="text-xs text-muted-foreground">+57 3182644725</p>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="shadow-card">
-              <CardContent className="p-6 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Mail className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium text-foreground">Email</h3>
-                  <p className="text-xs text-muted-foreground">logistica@balticaeducation.com</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </motion.section>
       </main>
 
       {/* Floating Back Button - top left */}
@@ -481,6 +461,16 @@ export default function HelpPage() {
         <ArrowLeft className="h-4 w-4" />
         {locale.startsWith('es') ? 'Volver' : 'Back'}
       </Button>
+
+      {/* Floating WhatsApp Button - bottom right */}
+      <a
+        href="https://wa.me/573182644725"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-green-500 hover:bg-green-600 flex items-center justify-center shadow-lg transition-colors z-50"
+      >
+        <MessageCircle className="h-7 w-7 text-white" />
+      </a>
     </div>
   );
 }

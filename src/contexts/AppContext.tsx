@@ -131,6 +131,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
   // MVP: Fixed to Spanish (Latin America) only
   const [locale, setLocale] = useState<Locale>('es-LATAM');
 
+  // Sync HTML lang attribute with current locale
+  useEffect(() => {
+    const langMap: Record<Locale, string> = { 'es-ES': 'es', 'es-LATAM': 'es', 'en': 'en' };
+    document.documentElement.lang = langMap[locale] || 'es';
+  }, [locale]);
+
   const [theme, setThemeState] = useState<'light' | 'dark' | 'system'>(() => {
     return (localStorage.getItem('theme') as 'light' | 'dark' | 'system') || 'system';
   });

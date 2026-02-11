@@ -1,10 +1,12 @@
 import { useApp } from '@/contexts/AppContext';
+import { usePageTitle } from '@/hooks/usePageTitle';
 import { Header } from '@/components/layout/Header';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 
 export default function PrivacyPage() {
   const { locale } = useApp();
+  usePageTitle('Política de Privacidad');
   const isSpanish = locale.startsWith('es');
 
   return (
