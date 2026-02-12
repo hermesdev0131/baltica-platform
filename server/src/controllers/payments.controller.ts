@@ -7,6 +7,7 @@ const mpClient = new MercadoPagoConfig({
 });
 
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3001';
 
 // Create MercadoPago Checkout Pro preference
 export async function createPreference(req: Request & { user?: any }, res: Response) {
@@ -40,7 +41,7 @@ export async function createPreference(req: Request & { user?: any }, res: Respo
         },
         auto_return: 'approved',
         external_reference: String(userId),
-        notification_url: undefined, // Set in production
+        notification_url: BACKEND_URL !== 'http://localhost:3001' ? `${BACKEND_URL}/api/payments/webhook` : undefined,
       },
     });
 
