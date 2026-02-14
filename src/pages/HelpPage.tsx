@@ -1,7 +1,6 @@
 import { useApp } from '@/contexts/AppContext';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
   Accordion,
@@ -9,7 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Mail, MessageCircle, HelpCircle, ArrowLeft } from 'lucide-react';
+import { MessageCircle, HelpCircle, ArrowLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 // FAQ estructurado por secciones - RETO DE 3 DÍAS
@@ -20,7 +19,7 @@ type FaqSection = {
 
 const faqSections: Record<string, FaqSection[]> = {
   'es-LATAM': [
-    // 1. INSCRIPCIÓN - PRIMERO
+    // 1. INSCRIPCIÓN
     {
       title: 'Inscripción',
       faqs: [
@@ -84,7 +83,73 @@ const faqSections: Record<string, FaqSection[]> = {
         },
       ],
     },
-    // 3. FORMAS DE PAGO - DETALLADO
+    // 3. SALUD MENTAL
+    {
+      title: '¿Cómo puede ayudar este reto en su salud mental?',
+      faqs: [
+        {
+          question: '¿Este reto ayuda con el estrés?',
+          answer: 'Sí. Está diseñado para ayudar a regular el estrés cotidiano, especialmente el estrés leve a moderado relacionado con trabajo, estudio o sobrecarga digital. Incluye técnicas breves de grounding y respiración que favorecen la autorregulación emocional.',
+        },
+        {
+          question: '¿Puede ayudar si siento ansiedad leve o preocupación constante?',
+          answer: 'El reto puede apoyar en casos de ansiedad leve o preocupación anticipatoria mediante ejercicios de atención plena y regulación. No sustituye tratamiento psicológico en casos de trastornos de ansiedad diagnosticados.',
+        },
+        {
+          question: '¿Sirve para la rumiación mental o pensamientos repetitivos?',
+          answer: 'Sí, especialmente el Día 3 enfocado en autocompasión, que ayuda a disminuir la autocrítica excesiva y la repetición constante de pensamientos negativos, fortaleciendo una relación más amable con uno mismo.',
+        },
+        {
+          question: '¿Puede ayudar si me siento desmotivado o sin energía?',
+          answer: 'El Día 2 trabaja activación conductual y acción con propósito, lo cual puede ser útil cuando hay desmotivación leve, procrastinación o sensación de estancamiento. Se enfoca en acciones pequeñas y alcanzables.',
+        },
+        {
+          question: '¿Este reto ayuda con el burnout o agotamiento emocional?',
+          answer: 'Puede ser útil en fases tempranas de desgaste emocional o agotamiento leve. Promueve pausas conscientes, claridad de prioridades y autocuidado básico. No está diseñado para tratar burnout severo o incapacitante.',
+        },
+        {
+          question: '¿Puede ayudar con la irritabilidad o reactividad emocional?',
+          answer: 'Sí. Las prácticas de regulación y pausa consciente pueden mejorar la capacidad de responder en lugar de reaccionar automáticamente ante el estrés cotidiano.',
+        },
+        {
+          question: '¿Sirve si siento que estoy desconectado de mí mismo?',
+          answer: 'Sí. El Día 1 trabaja conexión corporal y atención plena; el Día 3 fortalece autocompasión. Ambas prácticas ayudan a reconectar con sensaciones, emociones y valores personales.',
+        },
+        {
+          question: '¿Puede mejorar mi regulación emocional?',
+          answer: 'Sí. El reto fortalece habilidades básicas de regulación emocional como:\n\n• Reconocer emociones\n• Pausar antes de actuar\n• Elegir respuestas conscientes\n• Reducir activación fisiológica',
+        },
+        {
+          question: '¿Este reto ayuda con la autoexigencia excesiva?',
+          answer: 'Sí. El componente de autocompasión está orientado a reducir la autocrítica severa y promover un trato más equilibrado hacia uno mismo.',
+        },
+        {
+          question: '¿Puede ayudar con dificultades de concentración asociadas al estrés?',
+          answer: 'Las prácticas de grounding y atención plena pueden mejorar la atención sostenida cuando la distracción está relacionada con estrés o sobrecarga mental.',
+        },
+        {
+          question: '¿Es útil para estudiantes con estrés académico?',
+          answer: 'Sí. Está diseñado para jóvenes y adultos desde los 16 años que enfrentan presión académica o laboral leve, fortaleciendo herramientas de autorregulación.',
+        },
+        {
+          question: '¿Puede ayudar si siento que mi vida va en "piloto automático"?',
+          answer: 'Sí. El Día 2 trabaja acción con propósito, ayudando a alinear pequeñas acciones con valores personales, lo cual mejora la sensación de dirección y sentido.',
+        },
+        {
+          question: '¿Ayuda con la baja autoestima?',
+          answer: 'Puede contribuir a fortalecer autoeficacia y autocompasión mediante pequeñas acciones exitosas y un trato interno más amable. No sustituye intervención clínica en casos de trastornos de autoestima severos.',
+        },
+        {
+          question: '¿Sirve como prevención antes de que el malestar empeore?',
+          answer: 'Sí. El objetivo principal es preventivo: fortalecer habilidades antes de que el estrés o el desgaste se intensifiquen.',
+        },
+        {
+          question: '¿Qué problemas psicológicos NO trata este reto?',
+          answer: 'No trata ni diagnostica:\n\n• Depresión mayor\n• Trastornos de ansiedad diagnosticados\n• Trastorno bipolar\n• Ideación suicida\n• Trastornos psicóticos\n• Trastornos de personalidad\n\nEn estos casos es fundamental buscar apoyo profesional.',
+        },
+      ],
+    },
+    // 4. FORMAS DE PAGO
     {
       title: 'Formas de Pago',
       faqs: [
@@ -122,7 +187,7 @@ const faqSections: Record<string, FaqSection[]> = {
         },
       ],
     },
-    // 4. PRÓXIMOS CURSOS
+    // 5. PRÓXIMOS CURSOS
     {
       title: 'Próximos Cursos',
       faqs: [
@@ -132,7 +197,7 @@ const faqSections: Record<string, FaqSection[]> = {
         },
       ],
     },
-    // 5. CONTACTO Y AYUDA
+    // 6. CONTACTO
     {
       title: 'Contacto',
       faqs: [
@@ -142,7 +207,7 @@ const faqSections: Record<string, FaqSection[]> = {
         },
       ],
     },
-    // 6. IDIOMAS - ÚLTIMO
+    // 7. IDIOMAS
     {
       title: 'Idiomas',
       faqs: [
@@ -154,7 +219,6 @@ const faqSections: Record<string, FaqSection[]> = {
     },
   ],
   'es-ES': [
-    // Same structure for es-ES
     {
       title: 'Inscripción',
       faqs: [
@@ -197,10 +261,10 @@ const faqSections: Record<string, FaqSection[]> = {
         },
         {
           question: '¿Qué tipo de contenidos incluye?',
-          answer: 'Cada jornada incluye: un vídeo breve, un audio guiado, un material de apoyo (PDF) y una práctica concreta y sencilla. Todo el contenido está diseñado con un lenguaje claro, humano y no clínico.',
+          answer: 'Cada día incluye: un vídeo breve, un audio guiado, un material de apoyo (PDF) y una práctica concreta y sencilla. Todo el contenido está desarrollado con las mejores y más avanzadas técnicas psicológicas, con lenguaje claro, humano y no clínico.',
         },
         {
-          question: '¿Puedo usar el RETO DE 3 DÍAS en el celular o Tablet?',
+          question: '¿Puedo usar el RETO DE 3 DÍAS en el móvil o Tablet?',
           answer: 'Pensamos en todo. Este programa está diseñado para usarse cómodamente desde el móvil o el ordenador, con un diseño simple, claro y adaptable a distintos dispositivos.',
         },
         {
@@ -214,6 +278,71 @@ const faqSections: Record<string, FaqSection[]> = {
         {
           question: '¿El programa tiene logros o celebraciones?',
           answer: 'Sí, la plataforma reconoce tus hitos con mensajes y animaciones de celebración suaves, pensadas para motivar sin generar presión. Por ejemplo: al completar cada día recibes una felicitación, al llegar a la mitad del programa se reconoce tu avance, al completar rachas de días consecutivos se celebra tu constancia, y al finalizar el reto completo recibes una celebración especial.',
+        },
+      ],
+    },
+    {
+      title: '¿Cómo puede ayudar este reto en su salud mental?',
+      faqs: [
+        {
+          question: '¿Este reto ayuda con el estrés?',
+          answer: 'Sí. Está diseñado para ayudar a regular el estrés cotidiano, especialmente el estrés leve a moderado relacionado con trabajo, estudio o sobrecarga digital. Incluye técnicas breves de grounding y respiración que favorecen la autorregulación emocional.',
+        },
+        {
+          question: '¿Puede ayudar si siento ansiedad leve o preocupación constante?',
+          answer: 'El reto puede apoyar en casos de ansiedad leve o preocupación anticipatoria mediante ejercicios de atención plena y regulación. No sustituye tratamiento psicológico en casos de trastornos de ansiedad diagnosticados.',
+        },
+        {
+          question: '¿Sirve para la rumiación mental o pensamientos repetitivos?',
+          answer: 'Sí, especialmente el Día 3 enfocado en autocompasión, que ayuda a disminuir la autocrítica excesiva y la repetición constante de pensamientos negativos, fortaleciendo una relación más amable con uno mismo.',
+        },
+        {
+          question: '¿Puede ayudar si me siento desmotivado o sin energía?',
+          answer: 'El Día 2 trabaja activación conductual y acción con propósito, lo cual puede ser útil cuando hay desmotivación leve, procrastinación o sensación de estancamiento. Se enfoca en acciones pequeñas y alcanzables.',
+        },
+        {
+          question: '¿Este reto ayuda con el burnout o agotamiento emocional?',
+          answer: 'Puede ser útil en fases tempranas de desgaste emocional o agotamiento leve. Promueve pausas conscientes, claridad de prioridades y autocuidado básico. No está diseñado para tratar burnout severo o incapacitante.',
+        },
+        {
+          question: '¿Puede ayudar con la irritabilidad o reactividad emocional?',
+          answer: 'Sí. Las prácticas de regulación y pausa consciente pueden mejorar la capacidad de responder en lugar de reaccionar automáticamente ante el estrés cotidiano.',
+        },
+        {
+          question: '¿Sirve si siento que estoy desconectado de mí mismo?',
+          answer: 'Sí. El Día 1 trabaja conexión corporal y atención plena; el Día 3 fortalece autocompasión. Ambas prácticas ayudan a reconectar con sensaciones, emociones y valores personales.',
+        },
+        {
+          question: '¿Puede mejorar mi regulación emocional?',
+          answer: 'Sí. El reto fortalece habilidades básicas de regulación emocional como:\n\n• Reconocer emociones\n• Pausar antes de actuar\n• Elegir respuestas conscientes\n• Reducir activación fisiológica',
+        },
+        {
+          question: '¿Este reto ayuda con la autoexigencia excesiva?',
+          answer: 'Sí. El componente de autocompasión está orientado a reducir la autocrítica severa y promover un trato más equilibrado hacia uno mismo.',
+        },
+        {
+          question: '¿Puede ayudar con dificultades de concentración asociadas al estrés?',
+          answer: 'Las prácticas de grounding y atención plena pueden mejorar la atención sostenida cuando la distracción está relacionada con estrés o sobrecarga mental.',
+        },
+        {
+          question: '¿Es útil para estudiantes con estrés académico?',
+          answer: 'Sí. Está diseñado para jóvenes y adultos desde los 16 años que enfrentan presión académica o laboral leve, fortaleciendo herramientas de autorregulación.',
+        },
+        {
+          question: '¿Puede ayudar si siento que mi vida va en "piloto automático"?',
+          answer: 'Sí. El Día 2 trabaja acción con propósito, ayudando a alinear pequeñas acciones con valores personales, lo cual mejora la sensación de dirección y sentido.',
+        },
+        {
+          question: '¿Ayuda con la baja autoestima?',
+          answer: 'Puede contribuir a fortalecer autoeficacia y autocompasión mediante pequeñas acciones exitosas y un trato interno más amable. No sustituye intervención clínica en casos de trastornos de autoestima severos.',
+        },
+        {
+          question: '¿Sirve como prevención antes de que el malestar empeore?',
+          answer: 'Sí. El objetivo principal es preventivo: fortalecer habilidades antes de que el estrés o el desgaste se intensifiquen.',
+        },
+        {
+          question: '¿Qué problemas psicológicos NO trata este reto?',
+          answer: 'No trata ni diagnostica:\n\n• Depresión mayor\n• Trastornos de ansiedad diagnosticados\n• Trastorno bipolar\n• Ideación suicida\n• Trastornos psicóticos\n• Trastornos de personalidad\n\nEn estos casos es fundamental buscar apoyo profesional.',
         },
       ],
     },
@@ -330,6 +459,71 @@ const faqSections: Record<string, FaqSection[]> = {
       ],
     },
     {
+      title: 'How can this challenge help your mental health?',
+      faqs: [
+        {
+          question: 'Does this challenge help with stress?',
+          answer: 'Yes. It is designed to help regulate everyday stress, especially mild to moderate stress related to work, study, or digital overload. It includes brief grounding and breathing techniques that promote emotional self-regulation.',
+        },
+        {
+          question: 'Can it help if I feel mild anxiety or constant worry?',
+          answer: 'The challenge can support cases of mild anxiety or anticipatory worry through mindfulness and regulation exercises. It does not replace psychological treatment for diagnosed anxiety disorders.',
+        },
+        {
+          question: 'Does it help with mental rumination or repetitive thoughts?',
+          answer: 'Yes, especially Day 3 focused on self-compassion, which helps reduce excessive self-criticism and the constant repetition of negative thoughts, strengthening a kinder relationship with oneself.',
+        },
+        {
+          question: 'Can it help if I feel unmotivated or lack energy?',
+          answer: 'Day 2 works on behavioral activation and purposeful action, which can be useful when there is mild demotivation, procrastination, or a feeling of stagnation. It focuses on small, achievable actions.',
+        },
+        {
+          question: 'Does this challenge help with burnout or emotional exhaustion?',
+          answer: 'It can be useful in early stages of emotional wear or mild exhaustion. It promotes conscious pauses, clarity of priorities, and basic self-care. It is not designed to treat severe or incapacitating burnout.',
+        },
+        {
+          question: 'Can it help with irritability or emotional reactivity?',
+          answer: 'Yes. The regulation and conscious pause practices can improve the ability to respond rather than react automatically to everyday stress.',
+        },
+        {
+          question: 'Does it help if I feel disconnected from myself?',
+          answer: 'Yes. Day 1 works on body connection and mindfulness; Day 3 strengthens self-compassion. Both practices help reconnect with sensations, emotions, and personal values.',
+        },
+        {
+          question: 'Can it improve my emotional regulation?',
+          answer: 'Yes. The challenge strengthens basic emotional regulation skills such as:\n\n• Recognizing emotions\n• Pausing before acting\n• Choosing conscious responses\n• Reducing physiological activation',
+        },
+        {
+          question: 'Does this challenge help with excessive self-demand?',
+          answer: 'Yes. The self-compassion component is aimed at reducing severe self-criticism and promoting a more balanced treatment of oneself.',
+        },
+        {
+          question: 'Can it help with concentration difficulties associated with stress?',
+          answer: 'Grounding and mindfulness practices can improve sustained attention when distraction is related to stress or mental overload.',
+        },
+        {
+          question: 'Is it useful for students with academic stress?',
+          answer: 'Yes. It is designed for young people and adults from age 16 who face mild academic or work pressure, strengthening self-regulation tools.',
+        },
+        {
+          question: 'Can it help if I feel like my life is on "autopilot"?',
+          answer: 'Yes. Day 2 works on purposeful action, helping to align small actions with personal values, which improves the sense of direction and meaning.',
+        },
+        {
+          question: 'Does it help with low self-esteem?',
+          answer: 'It can contribute to strengthening self-efficacy and self-compassion through small successful actions and a kinder internal treatment. It does not replace clinical intervention in cases of severe self-esteem disorders.',
+        },
+        {
+          question: 'Does it serve as prevention before discomfort worsens?',
+          answer: 'Yes. The main objective is preventive: strengthening skills before stress or emotional wear intensify.',
+        },
+        {
+          question: 'What psychological problems does this challenge NOT address?',
+          answer: 'It does not treat or diagnose:\n\n• Major depression\n• Diagnosed anxiety disorders\n• Bipolar disorder\n• Suicidal ideation\n• Psychotic disorders\n• Personality disorders\n\nIn these cases, it is essential to seek professional support.',
+        },
+      ],
+    },
+    {
       title: 'Payment Methods',
       faqs: [
         {
@@ -415,39 +609,51 @@ export default function HelpPage() {
           </h1>
         </motion.div>
 
-        {/* FAQ Sections */}
+        {/* FAQ Sections - Collapsible */}
         <motion.section
-          className="mb-10 space-y-8"
+          className="mb-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          {currentSections.map((section, sectionIndex) => (
-            <div key={sectionIndex}>
-              <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-                <span className="w-6 h-6 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center font-bold">
-                  {sectionIndex + 1}
-                </span>
-                {section.title}
-              </h2>
-              <Accordion type="single" collapsible className="space-y-2">
-                {section.faqs.map((faq, faqIndex) => (
-                  <AccordionItem
-                    key={faqIndex}
-                    value={`section-${sectionIndex}-faq-${faqIndex}`}
-                    className="bg-card rounded-xl border shadow-card px-4"
-                  >
-                    <AccordionTrigger className="text-left text-sm hover:no-underline">
-                      {faq.question}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-muted-foreground whitespace-pre-line">
-                      {faq.answer}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </div>
-          ))}
+          <Accordion type="single" collapsible className="space-y-3">
+            {currentSections.map((section, sectionIndex) => (
+              <AccordionItem
+                key={sectionIndex}
+                value={`section-${sectionIndex}`}
+                className="bg-card rounded-xl border shadow-card px-4"
+              >
+                <AccordionTrigger className="text-left hover:no-underline gap-3">
+                  <span className="flex items-center gap-3">
+                    <span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs flex items-center justify-center font-bold shrink-0">
+                      {sectionIndex + 1}
+                    </span>
+                    <span className="font-semibold text-foreground text-base md:text-lg">
+                      {section.title}
+                    </span>
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <Accordion type="single" collapsible className="space-y-2 pt-2">
+                    {section.faqs.map((faq, faqIndex) => (
+                      <AccordionItem
+                        key={faqIndex}
+                        value={`section-${sectionIndex}-faq-${faqIndex}`}
+                        className="bg-muted/50 rounded-lg border-0 px-3"
+                      >
+                        <AccordionTrigger className="text-left text-sm hover:no-underline py-3">
+                          {faq.question}
+                        </AccordionTrigger>
+                        <AccordionContent className="text-muted-foreground whitespace-pre-line text-sm">
+                          {faq.answer}
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </motion.section>
 
       </main>
