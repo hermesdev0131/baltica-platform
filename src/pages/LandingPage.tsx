@@ -40,9 +40,19 @@ export default function LandingPage() {
       desc: t('landing.feature2.desc'),
     },
     {
-      icon: Sparkles,
+      icon: Brain,
       title: t('landing.feature3.title'),
       desc: t('landing.feature3.desc'),
+    },
+    {
+      icon: Sparkles,
+      title: t('landing.feature4.title'),
+      desc: t('landing.feature4.desc'),
+    },
+    {
+      icon: Package,
+      title: t('landing.feature5.title'),
+      desc: t('landing.feature5.desc'),
     },
   ];
 
@@ -136,31 +146,53 @@ export default function LandingPage() {
         </motion.section>
 
         {/* Features Section */}
-        <motion.section
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 py-12 max-w-4xl mx-auto"
+        <motion.div
+          className="py-12 max-w-5xl mx-auto"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
         >
-          {features.map((feature, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 + i * 0.1 }}
-            >
-              <Card className="shadow-card h-full">
-                <CardContent className="p-6 text-center">
-                  <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                    <feature.icon className="h-7 w-7 text-primary" />
-                  </div>
-                  <h3 className="font-semibold text-foreground mb-2">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground">{feature.desc}</p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.section>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+            {features.slice(0, 3).map((feature, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + i * 0.1 }}
+              >
+                <Card className="shadow-card h-full">
+                  <CardContent className="p-5 text-center">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+                      <feature.icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <h3 className="font-semibold text-foreground text-base mb-1.5">{feature.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
+            {features.slice(3).map((feature, i) => (
+              <motion.div
+                key={i + 3}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.8 + i * 0.1 }}
+              >
+                <Card className="shadow-card h-full">
+                  <CardContent className="p-5 text-center">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+                      <feature.icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <h3 className="font-semibold text-foreground text-base mb-1.5">{feature.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
 
         {/* How It Works Preview */}
         <motion.section
