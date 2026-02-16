@@ -3,7 +3,7 @@ export type Locale = 'es-ES' | 'es-LATAM' | 'en';
 export const locales: { code: Locale; label: string; flag: string }[] = [
   { code: 'es-ES', label: 'Español (España)', flag: '🇪🇸' },
   { code: 'es-LATAM', label: 'Español (Latinoamérica)', flag: '🌎' },
-  { code: 'en', label: 'English', flag: '🇬🇧' },
+  { code: 'en', label: 'English', flag: '🇺🇸' },
 ];
 
 export const translations = {
@@ -17,7 +17,8 @@ export const translations = {
     'nav.activityLog': 'Mi Historial',
 
     // Landing
-    'landing.headline': 'Recupera tu centro: 3 días para cultivar hábitos que transforman',
+    'landing.headline1': 'Recupera tu centro:',
+    'landing.headline2': '3 días para cultivar hábitos que transforman',
     'landing.subtitle': 'No necesitas horas, solo 10 minutos al día. Tu bienestar no puede esperar.',
     'landing.cta': 'Comenzar gratis',
     'landing.tagline': 'Solo 10 minutos al día',
@@ -222,7 +223,7 @@ export const translations = {
     'status.repay': 'Continuar mi camino',
 
     // How It Works
-    'howItWorks.title': '¿Cómo funciona BÁLTICA?',
+    'howItWorks.title': '¿Cómo funciona la aplicación?',
     'howItWorks.section1.title': 'Todo en un solo lugar',
     'howItWorks.section1.text': 'Accedes a vídeos, audios y materiales directamente desde la app. Tu experiencia es fluida y sin interrupciones.',
     'howItWorks.section2.title': 'Siempre disponible',
@@ -325,9 +326,9 @@ export const translations = {
     // Methodology
     'methodology.title': 'La ciencia detrás de Báltica',
     'methodology.teaser.title': '¿Por qué funciona?',
-    'methodology.teaser.3days': 'Basado en investigación: 3 días es el umbral mínimo para crear un nuevo hábito mental',
+    'methodology.teaser.3days': 'Un micro-reto de 3 días diseñado para sembrar la semilla de nuevos hábitos',
     'methodology.teaser.10min': 'Diseñado para tu ritmo de vida: efectivo sin abrumar',
-    'methodology.teaser.act': 'Respaldado por la Terapia de Aceptación y Compromiso, con evidencia científica',
+    'methodology.teaser.act': 'Desarrollado con técnicas psicológicas validadas',
     'methodology.teaser.cta': 'Conoce la metodología completa',
     'methodology.why3days.title': '¿Por qué 3 días?',
     'methodology.why3days.content': 'Los estudios en psicología del comportamiento muestran que 3 días consecutivos de práctica crean las primeras conexiones neuronales de un nuevo hábito. No es magia: es neuroplasticidad. Elegimos 3 días porque es alcanzable, medible y suficiente para que sientas un cambio real.',
@@ -336,10 +337,10 @@ export const translations = {
     'methodology.whySound.title': '¿Por qué música y ambiente?',
     'methodology.whySound.content': 'El sonido ambiental reduce el cortisol y facilita el estado de calma. Los escenarios naturales activan áreas cerebrales asociadas con la recuperación emocional. No es decoración: es parte del diseño terapéutico.',
     'methodology.whyOrder.title': '¿Por qué este orden?',
-    'methodology.whyOrder.content': 'Seguimos el modelo ACT: primero conectas con el presente (anclaje), luego identificas lo que importa (valores/propósito), y finalmente te tratas con amabilidad (autocompasión). Este orden está validado clínicamente para construir flexibilidad psicológica.',
-    'methodology.whatIsACT.title': '¿Qué es ACT?',
-    'methodology.whatIsACT.content': 'La Terapia de Aceptación y Compromiso (ACT) es un enfoque psicológico con décadas de investigación. No busca eliminar el malestar, sino ayudarte a vivir una vida significativa incluso cuando las cosas son difíciles. Báltica adapta estos principios a un formato accesible y breve.',
-    'methodology.disclaimer': 'Báltica es un programa educativo de bienestar. No reemplaza la atención profesional de salud mental.',
+    'methodology.whyOrder.content': 'Primero conectas con el presente (anclaje), luego identificas lo que importa (valores y propósito), y finalmente te tratas con amabilidad (autocompasión). Este orden está diseñado para construir bienestar de forma progresiva.',
+    'methodology.whatIsACT.title': 'Enfoque psicológico',
+    'methodology.whatIsACT.content': 'El programa está desarrollado con técnicas psicológicas validadas, como atención plena, regulación emocional y autocompasión. No busca eliminar el malestar, sino ayudarte a construir hábitos de autocuidado con herramientas prácticas y accesibles.',
+    'methodology.disclaimer': 'Este programa es educativo y preventivo. Si necesitas apoyo profesional, siempre es importante buscar acompañamiento especializado.',
 
     // Common
     'common.back': 'Volver',
@@ -463,7 +464,8 @@ export const translations = {
     'nav.activityLog': 'Mi Historial',
 
     // Landing
-    'landing.headline': 'Recupera tu centro: 3 días para cultivar hábitos que transforman',
+    'landing.headline1': 'Recupera tu centro:',
+    'landing.headline2': '3 días para cultivar hábitos que transforman',
     'landing.subtitle': 'No necesitas horas, solo 10 minutos al día. Tu bienestar no puede esperar.',
     'landing.cta': 'Comenzar gratis',
     'landing.tagline': 'Solo 10 minutos al día',
@@ -667,7 +669,7 @@ export const translations = {
     'status.repay': 'Continuar mi camino',
 
     // How It Works
-    'howItWorks.title': '¿Cómo funciona BÁLTICA?',
+    'howItWorks.title': '¿Cómo funciona la aplicación?',
     'howItWorks.section1.title': 'Todo en un solo lugar',
     'howItWorks.section1.text': 'Accedes a videos, audios y materiales directamente desde la app. Tu experiencia es fluida y sin interrupciones.',
     'howItWorks.section2.title': 'Siempre disponible',
@@ -770,9 +772,9 @@ export const translations = {
     // Methodology
     'methodology.title': 'La ciencia detrás de Báltica',
     'methodology.teaser.title': '¿Por qué funciona?',
-    'methodology.teaser.3days': 'Basado en investigación: 3 días es el umbral mínimo para crear un nuevo hábito mental',
+    'methodology.teaser.3days': 'Un micro-reto de 3 días diseñado para sembrar la semilla de nuevos hábitos',
     'methodology.teaser.10min': 'Diseñado para tu ritmo de vida: efectivo sin abrumar',
-    'methodology.teaser.act': 'Respaldado por la Terapia de Aceptación y Compromiso, con evidencia científica',
+    'methodology.teaser.act': 'Desarrollado con técnicas psicológicas validadas',
     'methodology.teaser.cta': 'Conoce la metodología completa',
     'methodology.why3days.title': '¿Por qué 3 días?',
     'methodology.why3days.content': 'Los estudios en psicología del comportamiento muestran que 3 días consecutivos de práctica crean las primeras conexiones neuronales de un nuevo hábito. No es magia: es neuroplasticidad. Elegimos 3 días porque es alcanzable, medible y suficiente para que sientas un cambio real.',
@@ -781,10 +783,10 @@ export const translations = {
     'methodology.whySound.title': '¿Por qué música y ambiente?',
     'methodology.whySound.content': 'El sonido ambiental reduce el cortisol y facilita el estado de calma. Los escenarios naturales activan áreas cerebrales asociadas con la recuperación emocional. No es decoración: es parte del diseño terapéutico.',
     'methodology.whyOrder.title': '¿Por qué este orden?',
-    'methodology.whyOrder.content': 'Seguimos el modelo ACT: primero conectas con el presente (anclaje), luego identificas lo que importa (valores/propósito), y finalmente te tratas con amabilidad (autocompasión). Este orden está validado clínicamente para construir flexibilidad psicológica.',
-    'methodology.whatIsACT.title': '¿Qué es ACT?',
-    'methodology.whatIsACT.content': 'La Terapia de Aceptación y Compromiso (ACT) es un enfoque psicológico con décadas de investigación. No busca eliminar el malestar, sino ayudarte a vivir una vida significativa incluso cuando las cosas son difíciles. Báltica adapta estos principios a un formato accesible y breve.',
-    'methodology.disclaimer': 'Báltica es un programa educativo de bienestar. No reemplaza la atención profesional de salud mental.',
+    'methodology.whyOrder.content': 'Primero conectas con el presente (anclaje), luego identificas lo que importa (valores y propósito), y finalmente te tratas con amabilidad (autocompasión). Este orden está diseñado para construir bienestar de forma progresiva.',
+    'methodology.whatIsACT.title': 'Enfoque psicológico',
+    'methodology.whatIsACT.content': 'El programa está desarrollado con técnicas psicológicas validadas, como atención plena, regulación emocional y autocompasión. No busca eliminar el malestar, sino ayudarte a construir hábitos de autocuidado con herramientas prácticas y accesibles.',
+    'methodology.disclaimer': 'Este programa es educativo y preventivo. Si necesitas apoyo profesional, siempre es importante buscar acompañamiento especializado.',
 
     // Common
     'common.back': 'Volver',
@@ -908,7 +910,8 @@ export const translations = {
     'nav.activityLog': 'My Activity',
 
     // Landing
-    'landing.headline': 'Reclaim your center: 3 days to cultivate habits that transform',
+    'landing.headline1': 'Reclaim your center:',
+    'landing.headline2': '3 days to cultivate habits that transform',
     'landing.subtitle': 'You don\'t need hours, just 10 minutes a day. Your wellbeing can\'t wait.',
     'landing.cta': 'Start for free',
     'landing.tagline': 'Just 10 minutes a day',
@@ -1112,7 +1115,7 @@ export const translations = {
     'status.repay': 'Continue my journey',
 
     // How It Works
-    'howItWorks.title': 'How does BÁLTICA work?',
+    'howItWorks.title': 'How does the app work?',
     'howItWorks.section1.title': 'Everything in one place',
     'howItWorks.section1.text': 'Access videos, audios, and materials directly from the app. Your experience is smooth and uninterrupted.',
     'howItWorks.section2.title': 'Always available',
@@ -1215,9 +1218,9 @@ export const translations = {
     // Methodology
     'methodology.title': 'The science behind Báltica',
     'methodology.teaser.title': 'Why does it work?',
-    'methodology.teaser.3days': 'Research shows 3 days is the minimum threshold to form a new mental habit',
+    'methodology.teaser.3days': 'A 3-day micro-challenge designed to plant the seed of new habits',
     'methodology.teaser.10min': 'Designed for your lifestyle: effective without overwhelming',
-    'methodology.teaser.act': 'Backed by Acceptance and Commitment Therapy, with scientific evidence',
+    'methodology.teaser.act': 'Developed with validated psychological techniques',
     'methodology.teaser.cta': 'Learn about our full methodology',
     'methodology.why3days.title': 'Why 3 days?',
     'methodology.why3days.content': 'Behavioral psychology studies show that 3 consecutive days of practice create the first neural connections of a new habit. It\'s not magic: it\'s neuroplasticity. We chose 3 days because it\'s achievable, measurable, and enough for you to feel a real change.',
@@ -1226,10 +1229,10 @@ export const translations = {
     'methodology.whySound.title': 'Why music and ambiance?',
     'methodology.whySound.content': 'Ambient sound reduces cortisol and facilitates a calm state. Natural scenery activates brain areas associated with emotional recovery. It\'s not decoration: it\'s part of the therapeutic design.',
     'methodology.whyOrder.title': 'Why this order?',
-    'methodology.whyOrder.content': 'We follow the ACT model: first you connect with the present (grounding), then identify what matters (values/purpose), and finally treat yourself with kindness (self-compassion). This sequence is clinically validated to build psychological flexibility.',
-    'methodology.whatIsACT.title': 'What is ACT?',
-    'methodology.whatIsACT.content': 'Acceptance and Commitment Therapy (ACT) is a psychological approach with decades of research. It doesn\'t aim to eliminate discomfort, but helps you live a meaningful life even when things are hard. Báltica adapts these principles into an accessible, brief format.',
-    'methodology.disclaimer': 'Báltica is an educational wellness program. It does not replace professional mental health care.',
+    'methodology.whyOrder.content': 'First you connect with the present (grounding), then identify what matters (values and purpose), and finally treat yourself with kindness (self-compassion). This order is designed to build wellbeing progressively.',
+    'methodology.whatIsACT.title': 'Psychological approach',
+    'methodology.whatIsACT.content': 'The program is developed with validated psychological techniques, such as mindfulness, emotional regulation, and self-compassion. It doesn\'t aim to eliminate discomfort, but helps you build self-care habits with practical, accessible tools.',
+    'methodology.disclaimer': 'This program is educational and preventive. If you need professional support, it is always important to seek specialized guidance.',
 
     // Common
     'common.back': 'Back',

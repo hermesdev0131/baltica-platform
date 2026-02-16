@@ -120,8 +120,13 @@ export default function LandingPage() {
             <BalticaLogo variant="full" size={200} className="mx-auto drop-shadow-lg" />
           </motion.div>
 
-          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6 max-w-3xl mx-auto">
-            {t('landing.headline')}
+          <h1 className="mb-6 max-w-3xl mx-auto">
+            <span className="block text-2xl md:text-4xl font-medium text-primary mb-2">
+              {t('landing.headline1')}
+            </span>
+            <span className="block text-3xl md:text-5xl font-bold text-foreground">
+              {t('landing.headline2')}
+            </span>
           </h1>
 
           <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto">
