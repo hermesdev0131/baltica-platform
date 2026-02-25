@@ -6,6 +6,7 @@ interface JourneyProgress {
   currentDay: number;
   completedDays: number[];
   currentStep: 'start' | 'video' | 'audio' | 'download' | 'survey' | 'closure';
+  day0Step: number;
   streak: number;
   lastCompletedDate: string | null;
 }
@@ -83,6 +84,7 @@ interface AppContextType {
   progress: JourneyProgress;
   setCurrentDay: (day: number) => void;
   setCurrentStep: (step: JourneyProgress['currentStep']) => void;
+  setDay0Step: (step: number) => void;
   completeDay: (day: number) => void;
   totalDays: number;
 
@@ -109,6 +111,7 @@ const defaultProgress: JourneyProgress = {
   currentDay: 0,
   completedDays: [],
   currentStep: 'start',
+  day0Step: 0,
   streak: 0,
   lastCompletedDate: null,
 };
@@ -325,6 +328,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     api.progress.update({ current_step: step }).catch(() => {});
   };
 
+  const setDay0Step = (step: number) => {
+    setProgress(prev => ({ ...prev, day0Step: step }));
+  };
+
   const completeDay = (day: number) => {
     const today = new Date().toISOString().split('T')[0];
     setProgress(prev => {
@@ -351,6 +358,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         completedDays: newCompletedDays,
         currentDay: Math.min(day + 1, totalDays),
         currentStep: 'start',
+        day0Step: 0,
         streak: newStreak,
         lastCompletedDate: today,
       };
@@ -401,6 +409,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       progress,
       setCurrentDay,
       setCurrentStep,
+      setDay0Step,
       completeDay,
       totalDays,
       dayAnswers,

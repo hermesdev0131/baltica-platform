@@ -29,20 +29,37 @@ import { dayContents, day0ExtendedContent, valueOptions, timeSlotOptions } from 
 type JourneyStep = Step;
 
 // Day 0 sub-steps (independent of the generic Step type used by Days 1-3)
-const DAY0_SUBSTEPS = ['start', 'welcome-video', 'survey-before', 'intro-video', 'download', 'survey-after', 'closure'] as const;
+const DAY0_SUBSTEPS = ['start', 'welcome-video', 'survey-before', 'intro-video', 'download', 'closure'] as const;
 type Day0SubStep = typeof DAY0_SUBSTEPS[number];
 
 export default function JourneyPage() {
   const { day } = useParams<{ day: string }>();
   const navigate = useNavigate();
-  const { t, locale, progress, completeDay, totalDays, dayAnswers, saveDayAnswers } = useApp();
+  const { t, locale, progress, completeDay, setCurrentStep: persistStep, setDay0Step: persistDay0Step, totalDays, dayAnswers, saveDayAnswers } = useApp();
   const { sendAchievement } = useNotificationContext();
   const { celebration, closeCelebration, checkAndTriggerCelebration } = useCelebration();
-  const [currentStep, setCurrentStep] = useState<JourneyStep>('start');
-  const [completedSteps, setCompletedSteps] = useState<JourneyStep[]>([]);
-  const [day0Step, setDay0Step] = useState(0);
 
   const dayNumber = parseInt(day || '0', 10);
+
+  // Restore step position from persisted progress
+  const [currentStep, setCurrentStepLocal] = useState<JourneyStep>(
+    dayNumber === progress.currentDay ? progress.currentStep : 'start'
+  );
+  const [completedSteps, setCompletedSteps] = useState<JourneyStep[]>([]);
+  const [day0Step, setDay0StepLocal] = useState(
+    dayNumber === 0 && progress.currentDay === 0 ? progress.day0Step : 0
+  );
+
+  // Sync step changes to persisted progress
+  const setCurrentStep = (step: JourneyStep) => {
+    setCurrentStepLocal(step);
+    persistStep(step);
+  };
+  const setDay0Step = (step: number) => {
+    setDay0StepLocal(step);
+    persistDay0Step(step);
+  };
+
   const dayContent = dayContents[dayNumber];
   usePageTitle(`Día ${dayNumber}`);
   const localeKey = locale as 'es-LATAM' | 'es-ES' | 'en';
@@ -72,10 +89,6 @@ export default function JourneyPage() {
   const [selectedEnergy, setSelectedEnergy] = useState<Energy | ''>(
     dayNumber === 0 ? (dayAnswers.welcome?.energy || '') : (dayAnswers.day3?.energy || '')
   );
-
-  // Day 0 Survey 2 (after) state
-  const [moodAfter, setMoodAfter] = useState<string>(dayAnswers.welcome?.moodAfter || '');
-  const [energyAfter, setEnergyAfter] = useState<Energy | ''>(dayAnswers.welcome?.energyAfter || '');
 
   // Inactivity modal state
   const [showInactivityModal, setShowInactivityModal] = useState(false);
@@ -131,9 +144,6 @@ export default function JourneyPage() {
   const canProceedFromSurvey = (): boolean => {
     switch (dayNumber) {
       case 0:
-        if (DAY0_SUBSTEPS[day0Step] === 'survey-after') {
-          return !!moodAfter && !!energyAfter;
-        }
         return !!selectedMood && !!selectedEnergy;
       case 1:
         return words.every(w => w.trim()) && !!selectedTimeSlot;
@@ -153,7 +163,6 @@ export default function JourneyPage() {
         saveDayAnswers({ welcome: {
           mood: selectedMood, energy: selectedEnergy as Energy,
           moodBefore: selectedMood, energyBefore: selectedEnergy as Energy,
-          moodAfter, energyAfter: energyAfter as Energy,
           ethicalNoteViewed: true, welcomeVideoWatched: true, introVideoWatched: true,
           completedAt: now,
         } });
@@ -236,42 +245,14 @@ export default function JourneyPage() {
             ? 'Tu respuesta es solo para ti. No hay respuestas correctas o incorrectas.'
             : 'Your answer is just for you. There are no right or wrong answers.'}
         </p>
-        <MoodSelector onSelect={setSelectedMood as any} selectedMood={selectedMood as any} showResponse={false} />
+        <MoodSelector onSelect={setSelectedMood as any} selectedMood={selectedMood as any} />
       </div>
 
       <div>
         <h3 className="text-lg font-medium text-foreground mb-3 text-center">
           {t('energy.title' as any)}
         </h3>
-        <EnergySelector onSelect={setSelectedEnergy} selectedEnergy={selectedEnergy} showResponse={false} />
-      </div>
-
-      <div className="flex justify-center mt-6">
-        <Button onClick={nextStep} disabled={!canProceedFromSurvey()} className="gap-2 rounded-full px-8">
-          {t('welcome.block0.ready')}
-          <ArrowRight className="h-4 w-4" />
-        </Button>
-      </div>
-    </div>
-  );
-
-  const renderWelcomeSurveyAfter = () => (
-    <div className="py-4 space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold text-foreground mb-2 text-center">
-          {t('day.0.surveyAfter.title' as any)}
-        </h2>
-        <p className="text-muted-foreground text-center mb-4">
-          {t('day.0.surveyAfter.subtitle' as any)}
-        </p>
-        <MoodSelector onSelect={setMoodAfter as any} selectedMood={moodAfter as any} showResponse={false} />
-      </div>
-
-      <div>
-        <h3 className="text-lg font-medium text-foreground mb-3 text-center">
-          {t('energy.title' as any)}
-        </h3>
-        <EnergySelector onSelect={setEnergyAfter} selectedEnergy={energyAfter} showResponse={false} />
+        <EnergySelector onSelect={setSelectedEnergy} selectedEnergy={selectedEnergy} />
       </div>
 
       <div className="flex justify-center mt-6">
@@ -638,7 +619,6 @@ export default function JourneyPage() {
                   </div>
                 )}
 
-                {DAY0_SUBSTEPS[day0Step] === 'survey-after' && renderWelcomeSurveyAfter()}
 
                 {DAY0_SUBSTEPS[day0Step] === 'closure' && (
                   <div className="py-4 text-center">
@@ -672,32 +652,6 @@ export default function JourneyPage() {
                         )}
                       </CardContent>
                     </Card>
-
-                    {/* Before/after emotional comparison for Day 0 */}
-                    {selectedMood && moodAfter && (
-                      <Card className="shadow-card mb-4 text-left">
-                        <CardContent className="pt-4 pb-4">
-                          <p className="text-base font-semibold mb-3">{t('day.0.comparison.title' as any)}</p>
-                          <div className="flex items-center justify-around">
-                            <div className="text-center">
-                              <p className="text-xs text-muted-foreground mb-1">{t('day.0.comparison.before' as any)}</p>
-                              <p className="text-base font-medium">{t(`mood.${selectedMood}` as any)}</p>
-                              {selectedEnergy && (
-                                <p className="text-xs text-muted-foreground">{t(`energy.${selectedEnergy}` as any)}</p>
-                              )}
-                            </div>
-                            <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                            <div className="text-center">
-                              <p className="text-xs text-muted-foreground mb-1">{t('day.0.comparison.after' as any)}</p>
-                              <p className="text-base font-medium">{t(`mood.${moodAfter}` as any)}</p>
-                              {energyAfter && (
-                                <p className="text-xs text-muted-foreground">{t(`energy.${energyAfter}` as any)}</p>
-                              )}
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    )}
 
                     <div className="flex flex-col sm:flex-row gap-2 justify-center">
                       <Button onClick={handleComplete} size="lg" className="gap-2 rounded-full px-8">

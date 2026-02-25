@@ -42,13 +42,13 @@ export const welcomeContent: DayContent = {
   id: 0,
   key: 'welcome',
   title: {
-    'es-LATAM': 'Bienvenido/a tu espacio',
-    'es-ES': 'Bienvenido/a tu espacio',
+    'es-LATAM': 'Empieza aquí tu bienestar emocional',
+    'es-ES': 'Empieza aquí tu bienestar emocional',
     'en': 'Welcome to your space',
   },
   subtitle: {
-    'es-LATAM': 'Antes de comenzar, toma un momento para ti',
-    'es-ES': 'Antes de comenzar, toma un momento para ti',
+    'es-LATAM': 'Este momento es solo para ti',
+    'es-ES': 'Este momento es solo para ti',
     'en': 'Before we begin, take a moment for yourself',
   },
   video: {

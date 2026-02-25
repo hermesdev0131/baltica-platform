@@ -58,7 +58,7 @@ export default function SettingsPage() {
 
   const handleLogout = () => {
     logout();
-    navigate('/auth');
+    navigate('/landing');
   };
 
   const handleChangePassword = async () => {

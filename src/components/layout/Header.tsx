@@ -144,7 +144,7 @@ export function Header() {
                   <Settings className="h-4 w-4 mr-2" />
                   {t('nav.settings')}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => { logout(); navigate('/auth'); }}>
+                <DropdownMenuItem onClick={() => { logout(); navigate('/landing'); }}>
                   <LogOut className="h-4 w-4 mr-2" />
                   Cerrar sesión
                 </DropdownMenuItem>
