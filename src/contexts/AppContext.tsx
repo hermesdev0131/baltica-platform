@@ -152,7 +152,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const [progress, setProgress] = useState<JourneyProgress>(() => {
     const saved = localStorage.getItem(userPrefix('journeyProgress'));
-    return saved ? JSON.parse(saved) : defaultProgress;
+    return saved ? { ...defaultProgress, ...JSON.parse(saved) } : defaultProgress;
   });
 
   const [userName, setUserName] = useState(() => {
@@ -196,13 +196,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
       api.progress.get().then(data => {
         if (data.progress) {
           const p = data.progress;
-          setProgress({
+          setProgress(prev => ({
+            ...prev,
             currentDay: p.current_day,
             completedDays: p.completed_days || [],
             currentStep: p.current_step || 'start',
             streak: p.streak || 0,
             lastCompletedDate: p.last_completed_date || null,
-          });
+          }));
         }
       }).catch(() => { /* use local state */ });
 

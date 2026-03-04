@@ -23,7 +23,8 @@ const Index = () => {
   
   const hasStarted = progress.completedDays.length > 0;
   const programComplete = progress.completedDays.includes(3);
-  const progressPercent = (progress.completedDays.length / (totalDays + 1)) * 100;
+  const retoDaysCompleted = progress.completedDays.filter(d => d > 0).length;
+  const progressPercent = Math.min((retoDaysCompleted / totalDays) * 100, 100);
   
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -124,7 +125,7 @@ const Index = () => {
               <ProgressRing progress={progressPercent} size={120} strokeWidth={10}>
                 <div className="text-center">
                   <span className="text-2xl font-bold text-primary">
-                    {progress.completedDays.length}
+                    {retoDaysCompleted}
                   </span>
                   <span className="text-muted-foreground text-xs block">
                     / {totalDays}

@@ -20,16 +20,16 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, ArrowRight, Download, CheckCircle, Share2, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Download, CheckCircle, Sparkles, Play } from 'lucide-react';
 import BalticaLogo from '@/components/brand/BalticaLogo';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { dayContents, day0ExtendedContent, valueOptions, timeSlotOptions } from '@/config/content';
+import { dayContents, day0ExtendedContent, day1Content, valueOptions, timeSlotOptions } from '@/config/content';
 
 type JourneyStep = Step;
 
 // Day 0 sub-steps (independent of the generic Step type used by Days 1-3)
-const DAY0_SUBSTEPS = ['start', 'welcome-video', 'survey-before', 'intro-video', 'download', 'closure'] as const;
+const DAY0_SUBSTEPS = ['start', 'video-gallery', 'survey-before', 'download', 'closure'] as const;
 type Day0SubStep = typeof DAY0_SUBSTEPS[number];
 
 export default function JourneyPage() {
@@ -47,7 +47,7 @@ export default function JourneyPage() {
   );
   const [completedSteps, setCompletedSteps] = useState<JourneyStep[]>([]);
   const [day0Step, setDay0StepLocal] = useState(
-    dayNumber === 0 && progress.currentDay === 0 ? progress.day0Step : 0
+    dayNumber === 0 && progress.currentDay === 0 ? (progress.day0Step ?? 0) : 0
   );
 
   // Sync step changes to persisted progress
@@ -89,6 +89,9 @@ export default function JourneyPage() {
   const [selectedEnergy, setSelectedEnergy] = useState<Energy | ''>(
     dayNumber === 0 ? (dayAnswers.welcome?.energy || '') : (dayAnswers.day3?.energy || '')
   );
+
+  // Video gallery state for Day 0
+  const [selectedVideo, setSelectedVideo] = useState<{ url: string; title: string; duration: string } | null>(null);
 
   // Inactivity modal state
   const [showInactivityModal, setShowInactivityModal] = useState(false);
@@ -315,6 +318,32 @@ export default function JourneyPage() {
 
   const renderDay2Survey = () => (
     <div className="py-4">
+      {/* PDF reading notice */}
+      <div className="flex items-start gap-3 p-4 mb-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
+        <Download className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+        <div className="text-sm">
+          <p className="font-semibold text-amber-800 dark:text-amber-300 mb-1">
+            {locale.startsWith('es') ? 'Antes de continuar, lee el PDF del Día 2' : 'Before continuing, read the Day 2 PDF'}
+          </p>
+          <p className="text-amber-700 dark:text-amber-400 mb-2">
+            {locale.startsWith('es')
+              ? 'El formulario tiene más sentido después de leer la guía.'
+              : 'The form makes more sense after reading the guide.'}
+          </p>
+          {dayContents[2]?.pdf.url && (
+            <a
+              href={dayContents[2].pdf.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 font-medium text-amber-800 dark:text-amber-300 underline underline-offset-2 hover:opacity-80"
+            >
+              <Download className="h-3.5 w-3.5" />
+              {locale.startsWith('es') ? 'Descargar PDF Día 2' : 'Download Day 2 PDF'}
+            </a>
+          )}
+        </div>
+      </div>
+
       <Card className="shadow-card">
         <CardHeader>
           <CardTitle className="text-lg">{t('day.2.value.title')}</CardTitle>
@@ -387,6 +416,23 @@ export default function JourneyPage() {
 
   const renderDay3Survey = () => (
     <div className="py-4">
+      <div className="flex items-start gap-3 p-4 mb-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
+        <Download className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+        <div className="text-sm">
+          <p className="font-semibold text-amber-800 dark:text-amber-300 mb-1">
+            {locale.startsWith('es') ? 'Antes de continuar, lee el PDF del Día 3' : 'Before continuing, read the Day 3 PDF'}
+          </p>
+          <p className="text-amber-700 dark:text-amber-400 mb-2">
+            {locale.startsWith('es') ? 'El formulario tiene más sentido después de leer la guía.' : 'The form makes more sense after reading the guide.'}
+          </p>
+          {dayContents[3]?.pdf.url && (
+            <a href={dayContents[3].pdf.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-medium text-amber-800 dark:text-amber-300 underline underline-offset-2 hover:opacity-80">
+              <Download className="h-3.5 w-3.5" />
+              {locale.startsWith('es') ? 'Descargar PDF Día 3' : 'Download Day 3 PDF'}
+            </a>
+          )}
+        </div>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-[5fr,3fr] gap-4">
         {/* Left column (full width on mobile): exercises */}
         <Card className="shadow-card">
@@ -462,8 +508,8 @@ export default function JourneyPage() {
           : 'Acting from your values connects you with yourself. See you tomorrow to close this journey.';
       case 3:
         return isSpanish
-          ? 'Gracias por completar este viaje. Recuerda: este programa es educativo. Si necesitas apoyo profesional, no dudes en buscarlo.'
-          : 'Thank you for completing this journey. Remember: this program is educational. If you need professional support, do not hesitate to seek it.';
+          ? '¡Has terminado el reto! Completaste los 3 días. Recuerda: este programa es educativo. Si necesitas apoyo profesional, no dudes en buscarlo.'
+          : 'You finished the challenge! You completed all 3 days. Remember: this program is educational. If you need professional support, do not hesitate to seek it.';
       default:
         return '';
     }
@@ -513,7 +559,7 @@ export default function JourneyPage() {
 
         <main className="container mx-auto px-4 py-2 max-w-4xl">
           <div className="flex items-center justify-between mb-2">
-            <Button variant="ghost" size="sm" onClick={prevStep} className="gap-2">
+            <Button variant="default" size="sm" onClick={prevStep} className="gap-2 rounded-full px-4 bg-[#10B0C0] hover:bg-[#0e9aaa] text-white">
               <ArrowLeft className="h-4 w-4" />
               {t('common.back')}
             </Button>
@@ -554,39 +600,84 @@ export default function JourneyPage() {
                   </div>
                 )}
 
-                {DAY0_SUBSTEPS[day0Step] === 'welcome-video' && (
-                  <div>
-                    <h2 className="text-lg font-semibold text-foreground mb-1 text-center">{t('day.0.welcomeVideo.title' as any)}</h2>
-                    <p className="text-muted-foreground text-center mb-2 text-sm">{t('day.0.welcomeVideo.subtitle' as any)}</p>
-                    <div className="mx-auto" style={{ maxWidth: 'calc((100vh - 19rem) * 1.778)' }}>
-                      <VideoPlayer src={day0ExtendedContent.welcomeVideo.url} title={day0ExtendedContent.welcomeVideo.title || ''} duration={day0ExtendedContent.welcomeVideo.duration} />
+                {DAY0_SUBSTEPS[day0Step] === 'video-gallery' && (() => {
+                  const galleryVideos = [
+                    { url: day0ExtendedContent.welcomeVideo.url, title: locale.startsWith('es') ? 'Bienvenida' : 'Welcome', duration: day0ExtendedContent.welcomeVideo.duration },
+                    { url: day1Content.video.url, title: 'Grounding', duration: day1Content.video.duration },
+                    { url: day0ExtendedContent.introVideo.url, title: locale.startsWith('es') ? 'Introducción' : 'Introduction', duration: day0ExtendedContent.introVideo.duration },
+                  ];
+                  return (
+                    <div className="py-4">
+                      {selectedVideo ? (
+                        <div>
+                          <button
+                            onClick={() => setSelectedVideo(null)}
+                            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-3 transition-colors"
+                          >
+                            <ArrowLeft className="h-4 w-4" />
+                            {locale.startsWith('es') ? 'Volver a videos' : 'Back to videos'}
+                          </button>
+                          <div className="mx-auto" style={{ maxWidth: 'calc((100vh - 19rem) * 1.778)' }}>
+                            <VideoPlayer src={selectedVideo.url} title={selectedVideo.title} duration={selectedVideo.duration} />
+                          </div>
+                          <div className="flex justify-center mt-3">
+                            <Button onClick={() => setSelectedVideo(null)} className="gap-2 rounded-full px-8">
+                              {locale.startsWith('es') ? 'Listo' : 'Done'}
+                              <CheckCircle className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div>
+                          <h2 className="text-lg font-semibold text-foreground mb-1 text-center">
+                            {locale.startsWith('es') ? 'Videos del programa' : 'Program videos'}
+                          </h2>
+                          <p className="text-muted-foreground text-center mb-6 text-sm">
+                            {locale.startsWith('es') ? 'Haz clic en un video para verlo' : 'Click a video to watch it'}
+                          </p>
+                          <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
+                            {galleryVideos.map((video) => (
+                              <button
+                                key={video.title}
+                                onClick={() => setSelectedVideo(video)}
+                                className="group flex flex-col items-center gap-2 focus:outline-none"
+                              >
+                                <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-muted shadow-card group-hover:shadow-md transition-shadow">
+                                  <video
+                                    src={video.url || undefined}
+                                    className="w-full h-full object-cover"
+                                    preload="metadata"
+                                    muted
+                                    onLoadedMetadata={e => {
+                                      const v = e.currentTarget;
+                                      v.currentTime = v.duration / 2;
+                                    }}
+                                  />
+                                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/20 transition-colors">
+                                    <div className="w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center shadow-lg">
+                                      <Play className="h-4 w-4 text-primary-foreground ml-0.5" />
+                                    </div>
+                                  </div>
+                                </div>
+                                <span className="text-sm font-medium text-foreground text-center leading-tight">
+                                  {video.title}
+                                </span>
+                              </button>
+                            ))}
+                          </div>
+                          <div className="flex justify-center mt-8">
+                            <Button onClick={nextStep} className="gap-2 rounded-full px-8">
+                              {t('video.next')}
+                              <ArrowRight className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      )}
                     </div>
-                    <div className="flex justify-center mt-3">
-                      <Button onClick={nextStep} className="gap-2 rounded-full px-8">
-                        {t('video.next')}
-                        <ArrowRight className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                )}
+                  );
+                })()}
 
                 {DAY0_SUBSTEPS[day0Step] === 'survey-before' && renderWelcomeSurvey()}
-
-                {DAY0_SUBSTEPS[day0Step] === 'intro-video' && (
-                  <div>
-                    <h2 className="text-lg font-semibold text-foreground mb-1 text-center">{t('day.0.introVideo.title' as any)}</h2>
-                    <p className="text-muted-foreground text-center mb-2 text-sm">{t('day.0.introVideo.subtitle' as any)}</p>
-                    <div className="mx-auto" style={{ maxWidth: 'calc((100vh - 19rem) * 1.778)' }}>
-                      <VideoPlayer src={day0ExtendedContent.introVideo.url} title={day0ExtendedContent.introVideo.title || ''} duration={day0ExtendedContent.introVideo.duration} />
-                    </div>
-                    <div className="flex justify-center mt-3">
-                      <Button onClick={nextStep} className="gap-2 rounded-full px-8">
-                        {t('video.next')}
-                        <ArrowRight className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                )}
 
                 {DAY0_SUBSTEPS[day0Step] === 'download' && (
                   <div className="py-4">
@@ -653,14 +744,10 @@ export default function JourneyPage() {
                       </CardContent>
                     </Card>
 
-                    <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                    <div className="flex justify-center">
                       <Button onClick={handleComplete} size="lg" className="gap-2 rounded-full px-8">
                         {t('closure.next')}
                         <ArrowRight className="h-5 w-5" />
-                      </Button>
-                      <Button variant="outline" size="lg" className="gap-2 rounded-full">
-                        <Share2 className="h-4 w-4" />
-                        {t('closure.share')}
                       </Button>
                     </div>
                   </div>
@@ -842,10 +929,6 @@ export default function JourneyPage() {
                           ? (locale.startsWith('es') ? 'Ver mi progreso completo' : 'See my full progress')
                           : t('closure.next')}
                         <ArrowRight className="h-5 w-5" />
-                      </Button>
-                      <Button variant="outline" size="lg" className="gap-2 rounded-full">
-                        <Share2 className="h-4 w-4" />
-                        {t('closure.share')}
                       </Button>
                     </div>
                   </div>

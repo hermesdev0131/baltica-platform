@@ -31,7 +31,7 @@ export function BalticaLogo({
       src={getLogoSrc()}
       alt="Báltica Education"
       style={{ height: size, width: 'auto' }}
-      className={`object-contain ${className}`}
+      className={`object-contain dark:hidden ${className}`}
     />
   );
 }

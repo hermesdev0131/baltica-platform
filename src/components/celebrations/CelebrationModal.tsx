@@ -98,10 +98,12 @@ export function CelebrationModal({
     switch (type) {
       case 'day-complete':
         return {
-          title: isSpanish ? '¡Día completado!' : 'Day complete!',
-          subtitle: isSpanish 
-            ? `Has terminado el día ${dayNumber}. ¡Sigue así!` 
-            : `You finished day ${dayNumber}. Keep it up!`,
+          title: isSpanish
+            ? (dayNumber === 3 ? '¡Has terminado el reto!' : '¡Día completado!')
+            : (dayNumber === 3 ? 'You finished the challenge!' : 'Day complete!'),
+          subtitle: isSpanish
+            ? (dayNumber === 3 ? '¡Completaste los 3 días. Eso es un logro real!' : `Has terminado el día ${dayNumber}.`)
+            : (dayNumber === 3 ? 'You completed all 3 days. That is a real achievement!' : `You finished day ${dayNumber}.`),
         };
       case 'streak-3':
         return {

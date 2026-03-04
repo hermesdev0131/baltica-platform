@@ -153,6 +153,29 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ===== VIDEO SECTION ===== */}
+      <section className="py-10 md:py-14">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+            className="rounded-2xl overflow-hidden shadow-soft"
+          >
+            <video
+              src="/Video 30 seg HORIZONTAL LP.mp4"
+              className="w-full h-auto block"
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls
+            />
+          </motion.div>
+        </div>
+      </section>
+
       {/* ===== SECTION 2: EL PROBLEMA ===== */}
       <section className="py-16 md:py-20 bg-muted/30">
         <div className="container mx-auto px-4 max-w-3xl">

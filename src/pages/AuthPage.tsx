@@ -116,10 +116,10 @@ export default function AuthPage() {
       <header className="w-full border-b border-border/40 bg-background/80">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Button
-            variant="ghost"
+            variant="default"
             size="sm"
             onClick={() => navigate('/landing')}
-            className="gap-2"
+            className="gap-2 rounded-full px-4 bg-[#10B0C0] hover:bg-[#0e9aaa] text-white"
           >
             <ArrowLeft className="h-4 w-4" />
             {t('common.back')}

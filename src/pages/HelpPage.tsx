@@ -661,7 +661,7 @@ export default function HelpPage() {
       {/* Floating Back Button - top left */}
       <Button
         variant="default"
-        className="fixed top-4 left-4 h-10 rounded-full shadow-lg gap-2 px-4"
+        className="fixed top-4 left-4 h-10 rounded-full shadow-lg gap-2 px-4 bg-[#10B0C0] hover:bg-[#0e9aaa] text-white"
         onClick={handleReturn}
       >
         <ArrowLeft className="h-4 w-4" />
