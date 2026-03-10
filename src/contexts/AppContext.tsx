@@ -336,9 +336,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const completeDay = (day: number) => {
     const today = new Date().toISOString().split('T')[0];
     setProgress(prev => {
-      const newCompletedDays = prev.completedDays.includes(day)
-        ? prev.completedDays
-        : [...prev.completedDays, day];
+      let newCompletedDays = [...prev.completedDays];
+      if (!newCompletedDays.includes(day)) {
+        newCompletedDays.push(day);
+      }
+      // Day 0 completion auto-completes day 1 (merged into Día 1)
+      if (day === 0 && !newCompletedDays.includes(1)) {
+        newCompletedDays.push(1);
+      }
 
       let newStreak = prev.streak;
       if (prev.lastCompletedDate) {
@@ -354,10 +359,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
         newStreak = 1;
       }
 
+      // When day 0 completes, skip to day 2 (day 1 is part of day 0 now)
+      const nextDay = day === 0 ? 2 : Math.min(day + 1, totalDays);
+
       return {
         ...prev,
         completedDays: newCompletedDays,
-        currentDay: Math.min(day + 1, totalDays),
+        currentDay: nextDay,
         currentStep: 'start',
         day0Step: 0,
         streak: newStreak,

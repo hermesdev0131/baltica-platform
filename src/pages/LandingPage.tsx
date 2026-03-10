@@ -74,87 +74,45 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* ===== SECTION 1: HERO ===== */}
+      {/* ===== SECTION 1: HERO (text only, full width) ===== */}
       <section className="container mx-auto px-4 py-16 md:py-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center max-w-6xl mx-auto">
-          {/* Left: Text */}
-          <div className="text-center md:text-left">
-            <motion.span
-              className="inline-block text-xs font-semibold tracking-wider uppercase px-3 py-1 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 mb-6"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-            >
-              {t('landing.pretitle' as any)}
-            </motion.span>
-
-            <motion.h1
-              className="mb-6"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-            >
-              <span className="block text-3xl md:text-4xl lg:text-5xl font-bold text-primary leading-tight mb-2">
-                {t('landing.headline1' as any)}
-              </span>
-              <span className="block text-xl md:text-2xl lg:text-3xl font-medium text-foreground leading-snug">
-                {t('landing.headline2' as any)}
-              </span>
-            </motion.h1>
-
-            <motion.p
-              className="text-base md:text-lg text-muted-foreground leading-relaxed mb-8"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-            >
-              {t('landing.subtitle')}
-            </motion.p>
-
-            <motion.div
-              className="flex justify-center md:justify-center"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-            >
-              <Button
-                size="lg"
-                className="gap-2 px-8 py-6 text-base font-semibold rounded-full shadow-soft"
-                onClick={goToRegister}
-              >
-                {t('landing.cta')}
-                <ArrowRight className="h-5 w-5" />
-              </Button>
-            </motion.div>
-
-            <motion.p
-              className="text-sm text-muted-foreground mt-4 text-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4, delay: 0.4 }}
-            >
-              {t('landing.microcopy' as any)}
-            </motion.p>
-          </div>
-
-          {/* Right: Hero image */}
-          <motion.div
-            className="hidden md:flex items-center justify-center"
-            initial={{ opacity: 0, x: 30, scale: 0.95 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.span
+            className="inline-block text-xs font-semibold tracking-wider uppercase px-3 py-1 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 mb-6"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
           >
-            <img
-              src="/hero-img.jpg"
-              alt="Persona en calma con audífonos"
-              className="w-full rounded-2xl object-cover shadow-soft"
-            />
-          </motion.div>
+            {t('landing.pretitle' as any)}
+          </motion.span>
+
+          <motion.h1
+            className="mb-6"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <span className="block text-3xl md:text-4xl lg:text-5xl font-bold text-primary leading-tight mb-2">
+              {t('landing.headline1' as any)}
+            </span>
+            <span className="block text-xl md:text-2xl lg:text-3xl font-medium text-foreground leading-snug">
+              {t('landing.headline2' as any)}
+            </span>
+          </motion.h1>
+
+          <motion.p
+            className="text-base md:text-lg text-muted-foreground leading-relaxed"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            {t('landing.subtitle')}
+          </motion.p>
         </div>
       </section>
 
-      {/* ===== VIDEO SECTION ===== */}
-      <section className="py-10 md:py-14">
+      {/* ===== VIDEO SECTION + CTA ===== */}
+      <section className="pb-10 md:pb-14">
         <div className="container mx-auto px-4 max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -172,6 +130,27 @@ export default function LandingPage() {
               playsInline
               controls
             />
+          </motion.div>
+
+          {/* CTA below video */}
+          <motion.div
+            className="text-center mt-8"
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.4, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <Button
+              size="lg"
+              className="gap-2 px-8 py-6 text-base font-semibold rounded-full shadow-soft"
+              onClick={goToRegister}
+            >
+              {t('landing.cta')}
+              <ArrowRight className="h-5 w-5" />
+            </Button>
+            <p className="text-sm text-muted-foreground mt-4">
+              {t('landing.microcopy' as any)}
+            </p>
           </motion.div>
         </div>
       </section>
@@ -210,7 +189,7 @@ export default function LandingPage() {
           </motion.p>
 
           <div className="space-y-4 mb-10">
-            {[1, 2, 3].map((i, idx) => (
+            {[1, 2, 3, 4, 5].map((i, idx) => (
               <motion.div
                 key={i}
                 className="flex items-start gap-3 p-4 bg-card rounded-xl border border-border/40"
@@ -222,35 +201,7 @@ export default function LandingPage() {
                 <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <Check className="h-3.5 w-3.5 text-primary" />
                 </div>
-                <p className="text-sm text-foreground leading-relaxed">
-                  {t(`landing.problem.point${i}` as any)}
-                </p>
-              </motion.div>
-            ))}
-
-            <motion.p
-              className="text-base font-medium text-primary text-center py-2"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.4, delay: 0.3 }}
-            >
-              {t('landing.problem.bridge' as any)}
-            </motion.p>
-
-            {[4, 5].map((i, idx) => (
-              <motion.div
-                key={i}
-                className="flex items-start gap-3 p-4 bg-card rounded-xl border border-border/40"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.4, delay: 0.4 + idx * 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-              >
-                <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Check className="h-3.5 w-3.5 text-primary" />
-                </div>
-                <p className="text-sm text-foreground leading-relaxed">
+                <p className="text-base text-foreground leading-relaxed">
                   {t(`landing.problem.point${i}` as any)}
                 </p>
               </motion.div>
@@ -258,13 +209,13 @@ export default function LandingPage() {
           </div>
 
           <motion.div
-            className="text-center"
+            className="text-center bg-primary/10 dark:bg-primary/20 rounded-2xl py-6 px-6"
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.4, delay: 0.6 }}
           >
-            <p className="text-base font-medium text-primary mb-4">
+            <p className="text-xl md:text-2xl font-semibold text-primary mb-4">
               {t('landing.problem.transition' as any)}
             </p>
             <ArrowDown className="h-6 w-6 text-primary mx-auto animate-bounce" />
@@ -394,17 +345,6 @@ export default function LandingPage() {
       {/* ===== SECTION 5: MICROHÁBITOS ===== */}
       <section className="py-16 md:py-20 bg-muted/30">
         <div className="container mx-auto px-4 max-w-4xl">
-          {/* Title */}
-          <motion.h2
-            className="text-2xl md:text-3xl font-bold text-foreground mb-4 text-center"
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-          >
-            {t('landing.microhabits.title' as any)}
-          </motion.h2>
-
           {/* Hook */}
           <motion.div
             className="text-center mb-8 space-y-2"

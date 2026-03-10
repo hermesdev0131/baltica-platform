@@ -33,7 +33,16 @@ const Index = () => {
     return t('journey.greeting.evening');
   };
 
+  // Visible days: [0, 2, 3] → displayed as "1", "2", "3" (day 1 is merged into day 0)
+  const visibleDays = [0, 2, 3];
+
   const getDayStatus = (day: number): 'completed' | 'current' | 'locked' => {
+    if (day === 0) {
+      // Día 1 is complete only when both internal days 0 and 1 are done
+      if (progress.completedDays.includes(0) && progress.completedDays.includes(1)) return 'completed';
+      if (progress.currentDay <= 1) return 'current';
+      return 'locked';
+    }
     if (progress.completedDays.includes(day)) return 'completed';
     if (day === progress.currentDay) return 'current';
     return 'locked';
@@ -92,7 +101,7 @@ const Index = () => {
                 {getGreeting()}{userName && `, ${userName}`}
               </p>
               <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                {t('journey.day')} {progress.currentDay} {t('journey.of')} {totalDays}
+                {t('journey.day')} {progress.currentDay === 0 ? 1 : progress.currentDay} {t('journey.of')} {totalDays}
               </h1>
             </>
           ) : (
@@ -196,8 +205,8 @@ const Index = () => {
             <h2 className="text-lg font-semibold text-foreground mb-4 text-center">
               {t('progress.title')}
             </h2>
-            <div className="grid grid-cols-4 gap-3 md:gap-4 max-w-md mx-auto">
-              {Array.from({ length: totalDays + 1 }, (_, i) => i).map(day => (
+            <div className="grid grid-cols-3 gap-3 md:gap-4 max-w-sm mx-auto">
+              {visibleDays.map(day => (
                 <DayCard
                   key={day}
                   day={day}

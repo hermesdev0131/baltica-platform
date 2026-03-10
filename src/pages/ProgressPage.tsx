@@ -16,10 +16,22 @@ export default function ProgressPage() {
   const isSpanish = locale.startsWith('es');
 
   // Count only reto days (1–3); Day 0 is "Bienvenida" (setup), not part of the 3-day reto
-  const retoDaysCompleted = progress.completedDays.filter(d => d > 0).length;
+  // Visible days: [0, 2, 3] displayed as "1", "2", "3" (day 1 merged into day 0)
+  const visibleDays = [0, 2, 3];
+
+  // Count completed visible days: day 0 requires both 0+1 done, days 2 and 3 are standalone
+  const dia1Complete = progress.completedDays.includes(0) && progress.completedDays.includes(1);
+  const dia2Complete = progress.completedDays.includes(2);
+  const dia3Complete = progress.completedDays.includes(3);
+  const retoDaysCompleted = [dia1Complete, dia2Complete, dia3Complete].filter(Boolean).length;
   const progressPercent = Math.min((retoDaysCompleted / totalDays) * 100, 100);
 
   const getDayStatus = (day: number): 'completed' | 'current' | 'locked' => {
+    if (day === 0) {
+      if (dia1Complete) return 'completed';
+      if (progress.currentDay <= 1) return 'current';
+      return 'locked';
+    }
     if (progress.completedDays.includes(day)) return 'completed';
     if (day === progress.currentDay) return 'current';
     return 'locked';
@@ -112,8 +124,8 @@ export default function ProgressPage() {
           <h2 className="text-sm font-semibold text-foreground mb-2 text-center">
             {t('progress.yourJourney' as any)}
           </h2>
-          <div className="grid grid-cols-4 gap-3 max-w-sm mx-auto">
-            {Array.from({ length: totalDays + 1 }, (_, i) => i).map(day => (
+          <div className="grid grid-cols-3 gap-3 max-w-sm mx-auto">
+            {visibleDays.map(day => (
               <DayCard
                 key={day}
                 day={day}
@@ -140,7 +152,7 @@ export default function ProgressPage() {
               <Card className="shadow-card">
                 <CardContent className="p-3">
                   <p className="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wide">
-                    {isSpanish ? 'Al inicio (Día 0)' : 'At start (Day 0)'}
+                    {isSpanish ? 'Al inicio (Día 1)' : 'At start (Day 1)'}
                   </p>
                   <div className="space-y-1.5 text-sm">
                     {moodBefore ? (

@@ -28,8 +28,18 @@ import { dayContents, day0ExtendedContent, day1Content, valueOptions, timeSlotOp
 
 type JourneyStep = Step;
 
-// Day 0 sub-steps (independent of the generic Step type used by Days 1-3)
-const DAY0_SUBSTEPS = ['start', 'video-gallery', 'survey-before', 'download', 'closure'] as const;
+// Day 0 sub-steps: merged Día 1 (Bienvenida + Grounding)
+const DAY0_SUBSTEPS = [
+  'start',
+  'video-welcome',     // Día 1: Bienvenida
+  'survey-before',     // Encuesta mood/energy
+  'video-intro',       // Día 1: Introducción
+  'video-grounding',   // Día 1: Grounding
+  'audio-grounding',   // Audio meditación grounding
+  'five-senses',       // Ejercicio 5 sentidos (from Day 1)
+  'download',          // PDFs
+  'closure',
+] as const;
 type Day0SubStep = typeof DAY0_SUBSTEPS[number];
 
 export default function JourneyPage() {
@@ -40,6 +50,12 @@ export default function JourneyPage() {
   const { celebration, closeCelebration, checkAndTriggerCelebration } = useCelebration();
 
   const dayNumber = parseInt(day || '0', 10);
+
+  // Day 1 is merged into Day 0 — redirect
+  if (dayNumber === 1) {
+    navigate('/journey/0', { replace: true });
+    return null;
+  }
 
   // Restore step position from persisted progress
   const [currentStep, setCurrentStepLocal] = useState<JourneyStep>(
@@ -61,7 +77,8 @@ export default function JourneyPage() {
   };
 
   const dayContent = dayContents[dayNumber];
-  usePageTitle(`Día ${dayNumber}`);
+  const displayDay = dayNumber === 0 ? 1 : dayNumber;
+  usePageTitle(`Día ${displayDay}`);
   const localeKey = locale as 'es-LATAM' | 'es-ES' | 'en';
 
   // Local form state for each day's exercises
@@ -163,12 +180,18 @@ export default function JourneyPage() {
     const now = new Date().toISOString();
     switch (dayNumber) {
       case 0:
-        saveDayAnswers({ welcome: {
-          mood: selectedMood, energy: selectedEnergy as Energy,
-          moodBefore: selectedMood, energyBefore: selectedEnergy as Energy,
-          ethicalNoteViewed: true, welcomeVideoWatched: true, introVideoWatched: true,
-          completedAt: now,
-        } });
+        saveDayAnswers({
+          welcome: {
+            mood: selectedMood, energy: selectedEnergy as Energy,
+            moodBefore: selectedMood, energyBefore: selectedEnergy as Energy,
+            ethicalNoteViewed: true, welcomeVideoWatched: true, introVideoWatched: true,
+            completedAt: now,
+          },
+          day1: {
+            words, timeSlot: selectedTimeSlot as any,
+            videoWatched: true, audioCompleted: true, completedAt: now,
+          },
+        });
         break;
       case 1:
         saveDayAnswers({ day1: { words, timeSlot: selectedTimeSlot as any, videoWatched: true, audioCompleted: true, completedAt: now } });
@@ -222,8 +245,7 @@ export default function JourneyPage() {
   };
 
   const getDayLabel = (): string => {
-    if (dayNumber === 0) return t('day.0.title');
-    return `${t('journey.day')} ${dayNumber}`;
+    return `${t('journey.day')} ${displayDay}`;
   };
 
   // Render survey content based on day
@@ -327,8 +349,8 @@ export default function JourneyPage() {
           </p>
           <p className="text-amber-700 dark:text-amber-400 mb-2">
             {locale.startsWith('es')
-              ? 'El formulario tiene más sentido después de leer la guía.'
-              : 'The form makes more sense after reading the guide.'}
+              ? 'Primero leer el PDF, para continuar.'
+              : 'Read the PDF first, then continue.'}
           </p>
           {dayContents[2]?.pdf.url && (
             <a
@@ -423,7 +445,7 @@ export default function JourneyPage() {
             {locale.startsWith('es') ? 'Antes de continuar, lee el PDF del Día 3' : 'Before continuing, read the Day 3 PDF'}
           </p>
           <p className="text-amber-700 dark:text-amber-400 mb-2">
-            {locale.startsWith('es') ? 'El formulario tiene más sentido después de leer la guía.' : 'The form makes more sense after reading the guide.'}
+            {locale.startsWith('es') ? 'Primero leer el PDF, para continuar.' : 'Read the PDF first, then continue.'}
           </p>
           {dayContents[3]?.pdf.url && (
             <a href={dayContents[3].pdf.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-medium text-amber-800 dark:text-amber-300 underline underline-offset-2 hover:opacity-80">
@@ -498,10 +520,8 @@ export default function JourneyPage() {
     switch (dayNumber) {
       case 0:
         return isSpanish
-          ? 'Los próximos 3 días serán tu momento de pausa. No hay forma correcta de hacerlo. Solo estar presente.'
-          : 'The next 3 days will be your moment of pause. There is no right way to do it. Just be present.';
-      case 1:
-        return isSpanish ? 'Cada pequeño paso cuenta. Nos vemos mañana.' : 'Every small step counts. See you tomorrow.';
+          ? '¡Completaste el Día 1! Hoy diste tu primer paso. Nos vemos mañana para el Día 2.'
+          : 'You completed Day 1! Today you took your first step. See you tomorrow for Day 2.';
       case 2:
         return isSpanish
           ? 'Actuar desde tus valores te conecta contigo. Nos vemos mañana para cerrar este viaje.'
@@ -516,7 +536,9 @@ export default function JourneyPage() {
   };
 
   const getNextDayPreview = (): string | null => {
-    if (dayNumber >= 3) return null; // No preview after Day 3
+    if (dayNumber >= 3) return null;
+    // Day 0 → next visible day is 2 (displayed as "Día 2")
+    if (dayNumber === 0) return `${t('closure.nextDay.prefix' as any)}${t('closure.nextDay.day2' as any)}`;
     const nextDay = dayNumber + 1;
     return `${t('closure.nextDay.prefix' as any)}${t(`closure.nextDay.day${nextDay}` as any)}`;
   };
@@ -600,107 +622,193 @@ export default function JourneyPage() {
                   </div>
                 )}
 
-                {DAY0_SUBSTEPS[day0Step] === 'video-gallery' && (() => {
-                  const galleryVideos = [
-                    { url: day0ExtendedContent.welcomeVideo.url, title: locale.startsWith('es') ? 'Bienvenida' : 'Welcome', duration: day0ExtendedContent.welcomeVideo.duration },
-                    { url: day1Content.video.url, title: 'Grounding', duration: day1Content.video.duration },
-                    { url: day0ExtendedContent.introVideo.url, title: locale.startsWith('es') ? 'Introducción' : 'Introduction', duration: day0ExtendedContent.introVideo.duration },
-                  ];
-                  return (
-                    <div className="py-4">
-                      {selectedVideo ? (
-                        <div>
-                          <button
-                            onClick={() => setSelectedVideo(null)}
-                            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-3 transition-colors"
-                          >
-                            <ArrowLeft className="h-4 w-4" />
-                            {locale.startsWith('es') ? 'Volver a videos' : 'Back to videos'}
-                          </button>
-                          <div className="mx-auto" style={{ maxWidth: 'calc((100vh - 19rem) * 1.778)' }}>
-                            <VideoPlayer src={selectedVideo.url} title={selectedVideo.title} duration={selectedVideo.duration} />
-                          </div>
-                          <div className="flex justify-center mt-3">
-                            <Button onClick={() => setSelectedVideo(null)} className="gap-2 rounded-full px-8">
-                              {locale.startsWith('es') ? 'Listo' : 'Done'}
-                              <CheckCircle className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div>
-                          <h2 className="text-lg font-semibold text-foreground mb-1 text-center">
-                            {locale.startsWith('es') ? 'Videos del programa' : 'Program videos'}
-                          </h2>
-                          <p className="text-muted-foreground text-center mb-6 text-sm">
-                            {locale.startsWith('es') ? 'Haz clic en un video para verlo' : 'Click a video to watch it'}
-                          </p>
-                          <div className="grid grid-cols-3 gap-4 max-w-2xl mx-auto">
-                            {galleryVideos.map((video) => (
-                              <button
-                                key={video.title}
-                                onClick={() => setSelectedVideo(video)}
-                                className="group flex flex-col items-center gap-2 focus:outline-none"
-                              >
-                                <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-muted shadow-card group-hover:shadow-md transition-shadow">
-                                  <video
-                                    src={video.url || undefined}
-                                    className="w-full h-full object-cover"
-                                    preload="metadata"
-                                    muted
-                                    onLoadedMetadata={e => {
-                                      const v = e.currentTarget;
-                                      v.currentTime = v.duration / 2;
-                                    }}
-                                  />
-                                  <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/20 transition-colors">
-                                    <div className="w-10 h-10 rounded-full bg-primary/90 flex items-center justify-center shadow-lg">
-                                      <Play className="h-4 w-4 text-primary-foreground ml-0.5" />
-                                    </div>
-                                  </div>
-                                </div>
-                                <span className="text-sm font-medium text-foreground text-center leading-tight">
-                                  {video.title}
-                                </span>
-                              </button>
-                            ))}
-                          </div>
-                          <div className="flex justify-center mt-8">
-                            <Button onClick={nextStep} className="gap-2 rounded-full px-8">
-                              {t('video.next')}
-                              <ArrowRight className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      )}
+                {/* Día 1: Bienvenida — video */}
+                {DAY0_SUBSTEPS[day0Step] === 'video-welcome' && (
+                  <div>
+                    <h2 className="text-lg font-semibold text-foreground mb-1 text-center">
+                      {locale.startsWith('es') ? 'Día 1: Bienvenida' : 'Day 1: Welcome'}
+                    </h2>
+                    <p className="text-muted-foreground text-center mb-2 text-sm">
+                      {locale.startsWith('es') ? 'Al reto Báltica de 3 días...' : 'Welcome to the 3-day Báltica challenge...'}
+                    </p>
+                    <div className="mx-auto" style={{ maxWidth: 'calc((100vh - 22rem) * 1.778)' }}>
+                      <VideoPlayer src={day0ExtendedContent.welcomeVideo.url} title={day0ExtendedContent.welcomeVideo.title || ''} duration={day0ExtendedContent.welcomeVideo.duration} />
                     </div>
-                  );
-                })()}
+                    <div className="flex justify-center mt-3">
+                      <Button onClick={nextStep} className="gap-2 rounded-full px-8">
+                        {t('video.next')}
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
 
+                {/* Encuesta mood/energy */}
                 {DAY0_SUBSTEPS[day0Step] === 'survey-before' && renderWelcomeSurvey()}
 
+                {/* Día 1: Introducción — video */}
+                {DAY0_SUBSTEPS[day0Step] === 'video-intro' && (
+                  <div>
+                    <h2 className="text-lg font-semibold text-foreground mb-1 text-center">
+                      {locale.startsWith('es') ? 'Día 1: Introducción' : 'Day 1: Introduction'}
+                    </h2>
+                    <p className="text-muted-foreground text-center mb-2 text-sm">
+                      {locale.startsWith('es') ? 'Cómo será el Reto Báltica y qué vas a encontrar' : 'What the Báltica Challenge looks like and what you will find'}
+                    </p>
+                    <div className="mx-auto" style={{ maxWidth: 'calc((100vh - 22rem) * 1.778)' }}>
+                      <VideoPlayer src={day0ExtendedContent.introVideo.url} title={day0ExtendedContent.introVideo.title || ''} duration={day0ExtendedContent.introVideo.duration} />
+                    </div>
+                    <div className="flex justify-center mt-3">
+                      <Button onClick={nextStep} className="gap-2 rounded-full px-8">
+                        {t('video.next')}
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Día 1: Grounding — video */}
+                {DAY0_SUBSTEPS[day0Step] === 'video-grounding' && (
+                  <div>
+                    <h2 className="text-lg font-semibold text-foreground mb-1 text-center">
+                      {locale.startsWith('es') ? 'Día 1: Grounding' : 'Day 1: Grounding'}
+                    </h2>
+                    <p className="text-muted-foreground text-center mb-2 text-sm">
+                      {locale.startsWith('es') ? 'Técnica de anclaje para conectar con el presente' : 'Grounding technique to connect with the present'}
+                    </p>
+                    <div className="mx-auto" style={{ maxWidth: 'calc((100vh - 22rem) * 1.778)' }}>
+                      <VideoPlayer src={day1Content.video.url} title={day1Content.video.title || ''} duration={day1Content.video.duration} />
+                    </div>
+                    <div className="flex justify-center mt-3">
+                      <Button onClick={nextStep} className="gap-2 rounded-full px-8">
+                        {t('video.next')}
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Audio grounding */}
+                {DAY0_SUBSTEPS[day0Step] === 'audio-grounding' && (
+                  <div className="py-2">
+                    <h2 className="text-lg font-semibold text-foreground mb-1 text-center">{t('content.audio')}</h2>
+                    <p className="text-muted-foreground text-center mb-2 text-sm">{day1Content.audio.title}</p>
+                    <AudioPlayer title={day1Content.audio.title || ''} subtitle={t('audio.title')} duration={day1Content.audio.duration || '5:00'} audioSrc={day1Content.audio.url} />
+                    <div className="flex justify-center mt-3">
+                      <Button onClick={nextStep} className="gap-2 rounded-full px-8">
+                        {t('audio.next')}
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* 5 senses exercise (from Day 1) */}
+                {DAY0_SUBSTEPS[day0Step] === 'five-senses' && (
+                  <div className="py-4">
+                    {/* PDF reading notice */}
+                    <div className="flex items-start gap-3 p-4 mb-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
+                      <Download className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+                      <div className="text-sm">
+                        <p className="font-semibold text-amber-800 dark:text-amber-300 mb-1">
+                          {locale.startsWith('es') ? 'Antes de continuar, lee el PDF del Día 1' : 'Before continuing, read the Day 1 PDF'}
+                        </p>
+                        <p className="text-amber-700 dark:text-amber-400 mb-2">
+                          {locale.startsWith('es') ? 'Primero leer el PDF, para continuar.' : 'Read the PDF first, then continue.'}
+                        </p>
+                        {day1Content.pdf.url && (
+                          <a href={day1Content.pdf.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-medium text-amber-800 dark:text-amber-300 underline underline-offset-2 hover:opacity-80">
+                            <Download className="h-3.5 w-3.5" />
+                            {locale.startsWith('es') ? 'Descargar PDF Día 1' : 'Download Day 1 PDF'}
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                    <Card className="shadow-card">
+                      <CardHeader>
+                        <CardTitle className="text-lg">{t('day.1.words.title')}</CardTitle>
+                        <p className="text-sm text-muted-foreground">{t('day.1.words.instruction')}</p>
+                      </CardHeader>
+                      <CardContent className="space-y-3">
+                        {[0, 1, 2].map(i => (
+                          <Input
+                            key={i}
+                            placeholder={locale.startsWith('es')
+                              ? `${['Primera', 'Segunda', 'Tercera'][i]} palabra`
+                              : `${['First', 'Second', 'Third'][i]} word`}
+                            value={words[i]}
+                            onChange={e => {
+                              const newWords = [...words] as [string, string, string];
+                              newWords[i] = e.target.value;
+                              setWords(newWords);
+                            }}
+                            className="text-center"
+                          />
+                        ))}
+                        <div className="border-t border-border/40 pt-4 mt-4">
+                          <p className="text-lg font-semibold text-foreground mb-3">{t('day.1.timeslot')}</p>
+                          <RadioGroup value={selectedTimeSlot} onValueChange={setSelectedTimeSlot}>
+                            {timeSlotOptions[localeKey].map(option => (
+                              <div key={option.value} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50">
+                                <RadioGroupItem value={option.value} id={`time-${option.value}`} />
+                                <Label htmlFor={`time-${option.value}`} className="cursor-pointer">{option.label}</Label>
+                              </div>
+                            ))}
+                          </RadioGroup>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <div className="flex justify-center mt-4">
+                      <Button onClick={nextStep} disabled={!words.every(w => w.trim()) || !selectedTimeSlot} className="gap-2 rounded-full px-8">
+                        {t('survey.submit')}
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Download PDFs */}
                 {DAY0_SUBSTEPS[day0Step] === 'download' && (
                   <div className="py-4">
                     <h2 className="text-xl font-semibold text-foreground mb-4 text-center">{t('content.download')}</h2>
-                    <Card className="shadow-card">
-                      <CardHeader className="text-center pb-2">
-                        <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mx-auto mb-3">
-                          <Download className="h-6 w-6 text-secondary-foreground" />
-                        </div>
-                        <CardTitle>{day0ExtendedContent.welcomePdf.title}</CardTitle>
-                      </CardHeader>
-                      <CardContent className="text-center">
-                        <p className="text-muted-foreground mb-4">
-                          {locale.startsWith('es') ? 'Material complementario de bienvenida' : 'Welcome complementary material'}
-                        </p>
-                        <a href={day0ExtendedContent.welcomePdf.url!} target="_blank" rel="noopener noreferrer">
-                          <Button variant="outline" className="gap-2">
-                            <Download className="h-4 w-4" />
-                            {locale.startsWith('es') ? 'Descargar PDF' : 'Download PDF'}
-                          </Button>
-                        </a>
-                      </CardContent>
-                    </Card>
+                    <div className="space-y-3">
+                      <Card className="shadow-card">
+                        <CardContent className="p-4 flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0">
+                            <Download className="h-5 w-5 text-secondary-foreground" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-medium text-foreground text-sm">{day0ExtendedContent.welcomePdf.title}</p>
+                            <p className="text-xs text-muted-foreground">{locale.startsWith('es') ? 'Material de bienvenida' : 'Welcome material'}</p>
+                          </div>
+                          <a href={day0ExtendedContent.welcomePdf.url!} target="_blank" rel="noopener noreferrer">
+                            <Button variant="outline" size="sm" className="gap-1.5">
+                              <Download className="h-3.5 w-3.5" />
+                              PDF
+                            </Button>
+                          </a>
+                        </CardContent>
+                      </Card>
+                      {day1Content.pdf.url && (
+                        <Card className="shadow-card">
+                          <CardContent className="p-4 flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0">
+                              <Download className="h-5 w-5 text-secondary-foreground" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-medium text-foreground text-sm">{day1Content.pdf.title}</p>
+                              <p className="text-xs text-muted-foreground">{locale.startsWith('es') ? 'Material de Grounding' : 'Grounding material'}</p>
+                            </div>
+                            <a href={day1Content.pdf.url} target="_blank" rel="noopener noreferrer">
+                              <Button variant="outline" size="sm" className="gap-1.5">
+                                <Download className="h-3.5 w-3.5" />
+                                PDF
+                              </Button>
+                            </a>
+                          </CardContent>
+                        </Card>
+                      )}
+                    </div>
                     <div className="flex justify-center mt-6">
                       <Button onClick={nextStep} className="gap-2 rounded-full px-8">
                         {t('common.next')}
@@ -773,7 +881,7 @@ export default function JourneyPage() {
                       className="mb-8"
                     >
                       <div className="w-24 h-24 rounded-full gradient-warm flex items-center justify-center mx-auto shadow-soft">
-                        <span className="text-4xl font-bold text-primary-foreground">{dayNumber}</span>
+                        <span className="text-4xl font-bold text-primary-foreground">{displayDay}</span>
                       </div>
                     </motion.div>
                     <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-4">{getDayTitle()}</h1>

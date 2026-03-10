@@ -70,6 +70,10 @@ export async function completeDay(req: AuthRequest, res: Response) {
     if (!completedDays.includes(day)) {
       completedDays.push(day);
     }
+    // Day 0 completion auto-completes day 1 (merged into Día 1)
+    if (day === 0 && !completedDays.includes(1)) {
+      completedDays.push(1);
+    }
 
     const today = new Date().toISOString().split('T')[0];
     let newStreak = progress.streak;
@@ -87,7 +91,8 @@ export async function completeDay(req: AuthRequest, res: Response) {
       newStreak = 1;
     }
 
-    const newCurrentDay = Math.min(day + 1, 3);
+    // When day 0 completes, skip to day 2 (day 1 is part of day 0 now)
+    const newCurrentDay = day === 0 ? 2 : Math.min(day + 1, 3);
 
     const updated = await pool.query(
       `UPDATE journey_progress

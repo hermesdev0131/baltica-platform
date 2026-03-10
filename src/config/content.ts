@@ -42,14 +42,14 @@ export const welcomeContent: DayContent = {
   id: 0,
   key: 'welcome',
   title: {
-    'es-LATAM': 'Empieza aquí tu bienestar emocional',
-    'es-ES': 'Empieza aquí tu bienestar emocional',
-    'en': 'Welcome to your space',
+    'es-LATAM': 'Día 1: Bienvenida y Anclaje',
+    'es-ES': 'Día 1: Bienvenida y Anclaje',
+    'en': 'Day 1: Welcome & Grounding',
   },
   subtitle: {
-    'es-LATAM': 'Este momento es solo para ti',
-    'es-ES': 'Este momento es solo para ti',
-    'en': 'Before we begin, take a moment for yourself',
+    'es-LATAM': 'Hoy conocerás el programa y darás tu primer paso hacia el bienestar',
+    'es-ES': 'Hoy conocerás el programa y darás tu primer paso hacia el bienestar',
+    'en': 'Today you will learn about the program and take your first step towards wellbeing',
   },
   video: {
     url: null, // No video for Day 0 per PDF spec
@@ -283,10 +283,10 @@ export const achievements: Achievement[] = [
       'es-ES': 'Diste el primer paso hacia tu bienestar',
       'en': 'You took the first step towards your wellbeing',
     },
-    condition: (p) => p.completedDays.includes(0),
+    condition: (p) => p.completedDays.includes(0) && p.completedDays.includes(1),
   },
   {
-    id: 'day1-complete',
+    id: 'day2-complete',
     icon: '⭐',
     title: {
       'es-LATAM': 'En camino',
@@ -294,14 +294,14 @@ export const achievements: Achievement[] = [
       'en': 'On the way',
     },
     description: {
-      'es-LATAM': 'Completaste tu primer día de práctica',
-      'es-ES': 'Completaste tu primer día de práctica',
-      'en': 'You completed your first day of practice',
+      'es-LATAM': 'Completaste el Día 2. ¡Sigue así!',
+      'es-ES': 'Completaste el Día 2. ¡Sigue así!',
+      'en': 'You completed Day 2. Keep going!',
     },
-    condition: (p) => p.completedDays.includes(1),
+    condition: (p) => p.completedDays.includes(2),
   },
   {
-    id: 'day2-complete',
+    id: 'day3-complete',
     icon: '💪',
     title: {
       'es-LATAM': 'Constancia',
@@ -309,11 +309,11 @@ export const achievements: Achievement[] = [
       'en': 'Consistency',
     },
     description: {
-      'es-LATAM': 'Dos días seguidos. ¡La constancia es clave!',
-      'es-ES': 'Dos días seguidos. ¡La constancia es clave!',
-      'en': 'Two days in a row. Consistency is key!',
+      'es-LATAM': 'Tres días seguidos. ¡La constancia es clave!',
+      'es-ES': 'Tres días seguidos. ¡La constancia es clave!',
+      'en': 'Three days in a row. Consistency is key!',
     },
-    condition: (p) => p.completedDays.includes(2),
+    condition: (p) => p.completedDays.includes(3),
   },
   {
     id: 'program-complete',
