@@ -81,9 +81,20 @@ export const api = {
     }) => request('/settings', { method: 'PUT', body: JSON.stringify(settings) }),
   },
 
+  diplomas: {
+    get: () => request('/diplomas'),
+    issue: () => request('/diplomas', { method: 'POST' }),
+  },
+
+  surveys: {
+    get: () => request('/surveys'),
+    submit: (body: { first_name: string; last_name: string; phone: string; email: string; contact_authorized: boolean; responses?: Record<string, any> }) =>
+      request('/surveys', { method: 'POST', body: JSON.stringify(body) }),
+  },
+
   payments: {
-    createPreference: () =>
-      request('/payments/create-preference', { method: 'POST' }),
+    createPreference: (planType?: string) =>
+      request('/payments/create-preference', { method: 'POST', body: JSON.stringify({ plan_type: planType || 'basico' }) }),
     verifyPayment: (paymentId: string) =>
       request(`/payments/verify/${paymentId}`),
   },
@@ -118,6 +129,9 @@ export const api = {
       get: () => request('/admin/settings'),
       update: (key: string, value: string) =>
         request('/admin/settings', { method: 'PUT', body: JSON.stringify({ key, value }) }),
+    },
+    surveys: {
+      getAll: () => request('/surveys/all'),
     },
   },
 };

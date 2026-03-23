@@ -1,7 +1,7 @@
 import { useApp } from '@/contexts/AppContext';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, ArrowDown, Globe, Moon, Sun, Check, Focus, Target, Heart, Brain, Briefcase, Smartphone, HeartHandshake } from 'lucide-react';
+import { ArrowRight, ArrowDown, Globe, Moon, Sun, Check, Focus, Target, Heart, Brain, Briefcase, Smartphone, HeartHandshake, Star, StarHalf, Quote, Play } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import BalticaLogo from '@/components/brand/BalticaLogo';
@@ -76,7 +76,7 @@ export default function LandingPage() {
 
       {/* ===== SECTION 1: HERO (text only, full width) ===== */}
       <section className="container mx-auto px-4 py-16 md:py-24">
-        <div className="max-w-3xl mx-auto text-center">
+        <div className="max-w-4xl mx-auto text-center">
           <motion.span
             className="inline-block text-xs font-semibold tracking-wider uppercase px-3 py-1 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 mb-6"
             initial={{ opacity: 0, y: 15 }}
@@ -113,7 +113,7 @@ export default function LandingPage() {
 
       {/* ===== VIDEO SECTION + CTA ===== */}
       <section className="pb-10 md:pb-14">
-        <div className="container mx-auto px-4 max-w-4xl">
+        <div className="container mx-auto px-4 max-w-5xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -157,7 +157,7 @@ export default function LandingPage() {
 
       {/* ===== SECTION 2: EL PROBLEMA ===== */}
       <section className="py-16 md:py-20 bg-muted/30">
-        <div className="container mx-auto px-4 max-w-3xl">
+        <div className="container mx-auto px-4 max-w-5xl">
           <motion.h2
             className="text-2xl md:text-3xl font-bold text-foreground mb-4 text-center"
             initial={{ opacity: 0, y: 15 }}
@@ -249,7 +249,7 @@ export default function LandingPage() {
           </p>
         </motion.div>
 
-        <div className="container mx-auto px-4 max-w-5xl pt-12 pb-16 md:pb-20">
+        <div className="container mx-auto px-4 max-w-6xl pt-12 pb-16 md:pb-20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { icon: Focus, day: 1, label: 'DÍA 1', titleKey: 'landing.solution.day1.title', descKey: 'landing.solution.day1.desc' },
@@ -284,7 +284,7 @@ export default function LandingPage() {
 
       {/* ===== SECTION 4: FORMATO ===== */}
       <section className="py-16 md:py-20">
-        <div className="container mx-auto px-4 max-w-3xl">
+        <div className="container mx-auto px-4 max-w-5xl">
           <motion.h2
             className="text-2xl md:text-3xl font-bold text-foreground mb-12 text-center"
             initial={{ opacity: 0, y: 15 }}
@@ -344,7 +344,7 @@ export default function LandingPage() {
 
       {/* ===== SECTION 5: MICROHÁBITOS ===== */}
       <section className="py-16 md:py-20 bg-muted/30">
-        <div className="container mx-auto px-4 max-w-4xl">
+        <div className="container mx-auto px-4 max-w-6xl">
           {/* Hook */}
           <motion.div
             className="text-center mb-8 space-y-2"
@@ -425,9 +425,76 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ===== TESTIMONIALS ===== */}
+      <section className="py-16 md:py-20">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <motion.h2
+            className="text-2xl md:text-3xl font-bold text-foreground mb-10 text-center"
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.4 }}
+          >
+            {locale.startsWith('es') ? 'Lo que dicen quienes ya lo hicieron' : 'What people who did it say'}
+          </motion.h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            {[
+              { quote: 'Pensé que sería otro contenido más, pero el primer ejercicio ya me hizo sentir diferente.', author: 'Daniel M.', location: 'Bogotá (Cundinamarca)', stars: 5 },
+              { quote: 'Logré eliminar varios malos hábitos frente a redes sociales y uso del celular.', author: 'Gloria M.', location: 'Pereira (Risaralda)', stars: 5 },
+              { quote: 'Pensé que necesitaría mucho tiempo, pero en menos de 10 minutos al día ya sentía cambios.', author: 'Héctor H.', location: 'Pereira (Risaralda)', stars: 4.5 },
+              { quote: 'Antes me sentía constantemente estresado. Después de hacer el reto logré encontrar momentos de calma que no tenía hace mucho tiempo.', author: 'Mauricio L.', location: 'Cali (Valle)', stars: 5 },
+              { quote: 'En menos de 10 minutos al día logré sentir más calma mental.', author: 'Laura M.', location: 'Bogotá D.C.', stars: 4.5 },
+              { quote: 'Las masterclass son excelentes y son el complemento perfecto para seguir practicando.', author: 'Mariale S.', location: 'Bogotá D.C.', stars: 5 },
+              { quote: 'Hace meses sentía que mi mente estaba saturada por el trabajo. Encontré este reto casi por casualidad y decidí probarlo. Los ejercicios son simples, pero efectivos. Después de hacerlo sentí más claridad mental y tranquilidad. Lo recomiendo a cualquiera que necesite reconectar consigo mismo.', author: 'Vanesa R.', location: 'Cali (Valle)', stars: 5 },
+              { quote: 'Muy fácil de seguir. Vale completamente la pena.', author: 'Julio C.', location: 'Pereira (Risaralda)', stars: 5 },
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                className="p-5 rounded-2xl bg-card border border-border/40 shadow-card flex flex-col"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ delay: i * 0.08, duration: 0.4 }}
+              >
+                <Quote className="h-5 w-5 text-primary/40 mb-2 rotate-180" />
+                <p className="text-sm text-foreground leading-relaxed italic flex-1 mb-3">
+                  "{item.quote}"
+                </p>
+                <div className="flex items-center gap-0.5 mb-2">
+                  {Array.from({ length: Math.floor(item.stars) }).map((_, s) => (
+                    <Star key={s} className="h-4 w-4 fill-amber-400 text-amber-400" />
+                  ))}
+                  {item.stars % 1 !== 0 && <StarHalf className="h-4 w-4 fill-amber-400 text-amber-400" />}
+                </div>
+                <p className="text-sm font-semibold text-foreground">— {item.author}</p>
+                <p className="text-xs text-muted-foreground">{item.location}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===== VIDEO CORTO (placeholder — pending from client) ===== */}
+      <section className="py-12 md:py-16 bg-muted/30">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <motion.div
+            className="aspect-video rounded-2xl bg-card border-2 border-dashed border-border/60 flex flex-col items-center justify-center text-muted-foreground"
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.4 }}
+          >
+            {/* Replace this placeholder with <video> when the client provides the video file */}
+            <Play className="h-12 w-12 mb-3 text-primary/40" />
+            <p className="text-sm font-medium">{locale.startsWith('es') ? 'Video próximamente' : 'Video coming soon'}</p>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ===== SECTION 6: AUTORIDAD Y RESPALDO CIENTÍFICO ===== */}
       <section className="py-16 md:py-20">
-        <div className="container mx-auto px-4 max-w-4xl">
+        <div className="container mx-auto px-4 max-w-6xl">
           <motion.h2
             className="text-2xl md:text-3xl font-bold text-foreground mb-6 text-center"
             initial={{ opacity: 0, y: 15 }}
@@ -490,7 +557,7 @@ export default function LandingPage() {
 
       {/* ===== SECTION 7: CIERRE Y CTA FINAL ===== */}
       <section className="py-16 md:py-24 bg-baltica-navy text-white">
-        <div className="container mx-auto px-4 max-w-3xl">
+        <div className="container mx-auto px-4 max-w-6xl">
           <motion.h2
             className="text-2xl md:text-3xl font-bold mb-6 text-center"
             initial={{ opacity: 0, y: 15 }}
@@ -511,75 +578,99 @@ export default function LandingPage() {
             {t('landing.offer.body' as any)}
           </motion.p>
 
-          {/* What's included */}
-          <motion.div
-            className="mb-10"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-          >
-            <p className="text-lg font-semibold text-primary mb-4">
-              {t('landing.offer.includes.label' as any)}
-            </p>
-            <ul className="space-y-3">
-              {[1, 2, 3, 4].map((i, idx) => (
-                <motion.li
-                  key={i}
-                  className="flex items-start gap-3"
-                  initial={{ opacity: 0, x: -15 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: 0.3, delay: 0.25 + idx * 0.08, ease: [0.25, 0.1, 0.25, 1] }}
+          {/* 3 Plans */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            {[
+              {
+                id: 'basico',
+                name: 'Plan Básico',
+                duration: '1 mes',
+                regular: '$58.598',
+                launch: '$35.000',
+                promo: null,
+                features: [
+                  'Bienvenida y primeros pasos',
+                  'Día 1: Grounding para ordenar tus ideas',
+                  'Día 2: Acción con propósito para no estancarte',
+                  'Día 3: Autocompasión para no rendirte',
+                  'Certificado de Bienesta',
+                  'Video: La Ciencia Detrás del Reto Báltica',
+                ],
+                highlight: false,
+              },
+              {
+                id: 'intermedio',
+                name: 'Plan Intermedio',
+                duration: '3 meses',
+                regular: '$175.795',
+                launch: '$70.000',
+                promo: 'Pague 2 lleve 3',
+                features: [
+                  'Todo lo del Plan Básico',
+                  'Video: Entender más sobre Grounding',
+                  'Video: Un poco más sobre Acción con Propósito',
+                  'Video: La Autocompasión, para entenderlo mejor',
+                  'Descuento del 25% Reto Báltica 7 días',
+                  'Descuento del 15% para el primer combo',
+                ],
+                highlight: false,
+              },
+              {
+                id: 'premium',
+                name: 'Plan Premium',
+                duration: '6 meses',
+                regular: '$351.590',
+                launch: '$140.000',
+                promo: 'Pague 4 lleve 6',
+                features: [
+                  'Todo lo del Plan Intermedio',
+                  'Masterclass de Neurociencia',
+                  'Protocolo de alto rendimiento (10 micro-acciones)',
+                  '50 micro-acciones con propósito',
+                  '30 señales de desgaste',
+                  'Infografías para cada documento',
+                  'Bono: Plan Básico Gratis para un amigo',
+                  'Descuento 50% Reto Báltica 7 días',
+                  'Descuento 30% primer combo',
+                ],
+                highlight: true,
+              },
+            ].map((plan, i) => (
+              <motion.div
+                key={plan.id}
+                className={`rounded-2xl p-6 flex flex-col ${plan.highlight ? 'bg-primary/20 border-2 border-primary ring-2 ring-primary/30' : 'bg-white/5 border border-white/10'}`}
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ delay: i * 0.12, duration: 0.4 }}
+              >
+                {plan.highlight && (
+                  <span className="text-xs font-bold uppercase tracking-wider text-primary mb-2">Mejor valor</span>
+                )}
+                <h3 className="text-lg font-bold text-white mb-1">{plan.name}</h3>
+                <p className="text-sm text-white/60 mb-3">{plan.duration}</p>
+                {plan.promo && (
+                  <span className="inline-block text-xs font-semibold bg-primary/30 text-primary px-2 py-1 rounded-full mb-3 w-fit">{plan.promo}</span>
+                )}
+                <p className="text-sm text-white/50 line-through">{plan.regular}</p>
+                <p className="text-3xl font-bold text-primary mb-4">{plan.launch}</p>
+                <ul className="space-y-2 flex-1 mb-5">
+                  {plan.features.map((f, fi) => (
+                    <li key={fi} className="flex items-start gap-2 text-sm text-white/85">
+                      <Check className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Button
+                  className={`w-full rounded-full font-semibold gap-2 ${plan.highlight ? 'bg-primary hover:bg-primary/90 text-primary-foreground' : 'bg-white/15 hover:bg-white/25 text-white border border-white/30'}`}
+                  onClick={goToRegister}
                 >
-                  <Check className="w-5 h-5 mt-0.5 flex-shrink-0 text-primary" />
-                  <span className="text-base text-white/90">
-                    {t(`landing.offer.includes.${i}` as any)}
-                  </span>
-                </motion.li>
-              ))}
-            </ul>
-          </motion.div>
-
-          {/* Price Note */}
-          <motion.p
-            className="text-sm text-white/70 leading-relaxed mb-10 border-l-2 border-primary/50 pl-4"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.4, delay: 0.5 }}
-          >
-            {t('landing.offer.priceNote' as any)}
-          </motion.p>
-
-          {/* Pricing */}
-          <div className="text-center mb-10">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.4, delay: 0.55 }}
-            >
-              <p className="text-sm text-white/60 mb-1">
-                {t('landing.offer.originalLabel' as any)}
-              </p>
-              <p className="text-2xl text-white/50 line-through mb-2">
-                {t('landing.offer.originalPrice' as any)}
-              </p>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.85 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.5, delay: 0.7, ease: [0.34, 1.56, 0.64, 1] }}
-            >
-              <p className="text-sm text-white/80 mb-1">
-                {t('landing.offer.priceLabel' as any)}
-              </p>
-              <p className="text-5xl md:text-6xl font-bold text-primary">
-                {t('landing.offer.price' as any)}
-              </p>
-            </motion.div>
+                  {locale.startsWith('es') ? 'Elegir plan' : 'Choose plan'}
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </motion.div>
+            ))}
           </div>
 
           <motion.div

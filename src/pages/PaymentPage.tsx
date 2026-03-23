@@ -19,26 +19,84 @@ import {
   CheckCircle,
   Clock,
   Zap,
-  Gift,
+  Crown,
+  Star,
   HelpCircle,
+  ArrowRight,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 type PaymentStatus = 'idle' | 'processing' | 'verifying' | 'success' | 'error' | 'pending';
 
+const PLANS = [
+  {
+    id: 'basico',
+    icon: Zap,
+    name: 'Plan Básico',
+    duration: '1 mes',
+    regular: '$58.598',
+    price: '$35.000',
+    features: [
+      'Reto de 3 días completo',
+      'Videos y audios guiados',
+      'Certificado de Bienesta',
+      'Video: La Ciencia Detrás del Reto',
+    ],
+    highlight: false,
+  },
+  {
+    id: 'intermedio',
+    icon: Star,
+    name: 'Plan Intermedio',
+    duration: '3 meses',
+    promo: 'Pague 2 lleve 3',
+    regular: '$175.795',
+    price: '$70.000',
+    features: [
+      'Todo lo del Plan Básico',
+      'Video: Más sobre Grounding',
+      'Video: Más sobre Acción con Propósito',
+      'Video: Más sobre Autocompasión',
+      '25% desc. Reto Báltica 7 días',
+    ],
+    highlight: false,
+  },
+  {
+    id: 'premium',
+    icon: Crown,
+    name: 'Plan Premium',
+    duration: '6 meses',
+    promo: 'Pague 4 lleve 6',
+    regular: '$351.590',
+    price: '$140.000',
+    features: [
+      'Todo lo del Plan Intermedio',
+      'Masterclass de Neurociencia',
+      'Protocolo de alto rendimiento',
+      '50 micro-acciones con propósito',
+      'Bono: Plan Básico para un amigo',
+      '50% desc. Reto Báltica 7 días',
+    ],
+    highlight: true,
+  },
+];
+
 export default function PaymentPage() {
-  const { t, userEmail, setPaymentCompleted } = useApp();
+  const { t, locale, userEmail, setPaymentCompleted, setPlanType } = useApp();
   const { getUserStatus, addLog, reactivateUser } = useAdmin();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   usePageTitle('Pago');
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>('idle');
   const [errorMessage, setErrorMessage] = useState('');
+  const [selectedPlan, setSelectedPlan] = useState('basico');
+  const es = locale.startsWith('es');
 
   // Handle return from MercadoPago
   useEffect(() => {
     const status = searchParams.get('status');
     const paymentId = searchParams.get('payment_id') || searchParams.get('collection_id');
+    const plan = searchParams.get('plan') || 'basico';
 
     if (status === 'approved' && paymentId) {
       setPaymentStatus('verifying');
@@ -47,6 +105,7 @@ export default function PaymentPage() {
           if (data.status === 'approved') {
             setPaymentStatus('success');
             setPaymentCompleted(true);
+            setPlanType(data.plan_type || plan);
 
             const existingUser = getUserStatus(userEmail);
             if (existingUser) {
@@ -55,7 +114,7 @@ export default function PaymentPage() {
                 userId: existingUser.id,
                 userEmail: existingUser.email,
                 eventType: 'payment_event',
-                eventDetail: `MercadoPago payment ${data.payment_id}`,
+                eventDetail: `MercadoPago payment ${data.payment_id} (${data.plan_type || plan})`,
               });
             }
 
@@ -67,6 +126,7 @@ export default function PaymentPage() {
         .catch(() => {
           setPaymentStatus('success');
           setPaymentCompleted(true);
+          setPlanType(plan);
           const existingUser = getUserStatus(userEmail);
           if (existingUser) {
             reactivateUser(existingUser.id);
@@ -81,12 +141,13 @@ export default function PaymentPage() {
     }
   }, [searchParams]);
 
-  const handlePayment = async () => {
+  const handlePayment = async (planId: string) => {
+    setSelectedPlan(planId);
     setPaymentStatus('processing');
     setErrorMessage('');
 
     try {
-      const data = await api.payments.createPreference();
+      const data = await api.payments.createPreference(planId);
       window.location.href = data.init_point;
     } catch (err: any) {
       setPaymentStatus('error');
@@ -94,29 +155,16 @@ export default function PaymentPage() {
     }
   };
 
-  const plan = {
-    name: t('payment.plan.basic.name'),
-    duration: t('payment.plan.basic.duration'),
-    price: t('payment.plan.basic.price'),
-    desc: t('payment.plan.basic.desc'),
-    features: [
-      t('payment.plan.item1'),
-      t('payment.plan.item2'),
-      t('payment.plan.item3'),
-      t('payment.plan.item4'),
-    ],
-  };
-
   return (
     <div className="min-h-screen bg-background">
       <Header />
 
-      <main className="container mx-auto px-4 py-4 max-w-lg">
+      <main className="container mx-auto px-4 py-4 max-w-4xl">
         {/* Title */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-3"
+          className="text-center mb-6"
         >
           <Badge variant="secondary" className="mb-2">
             <Sparkles className="h-3 w-3 mr-1" />
@@ -127,46 +175,112 @@ export default function PaymentPage() {
           </h1>
         </motion.div>
 
-        {/* Single Plan Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          <Card className="border-primary ring-2 ring-primary/20 mb-4">
-            <CardHeader className="text-center py-3 pb-2">
-              <div className="w-10 h-10 rounded-full mx-auto mb-2 flex items-center justify-center bg-primary/10">
-                <Zap className="h-5 w-5 text-primary" />
-              </div>
-              <CardTitle className="text-lg">{plan.name}</CardTitle>
-              <CardDescription className="text-xs">{plan.duration}</CardDescription>
-              <div className="mt-1">
-                <span className="text-3xl font-bold text-foreground">{plan.price}</span>
-                <span className="text-muted-foreground text-xs"> COP</span>
-              </div>
-              <p className="text-xs text-muted-foreground mt-1">{plan.desc}</p>
-            </CardHeader>
+        {/* Status Messages */}
+        {(paymentStatus === 'processing' || paymentStatus === 'verifying') && (
+          <Alert className="mb-4 max-w-lg mx-auto">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <AlertDescription className="text-sm">
+              {paymentStatus === 'verifying' ? 'Verificando pago...' : t('payment.processing')}
+            </AlertDescription>
+          </Alert>
+        )}
 
-            <CardContent className="pt-0 pb-3">
-              <ul className="space-y-1">
-                {plan.features.map((feature, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs">
-                    <Check className="h-3 w-3 mt-0.5 flex-shrink-0 text-primary" />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        </motion.div>
+        {paymentStatus === 'success' && (
+          <Alert className="mb-4 max-w-lg mx-auto border-green-200 bg-green-50 dark:bg-green-950/20">
+            <CheckCircle className="h-4 w-4 text-green-600" />
+            <AlertDescription className="text-sm text-green-600">
+              {t('payment.success')}
+            </AlertDescription>
+          </Alert>
+        )}
 
-        {/* Payment Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          {/* Payment Provider */}
+        {paymentStatus === 'pending' && (
+          <Alert className="mb-4 max-w-lg mx-auto border-amber-200 bg-amber-50 dark:bg-amber-950/20">
+            <Clock className="h-4 w-4 text-amber-600" />
+            <AlertDescription className="text-sm text-amber-600">
+              {es ? 'Tu pago está siendo procesado. Te notificaremos cuando se confirme.' : 'Your payment is being processed. We will notify you when confirmed.'}
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {paymentStatus === 'error' && (
+          <Alert variant="destructive" className="mb-4 max-w-lg mx-auto">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription className="text-sm">{errorMessage || t('payment.error')}</AlertDescription>
+          </Alert>
+        )}
+
+        {/* 3 Plan Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          {PLANS.map((plan, i) => (
+            <motion.div
+              key={plan.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+            >
+              <Card className={`h-full flex flex-col ${plan.highlight ? 'border-primary ring-2 ring-primary/20' : ''}`}>
+                <CardHeader className="text-center py-4 pb-2">
+                  {plan.highlight && (
+                    <Badge className="w-fit mx-auto mb-2 bg-primary text-primary-foreground">
+                      {es ? 'Mejor valor' : 'Best value'}
+                    </Badge>
+                  )}
+                  <div className="w-10 h-10 rounded-full mx-auto mb-2 flex items-center justify-center bg-primary/10">
+                    <plan.icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <CardTitle className="text-lg">{plan.name}</CardTitle>
+                  <CardDescription className="text-xs">
+                    {plan.duration}
+                    {plan.promo && (
+                      <span className="block text-primary font-semibold mt-1">{plan.promo}</span>
+                    )}
+                  </CardDescription>
+                  <div className="mt-2">
+                    <span className="text-sm text-muted-foreground line-through">{plan.regular}</span>
+                    <div>
+                      <span className="text-3xl font-bold text-foreground">{plan.price}</span>
+                      <span className="text-muted-foreground text-xs"> COP</span>
+                    </div>
+                  </div>
+                </CardHeader>
+
+                <CardContent className="pt-0 pb-4 flex-1 flex flex-col">
+                  <ul className="space-y-2 flex-1 mb-4">
+                    {plan.features.map((feature, fi) => (
+                      <li key={fi} className="flex items-start gap-2 text-xs">
+                        <Check className="h-3 w-3 mt-0.5 flex-shrink-0 text-primary" />
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Button
+                    className="w-full rounded-full gap-2"
+                    variant={plan.highlight ? 'default' : 'outline'}
+                    onClick={() => handlePayment(plan.id)}
+                    disabled={paymentStatus === 'processing' || paymentStatus === 'verifying' || paymentStatus === 'success'}
+                  >
+                    {paymentStatus === 'processing' && selectedPlan === plan.id ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        {es ? 'Procesando...' : 'Processing...'}
+                      </>
+                    ) : (
+                      <>
+                        <CreditCard className="h-4 w-4" />
+                        {es ? 'Elegir plan' : 'Choose plan'}
+                      </>
+                    )}
+                  </Button>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Payment Provider */}
+        <div className="max-w-lg mx-auto">
           <Card className="shadow-card mb-4">
             <CardContent className="p-3">
               <div className="flex items-center gap-3">
@@ -184,97 +298,12 @@ export default function PaymentPage() {
             </CardContent>
           </Card>
 
-          {/* Status Messages */}
-          {(paymentStatus === 'processing' || paymentStatus === 'verifying') && (
-            <Alert className="mb-4">
-              <Loader2 className="h-4 w-4 animate-spin" />
-              <AlertDescription className="text-sm">
-                {paymentStatus === 'verifying' ? 'Verificando pago...' : t('payment.processing')}
-              </AlertDescription>
-            </Alert>
-          )}
-
-          {paymentStatus === 'success' && (
-            <Alert className="mb-4 border-green-200 bg-green-50 dark:bg-green-950/20">
-              <CheckCircle className="h-4 w-4 text-green-600" />
-              <AlertDescription className="text-sm text-green-600">
-                {t('payment.success')}
-              </AlertDescription>
-            </Alert>
-          )}
-
-          {paymentStatus === 'pending' && (
-            <Alert className="mb-4 border-amber-200 bg-amber-50 dark:bg-amber-950/20">
-              <Clock className="h-4 w-4 text-amber-600" />
-              <AlertDescription className="text-sm text-amber-600">
-                Tu pago está siendo procesado. Te notificaremos cuando se confirme.
-              </AlertDescription>
-            </Alert>
-          )}
-
-          {paymentStatus === 'error' && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription className="text-sm">{errorMessage || t('payment.error')}</AlertDescription>
-            </Alert>
-          )}
-
-          {/* CTA Button */}
-          <Button
-            className="w-full py-5 text-base rounded-full gap-2"
-            onClick={handlePayment}
-            disabled={
-              paymentStatus === 'processing' ||
-              paymentStatus === 'verifying' ||
-              paymentStatus === 'success'
-            }
-          >
-            {paymentStatus === 'processing' || paymentStatus === 'verifying' ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Procesando...
-              </>
-            ) : paymentStatus === 'success' ? (
-              <>
-                <Check className="h-4 w-4" />
-                Completado
-              </>
-            ) : (
-              <>
-                <CreditCard className="h-4 w-4" />
-                {t('payment.cta')}
-              </>
-            )}
-          </Button>
-
-          {/* Contact Note */}
-          <p className="text-center text-xs text-muted-foreground mt-3">
+          <p className="text-center text-xs text-muted-foreground">
             {t('payment.note')}
           </p>
-        </motion.div>
-
-        {/* Coming Soon Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="mt-4"
-        >
-          <Card className="border-dashed border-2 bg-muted/30">
-            <CardContent className="py-4 text-center">
-              <Gift className="h-6 w-6 text-primary mx-auto mb-2" />
-              <h3 className="text-sm font-semibold text-foreground mb-1">
-                {t('payment.future.title')}
-              </h3>
-              <p className="text-xs text-muted-foreground">
-                {t('payment.future.desc')}
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
+        </div>
       </main>
 
-      {/* Floating Help Button - bottom right */}
       <Button
         variant="outline"
         size="icon"

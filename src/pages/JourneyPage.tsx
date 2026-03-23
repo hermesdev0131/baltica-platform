@@ -231,7 +231,7 @@ export default function JourneyPage() {
 
   const handleCelebrationClose = () => {
     closeCelebration();
-    navigate('/');
+    navigate(dayNumber === 3 ? '/survey' : '/');
   };
 
   const getDayTitle = (): string => {
@@ -1032,9 +1032,9 @@ export default function JourneyPage() {
                     )}
 
                     <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                      <Button onClick={handleComplete} size="lg" className="gap-2 rounded-full px-8">
+                      <Button onClick={() => { handleComplete(); if (dayNumber === 3) navigate('/survey'); }} size="lg" className="gap-2 rounded-full px-8">
                         {dayNumber === 3
-                          ? (locale.startsWith('es') ? 'Ver mi progreso completo' : 'See my full progress')
+                          ? (locale.startsWith('es') ? 'Completar encuesta de satisfacción' : 'Complete satisfaction survey')
                           : t('closure.next')}
                         <ArrowRight className="h-5 w-5" />
                       </Button>

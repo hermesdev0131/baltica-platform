@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAdmin, ManagedUser } from '@/contexts/AdminContext';
 import { useApp } from '@/contexts/AppContext';
 import { api } from '@/lib/api';
@@ -33,6 +33,10 @@ import {
   Key,
   Eye,
   EyeOff,
+  BarChart3,
+  Star,
+  ClipboardCheck,
+  Award,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
@@ -307,6 +311,20 @@ export default function AdminDashboard() {
   const [passwordMsg, setPasswordMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [showPasswords, setShowPasswords] = useState(false);
 
+  // Statistics
+  const [surveys, setSurveys] = useState<any[]>([]);
+  const [surveysLoading, setSurveysLoading] = useState(false);
+
+  useEffect(() => {
+    if (activeTab === 'stats') {
+      setSurveysLoading(true);
+      api.admin.surveys.getAll()
+        .then(data => setSurveys(data.surveys || []))
+        .catch(() => {})
+        .finally(() => setSurveysLoading(false));
+    }
+  }, [activeTab]);
+
   const filteredUsers = users.filter(u => {
     const matchSearch = !search || u.name.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === 'all' || u.status === statusFilter;
@@ -340,6 +358,7 @@ export default function AdminDashboard() {
           <TabsList className="mb-6">
             <TabsTrigger value="users" className="gap-2"><Users className="h-4 w-4" /> {t('admin.tabs.users')}</TabsTrigger>
             <TabsTrigger value="logs" className="gap-2"><Activity className="h-4 w-4" /> {t('admin.tabs.logs')}</TabsTrigger>
+            <TabsTrigger value="stats" className="gap-2"><BarChart3 className="h-4 w-4" /> Estadísticas</TabsTrigger>
             <TabsTrigger value="settings" className="gap-2"><Settings className="h-4 w-4" /> {t('admin.tabs.settings')}</TabsTrigger>
           </TabsList>
 
@@ -443,6 +462,145 @@ export default function AdminDashboard() {
                 )}
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Statistics Tab */}
+          <TabsContent value="stats">
+            {surveysLoading ? (
+              <div className="flex justify-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {/* Overview Stats */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {(() => {
+                    const planCounts = users.reduce((acc, u) => {
+                      const p = (u as any).plan_type || 'basico';
+                      acc[p] = (acc[p] || 0) + 1;
+                      return acc;
+                    }, {} as Record<string, number>);
+                    const avgRating = surveys.length > 0
+                      ? (surveys.reduce((sum, s) => sum + (Number(s.responses?.overallRating) || 0), 0) / surveys.length).toFixed(1)
+                      : '—';
+                    const wouldRecommend = surveys.filter(s => s.responses?.wouldRecommend === 'definitely' || s.responses?.wouldRecommend === 'probably').length;
+                    const diplomaCount = surveys.length; // survey = diploma access
+
+                    return [
+                      { label: 'Encuestas', value: surveys.length, icon: ClipboardCheck, color: 'text-blue-600' },
+                      { label: 'Rating promedio', value: avgRating, icon: Star, color: 'text-amber-500' },
+                      { label: 'Recomendarían', value: surveys.length > 0 ? `${Math.round((wouldRecommend / surveys.length) * 100)}%` : '—', icon: Users, color: 'text-green-600' },
+                      { label: 'Diplomas', value: diplomaCount, icon: Award, color: 'text-primary' },
+                    ].map((stat, i) => (
+                      <Card key={i} className="shadow-card">
+                        <CardContent className="p-4 text-center">
+                          <stat.icon className={`h-5 w-5 mx-auto mb-1 ${stat.color}`} />
+                          <p className="text-2xl font-bold">{stat.value}</p>
+                          <p className="text-xs text-muted-foreground">{stat.label}</p>
+                        </CardContent>
+                      </Card>
+                    ));
+                  })()}
+                </div>
+
+                {/* Plan Distribution */}
+                <Card className="shadow-card">
+                  <CardHeader>
+                    <CardTitle className="text-base">Distribución por Plan</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {(() => {
+                      const planCounts = users.reduce((acc, u) => {
+                        const p = (u as any).plan_type || 'basico';
+                        acc[p] = (acc[p] || 0) + 1;
+                        return acc;
+                      }, {} as Record<string, number>);
+                      const total = users.filter(u => u.role !== 'admin').length || 1;
+                      const plans = [
+                        { id: 'basico', label: 'Plan Básico', color: 'bg-blue-500' },
+                        { id: 'intermedio', label: 'Plan Intermedio', color: 'bg-amber-500' },
+                        { id: 'premium', label: 'Plan Premium', color: 'bg-primary' },
+                      ];
+                      return (
+                        <div className="space-y-3">
+                          {plans.map(p => {
+                            const count = planCounts[p.id] || 0;
+                            const pct = Math.round((count / total) * 100);
+                            return (
+                              <div key={p.id}>
+                                <div className="flex justify-between text-sm mb-1">
+                                  <span>{p.label}</span>
+                                  <span className="text-muted-foreground">{count} ({pct}%)</span>
+                                </div>
+                                <div className="h-2 bg-muted rounded-full overflow-hidden">
+                                  <div className={`h-full ${p.color} rounded-full transition-all`} style={{ width: `${pct}%` }} />
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    })()}
+                  </CardContent>
+                </Card>
+
+                {/* Survey Responses */}
+                <Card className="shadow-card">
+                  <CardHeader>
+                    <CardTitle className="text-base">Encuestas de Satisfacción ({surveys.length})</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {surveys.length === 0 ? (
+                      <p className="text-sm text-muted-foreground text-center py-4">No hay encuestas aún</p>
+                    ) : (
+                      <div className="space-y-3 max-h-96 overflow-y-auto">
+                        {surveys.map((s, i) => (
+                          <div key={s.id || i} className="p-3 rounded-lg bg-muted/50 border border-border/40">
+                            <div className="flex items-center justify-between mb-2">
+                              <div>
+                                <p className="font-medium text-sm">{s.first_name} {s.last_name}</p>
+                                <p className="text-xs text-muted-foreground">{s.email} · {s.phone}</p>
+                              </div>
+                              <div className="text-right">
+                                <div className="flex items-center gap-0.5">
+                                  {Array.from({ length: Number(s.responses?.overallRating) || 0 }).map((_, si) => (
+                                    <Star key={si} className="h-3 w-3 fill-amber-400 text-amber-400" />
+                                  ))}
+                                </div>
+                                <p className="text-xs text-muted-foreground">
+                                  {new Date(s.created_at).toLocaleDateString('es-CO')}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 text-xs">
+                              <div>
+                                <span className="text-muted-foreground">Recomendaría: </span>
+                                <span className="font-medium">
+                                  {s.responses?.wouldRecommend === 'definitely' ? 'Definitivamente sí'
+                                    : s.responses?.wouldRecommend === 'probably' ? 'Probablemente sí'
+                                    : s.responses?.wouldRecommend === 'not_sure' ? 'No seguro'
+                                    : s.responses?.wouldRecommend || '—'}
+                                </span>
+                              </div>
+                              <div>
+                                <span className="text-muted-foreground">Contacto: </span>
+                                <span className="font-medium">{s.contact_authorized ? 'Sí' : 'No'}</span>
+                              </div>
+                            </div>
+                            {s.responses?.mostHelpful && (
+                              <p className="text-xs mt-2"><span className="text-muted-foreground">Lo que más ayudó: </span>{s.responses.mostHelpful}</p>
+                            )}
+                            {s.responses?.improvement && (
+                              <p className="text-xs mt-1"><span className="text-muted-foreground">Mejoraría: </span>{s.responses.improvement}</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </TabsContent>
 
           {/* Settings Tab */}

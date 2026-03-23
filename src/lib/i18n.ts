@@ -22,7 +22,7 @@ export const translations = {
     'landing.headline2': 'Aprende a regular tu salud mental y a instalar microhábitos saludables con este programa.',
     'landing.subtitle': 'No necesitas más motivación, el Reto Báltica de 3 días, es neurociencia aplicada, diseñada para personas mentalmente agotadas, viven en modo estrés, empiezan hábitos y los abandonan, se tratan con dureza, no tienen tiempo para procesos largos, buscan mejorar su bienestar emocional, con herramientas científicas, invirtiendo tan solo 10 minutos por día.',
     'landing.cta': 'SÍ, QUIERO REGULAR MI MENTE AHORA',
-    'landing.microcopy': 'Acceso inmediato por 2 meses',
+    'landing.microcopy': 'Acceso inmediato por 1 mes',
     // Landing - El Problema
     'landing.problem.title': '¿Te suena familiar este agotamiento silencioso?',
     'landing.problem.intro': 'No es solo cansancio físico. Es una sobrecarga mental que te persigue, una sensación de desborde donde por más que intentas "controlar" tus pensamientos, estos vuelven con más fuerza, como una pelota de playa que intentas hundir en el agua.',
@@ -262,12 +262,12 @@ export const translations = {
     'payment.plan.item4': 'Recordatorios personalizados',
     // Plan Básico (MVP - single plan)
     'payment.plan.basic.name': 'Plan Básico',
-    'payment.plan.basic.duration': '2 meses de acceso',
+    'payment.plan.basic.duration': '1 mes de acceso',
     'payment.plan.basic.price': '$32.900',
     'payment.plan.basic.desc': 'Acceso completo al programa',
     // Common
     'payment.comingSoon': 'Próximamente',
-    'payment.planComingSoon': 'Este plan estará disponible próximamente. Por ahora, solo el plan de 2 meses está activo.',
+    'payment.planComingSoon': 'Este plan estará disponible próximamente.',
     'payment.selectPlan': 'Elegir plan',
     'payment.provider': 'Pago seguro con Mercado Pago',
     'payment.cta': 'Pagar con Mercado Pago',
@@ -532,7 +532,7 @@ export const translations = {
     'landing.headline2': 'Aprende a regular tu salud mental y a instalar microhábitos saludables con este programa.',
     'landing.subtitle': 'No necesitas más motivación, el Reto Báltica de 3 días, es neurociencia aplicada, diseñada para personas mentalmente agotadas, viven en modo estrés, empiezan hábitos y los abandonan, se tratan con dureza, no tienen tiempo para procesos largos, buscan mejorar su bienestar emocional, con herramientas científicas, invirtiendo tan solo 10 minutos por día.',
     'landing.cta': 'SÍ, QUIERO REGULAR MI MENTE AHORA',
-    'landing.microcopy': 'Acceso inmediato por 2 meses',
+    'landing.microcopy': 'Acceso inmediato por 1 mes',
     // Landing - El Problema
     'landing.problem.title': '¿Te suena familiar este agotamiento silencioso?',
     'landing.problem.intro': 'No es solo cansancio físico. Es una sobrecarga mental que te persigue, una sensación de desborde donde por más que intentas "controlar" tus pensamientos, estos vuelven con más fuerza, como una pelota de playa que intentas hundir en el agua.',
@@ -772,12 +772,12 @@ export const translations = {
     'payment.plan.item4': 'Recordatorios personalizados',
     // Plan Básico (MVP - single plan)
     'payment.plan.basic.name': 'Plan Básico',
-    'payment.plan.basic.duration': '2 meses de acceso',
+    'payment.plan.basic.duration': '1 mes de acceso',
     'payment.plan.basic.price': '$32.900',
     'payment.plan.basic.desc': 'Acceso completo al programa',
     // Common
     'payment.comingSoon': 'Próximamente',
-    'payment.planComingSoon': 'Este plan estará disponible próximamente. Por ahora, solo el plan de 2 meses está activo.',
+    'payment.planComingSoon': 'Este plan estará disponible próximamente.',
     'payment.selectPlan': 'Elegir plan',
     'payment.provider': 'Pago seguro con Mercado Pago',
     'payment.cta': 'Pagar con Mercado Pago',
@@ -1041,7 +1041,7 @@ export const translations = {
     'landing.headline2': 'Learn to regulate your mental health and build healthy micro-habits with this program.',
     'landing.subtitle': 'You don\'t need more motivation. The 3-Day Báltica Challenge is applied neuroscience, designed for mentally exhausted people, living in stress mode, who start habits and abandon them, treat themselves harshly, have no time for long processes, seek to improve their emotional wellbeing, with scientific tools, investing just 10 minutes per day.',
     'landing.cta': 'YES, I WANT TO REGULATE MY MIND NOW',
-    'landing.microcopy': 'Immediate access for 2 months',
+    'landing.microcopy': 'Immediate access for 1 month',
     // Landing - The Problem
     'landing.problem.title': 'Does this silent exhaustion sound familiar?',
     'landing.problem.intro': 'It\'s not just physical tiredness. It\'s a mental overload that follows you, a feeling of overwhelm where no matter how hard you try to "control" your thoughts, they come back stronger, like a beach ball you try to push underwater.',
@@ -1281,7 +1281,7 @@ export const translations = {
     'payment.plan.item4': 'Personalized reminders',
     // Plan Básico (MVP - single plan)
     'payment.plan.basic.name': 'Basic Plan',
-    'payment.plan.basic.duration': '2 months access',
+    'payment.plan.basic.duration': '1 month access',
     'payment.plan.basic.price': '$32,900',
     'payment.plan.basic.desc': 'Full access to the program',
     // Common

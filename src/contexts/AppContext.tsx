@@ -105,6 +105,10 @@ interface AppContextType {
   // Payment
   paymentCompleted: boolean;
   setPaymentCompleted: (completed: boolean) => void;
+
+  // Plan
+  planType: string;
+  setPlanType: (plan: string) => void;
 }
 
 const defaultProgress: JourneyProgress = {
@@ -176,6 +180,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return localStorage.getItem(userPrefix('paymentCompleted')) === 'true';
   });
 
+  const [planType, setPlanTypeState] = useState(() => {
+    return localStorage.getItem(userPrefix('planType')) || 'basico';
+  });
+
   const totalDays = 3; // MVP: Bienvenida (0) + 3 días
 
   // Reload per-user data when userEmail changes (login/logout)
@@ -187,6 +195,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setOnboardingCompletedState(localStorage.getItem(userPrefix('onboardingCompleted')) === 'true');
     setPreferredReminderTimeState(localStorage.getItem(userPrefix('preferredReminderTime')) || '08:00');
     setPaymentCompletedState(localStorage.getItem(userPrefix('paymentCompleted')) === 'true');
+    setPlanTypeState(localStorage.getItem(userPrefix('planType')) || 'basico');
   }, [userEmail]);
 
   // Load data from API on mount if authenticated
@@ -254,6 +263,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const isPaid = data.user.status === 'active';
       setPaymentCompletedState(isPaid);
       localStorage.setItem(userPrefix('paymentCompleted', data.user.email), String(isPaid));
+
+      // Sync plan type
+      if (data.user.plan_type) {
+        setPlanTypeState(data.user.plan_type);
+        localStorage.setItem(userPrefix('planType', data.user.email), data.user.plan_type);
+      }
 
       return { success: true };
     } catch (err: any) {
@@ -403,6 +418,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(userPrefix('paymentCompleted'), String(completed));
   };
 
+  const setPlanType = (plan: string) => {
+    setPlanTypeState(plan);
+    localStorage.setItem(userPrefix('planType'), plan);
+  };
+
   return (
     <AppContext.Provider value={{
       isAuthenticated,
@@ -431,6 +451,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setPreferredReminderTime,
       paymentCompleted,
       setPaymentCompleted,
+      planType,
+      setPlanType,
     }}>
       {children}
     </AppContext.Provider>

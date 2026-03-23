@@ -13,6 +13,8 @@ import logsRoutes from './routes/logs.routes';
 import paymentsRoutes from './routes/payments.routes';
 import settingsRoutes from './routes/settings.routes';
 import userSettingsRoutes from './routes/userSettings.routes';
+import surveysRoutes from './routes/surveys.routes';
+import diplomasRoutes from './routes/diplomas.routes';
 
 const app = express();
 
@@ -29,6 +31,8 @@ app.use('/api/admin/logs', logsRoutes);
 app.use('/api/payments', paymentsRoutes);
 app.use('/api/settings', userSettingsRoutes);
 app.use('/api/admin/settings', settingsRoutes);
+app.use('/api/surveys', surveysRoutes);
+app.use('/api/diplomas', diplomasRoutes);
 
 // Health check
 app.get('/api/health', (_req, res) => {

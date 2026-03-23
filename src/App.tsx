@@ -25,6 +25,8 @@ import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import MethodologyPage from "./pages/MethodologyPage";
 import AdminDashboard from "./pages/AdminDashboard";
+import SatisfactionSurveyPage from "./pages/SatisfactionSurveyPage";
+import DiplomaPage from "./pages/DiplomaPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -167,6 +169,22 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <PaymentPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/survey"
+        element={
+          <ProtectedRoute>
+            <SatisfactionSurveyPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/diploma"
+        element={
+          <ProtectedRoute>
+            <DiplomaPage />
           </ProtectedRoute>
         }
       />

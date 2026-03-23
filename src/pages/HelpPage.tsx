@@ -74,8 +74,8 @@ const faqSections: Record<string, FaqSection[]> = {
           answer: 'Sí. Guardamos tu progreso para que puedas retomar tus jornadas, revisar lo que hiciste y continuar sin perder información. Esta información es para tu conocimiento.',
         },
         {
-          question: '¿Qué incluye el plan de 2 meses?',
-          answer: 'El plan de 2 meses incluye acceso completo al Reto de 3 Días con todos los videos, audios guiados, materiales PDF y la posibilidad de repetir el contenido las veces que quieras durante ese período.',
+          question: '¿Qué incluye el plan?',
+          answer: 'El plan incluye acceso completo al Reto de 3 Días con todos los videos, audios guiados, materiales PDF y la posibilidad de repetir el contenido las veces que quieras durante tu período de acceso.',
         },
         {
           question: '¿El programa tiene logros o celebraciones?',
@@ -272,8 +272,8 @@ const faqSections: Record<string, FaqSection[]> = {
           answer: 'Sí. Guardamos tu progreso para que puedas retomar tus jornadas, revisar lo que hiciste y continuar sin perder información. Esta información es para tu conocimiento.',
         },
         {
-          question: '¿Qué incluye el plan de 2 meses?',
-          answer: 'El plan de 2 meses incluye acceso completo al Reto de 3 Días con todos los vídeos, audios guiados, materiales PDF y la posibilidad de repetir el contenido las veces que quieras durante ese período.',
+          question: '¿Qué incluye el plan?',
+          answer: 'El plan incluye acceso completo al Reto de 3 Días con todos los vídeos, audios guiados, materiales PDF y la posibilidad de repetir el contenido las veces que quieras durante tu período de acceso.',
         },
         {
           question: '¿El programa tiene logros o celebraciones?',
