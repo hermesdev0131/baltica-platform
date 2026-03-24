@@ -34,5 +34,7 @@ server/.env
 # Server build output
 server/dist
 
+docs/*
+
 # OS files
 Thumbs.db

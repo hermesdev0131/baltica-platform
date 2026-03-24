@@ -789,6 +789,25 @@ export default function JourneyPage() {
                           </a>
                         </CardContent>
                       </Card>
+                      {day0ExtendedContent.introPdf?.url && (
+                        <Card className="shadow-card">
+                          <CardContent className="p-4 flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0">
+                              <Download className="h-5 w-5 text-secondary-foreground" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-medium text-foreground text-sm">{day0ExtendedContent.introPdf.title}</p>
+                              <p className="text-xs text-muted-foreground">{locale.startsWith('es') ? 'Material de la introducción' : 'Introduction material'}</p>
+                            </div>
+                            <a href={day0ExtendedContent.introPdf.url} target="_blank" rel="noopener noreferrer">
+                              <Button variant="outline" size="sm" className="gap-1.5">
+                                <Download className="h-3.5 w-3.5" />
+                                PDF
+                              </Button>
+                            </a>
+                          </CardContent>
+                        </Card>
+                      )}
                       {day1Content.pdf.url && (
                         <Card className="shadow-card">
                           <CardContent className="p-4 flex items-center gap-4">

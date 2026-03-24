@@ -35,6 +35,7 @@ export const day0ExtendedContent = {
   welcomeVideo: { url: '/BIENVENIDA.mp4', duration: '2:00', title: 'Bienvenida' } as MediaAsset,
   introVideo: { url: '/INTRODUCCION.mp4', duration: '2:30', title: 'Introducción' } as MediaAsset,
   welcomePdf: { url: '/PDF Bienvenida.pdf', duration: '', title: 'PDF Bienvenida' } as MediaAsset,
+  introPdf: { url: '/Guía de Bienvenida.pdf', duration: '', title: 'Guía de Introducción' } as MediaAsset,
 };
 
 // Day 0 (Block 0) base content for backward compat

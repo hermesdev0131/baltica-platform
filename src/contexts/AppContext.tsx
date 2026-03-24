@@ -209,7 +209,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
             ...prev,
             currentDay: p.current_day,
             completedDays: p.completed_days || [],
-            currentStep: p.current_step || 'start',
+            // Prefer local step if API returns 'start' but local has a more advanced step
+            currentStep: (p.current_step && p.current_step !== 'start') ? p.current_step : prev.currentStep,
             streak: p.streak || 0,
             lastCompletedDate: p.last_completed_date || null,
           }));

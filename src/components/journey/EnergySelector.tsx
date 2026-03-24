@@ -25,18 +25,19 @@ export function EnergySelector({ onSelect, selectedEnergy, showResponse = true }
         {energyOptions.map((option, index) => (
           <motion.button
             key={option.key}
-            onClick={() => onSelect(option.key)}
+            onClick={() => !selectedEnergy && onSelect(option.key)}
+            disabled={!!selectedEnergy}
             className={cn(
               'flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-200',
               option.color,
               selectedEnergy === option.key && 'ring-2 ring-primary ring-offset-2',
-              selectedEnergy && selectedEnergy !== option.key && 'opacity-50'
+              selectedEnergy && selectedEnergy !== option.key && 'opacity-40 pointer-events-none'
             )}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={!selectedEnergy ? { scale: 1.05 } : {}}
+            whileTap={!selectedEnergy ? { scale: 0.95 } : {}}
           >
             <span className="text-3xl">{option.emoji}</span>
             <span className="text-sm font-medium text-foreground">

@@ -19,7 +19,7 @@ INSERT INTO plans (id, name, duration_months, regular_price, launch_price, featu
     "Bienvenida y primeros pasos, Día 1: Grounding para ordenar tus ideas",
     "Día 2: Acción con propósito para no estancarte",
     "Día 3: Autocompasión para no rendirte",
-    "Certificado de Bienesta",
+    "Certificado de Bienestar",
     "Video: La Ciencia Detrás del Reto Báltica"
   ]'),
   ('intermedio', 'Plan Intermedio', 3, 175795, 70000, '[

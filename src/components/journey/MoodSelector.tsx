@@ -27,18 +27,19 @@ export function MoodSelector({ onSelect, selectedMood, showResponse = true }: Mo
         {moods.map((mood, index) => (
           <motion.button
             key={mood.key}
-            onClick={() => onSelect(mood.key)}
+            onClick={() => !selectedMood && onSelect(mood.key)}
+            disabled={!!selectedMood}
             className={cn(
               'flex flex-col items-center gap-2 p-4 rounded-2xl border-2 transition-all duration-200',
               mood.color,
               selectedMood === mood.key && 'ring-2 ring-primary ring-offset-2',
-              selectedMood && selectedMood !== mood.key && 'opacity-50'
+              selectedMood && selectedMood !== mood.key && 'opacity-40 pointer-events-none'
             )}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={!selectedMood ? { scale: 1.05 } : {}}
+            whileTap={!selectedMood ? { scale: 0.95 } : {}}
           >
             <span className="text-3xl">{mood.emoji}</span>
             <span className="text-sm font-medium text-foreground">

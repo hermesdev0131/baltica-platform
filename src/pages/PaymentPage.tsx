@@ -39,7 +39,7 @@ const PLANS = [
     features: [
       'Reto de 3 días completo',
       'Videos y audios guiados',
-      'Certificado de Bienesta',
+      'Certificado de Bienestar',
       'Video: La Ciencia Detrás del Reto',
     ],
     highlight: false,

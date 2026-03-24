@@ -147,7 +147,7 @@ export default function DiplomaPage() {
 
                 {/* Title */}
                 <div style={{ fontSize: '32px', fontWeight: 700, color: '#102050', marginBottom: '8px', letterSpacing: '2px' }}>
-                  {es ? 'CERTIFICADO DE BIENESTA' : 'WELLNESS CERTIFICATE'}
+                  {es ? 'CERTIFICADO DE BIENESTAR' : 'WELLNESS CERTIFICATE'}
                 </div>
 
                 <div style={{ width: '120px', height: '3px', background: '#10B0C0', marginBottom: '20px' }} />

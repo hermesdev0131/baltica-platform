@@ -505,26 +505,6 @@ export default function LandingPage() {
             {t('landing.authority.title' as any)}
           </motion.h2>
 
-          <motion.p
-            className="text-base md:text-lg text-muted-foreground leading-relaxed text-center max-w-3xl mx-auto mb-8"
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.4, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-          >
-            {t('landing.authority.body' as any)}
-          </motion.p>
-
-          <motion.p
-            className="text-base font-semibold text-foreground text-center mb-6"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-          >
-            {t('landing.authority.also' as any)}
-          </motion.p>
-
           {/* 3 Scientific Points */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
@@ -593,7 +573,7 @@ export default function LandingPage() {
                   'Día 1: Grounding para ordenar tus ideas',
                   'Día 2: Acción con propósito para no estancarte',
                   'Día 3: Autocompasión para no rendirte',
-                  'Certificado de Bienesta',
+                  'Certificado de Bienestar',
                   'Video: La Ciencia Detrás del Reto Báltica',
                 ],
                 highlight: false,
@@ -648,15 +628,15 @@ export default function LandingPage() {
                   <span className="text-xs font-bold uppercase tracking-wider text-primary mb-2">Mejor valor</span>
                 )}
                 <h3 className="text-lg font-bold text-white mb-1">{plan.name}</h3>
-                <p className="text-sm text-white/60 mb-3">{plan.duration}</p>
+                <p className="text-lg md:text-xl font-bold text-white/80 mb-3">{plan.duration}</p>
                 {plan.promo && (
-                  <span className="inline-block text-xs font-semibold bg-primary/30 text-primary px-2 py-1 rounded-full mb-3 w-fit">{plan.promo}</span>
+                  <span className="inline-block text-sm font-bold bg-primary/30 text-primary px-3 py-1.5 rounded-full mb-3 w-fit">{plan.promo}</span>
                 )}
                 <p className="text-sm text-white/50 line-through">{plan.regular}</p>
-                <p className="text-3xl font-bold text-primary mb-4">{plan.launch}</p>
+                <p className="text-4xl md:text-5xl font-extrabold text-primary mb-4">{plan.launch}<span className="text-base font-semibold text-white/60 ml-1">COP</span></p>
                 <ul className="space-y-2 flex-1 mb-5">
                   {plan.features.map((f, fi) => (
-                    <li key={fi} className="flex items-start gap-2 text-sm text-white/85">
+                    <li key={fi} className="flex items-start gap-2 text-sm font-semibold text-white/90">
                       <Check className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
                       <span>{f}</span>
                     </li>

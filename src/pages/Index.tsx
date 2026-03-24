@@ -227,7 +227,7 @@ const Index = () => {
             transition={{ delay: 0.6 }}
           >
             <p className="text-base font-medium text-foreground">
-              🔥 {progress.streak} {t('progress.days')} {t('progress.streak').toLowerCase()}
+              🔥 {progress.streak} {progress.streak === 1 ? (locale.startsWith('es') ? 'día' : 'day') : t('progress.days')} {t('progress.streak').toLowerCase()}
             </p>
             <p className="text-sm text-muted-foreground">{t('progress.keep')}</p>
           </motion.div>
