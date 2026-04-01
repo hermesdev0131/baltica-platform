@@ -1,11 +1,10 @@
 export type Locale = 'es-ES' | 'es-LATAM' | 'en';
 
 export const locales: { code: Locale; label: string; flag: string }[] = [
-  { code: 'es-ES', label: 'Español (España)', flag: '🇪🇸' },
   { code: 'es-LATAM', label: 'Español (Latinoamérica)', flag: '🌎' },
   { code: 'en', label: 'English', flag: '🇺🇸' },
 ];
-
+// { code: 'es-ES', label: 'Español (España)', flag: '🇪🇸' },
 export const translations = {
   'es-ES': {
     // Navigation
@@ -45,7 +44,7 @@ export const translations = {
     // Landing - Microhábitos
     'landing.microhabits.title': 'La Lista de Poder: Microhábitos Concretos',
     'landing.microhabits.hook': '¿Crees que no tienes tiempo? El secreto está en las Microactividades.',
-    'landing.microhabits.hook2': 'Si no tienes 10 minutos para cuidar tu salud mental…',
+    'landing.microhabits.hook2': 'Si no tienes 10 minutos para cuidar tu salud mental🙈🙈…',
     'landing.microhabits.intro': 'La diferencia no está en hacer cosas gigantescas, sino en la estructura. Convertimos intenciones vagas como "debería cuidarme" en acciones concretas de menos de 10 minutos.',
     'landing.microhabits.sample': 'Aquí tienes una muestra real de lo que aprenderás a integrar en tu vida sin alterar tu agenda:',
     'landing.microhabits.cat1.title': 'Para tu Regulación Emocional',
@@ -133,8 +132,8 @@ export const translations = {
     'energy.low': 'Baja',
 
     // Inactivity
-    'inactivity.title': '¿Tomaste una pausa?',
-    'inactivity.message': '¿Te sirve retomar en 2 horas? Puedo guardarte el punto.',
+    'inactivity.title': '¿Hacemos una pausa?',
+    'inactivity.message': 'No hay prisa. Puedes retomar tu momento de bienestar cuando quieras',
     'inactivity.continue': 'Seguir ahora',
     'inactivity.saveLater': 'Guardar y volver después',
 
@@ -555,7 +554,7 @@ export const translations = {
     // Landing - Microhábitos
     'landing.microhabits.title': 'La Lista de Poder: Microhábitos Concretos',
     'landing.microhabits.hook': '¿Crees que no tienes tiempo? El secreto está en las Microactividades.',
-    'landing.microhabits.hook2': 'Si no tienes 10 minutos para cuidar tu salud mental…',
+    'landing.microhabits.hook2': 'Si no tienes 10 minutos para cuidar tu salud mental🙈🙈…',
     'landing.microhabits.intro': 'La diferencia no está en hacer cosas gigantescas, sino en la estructura. Convertimos intenciones vagas como "debería cuidarme" en acciones concretas de menos de 10 minutos.',
     'landing.microhabits.sample': 'Aquí tienes una muestra real de lo que aprenderás a integrar en tu vida sin alterar tu agenda:',
     'landing.microhabits.cat1.title': 'Para tu Regulación Emocional',
@@ -643,8 +642,8 @@ export const translations = {
     'energy.low': 'Baja',
 
     // Inactivity
-    'inactivity.title': '¿Tomaste una pausa?',
-    'inactivity.message': '¿Te sirve retomar en 2 horas? Puedo guardarte el punto.',
+    'inactivity.title': '¿Hacemos una pausa?',
+    'inactivity.message': 'No hay prisa. Puedes retomar tu momento de bienestar cuando quieras',
     'inactivity.continue': 'Seguir ahora',
     'inactivity.saveLater': 'Guardar y volver después',
 
@@ -1064,7 +1063,7 @@ export const translations = {
     // Landing - Microhabits
     'landing.microhabits.title': 'The Power List: Concrete Micro-Habits',
     'landing.microhabits.hook': 'Think you don\'t have time? The secret is in Micro-Activities.',
-    'landing.microhabits.hook2': 'If you don\'t have 10 minutes to take care of your mental health…',
+    'landing.microhabits.hook2': 'If you don\'t have 10 minutes to take care of your mental health🙈🙈…',
     'landing.microhabits.intro': 'The difference isn\'t in doing giant things, but in the structure. We turn vague intentions like "I should take care of myself" into concrete actions of less than 10 minutes.',
     'landing.microhabits.sample': 'Here\'s a real sample of what you\'ll learn to integrate into your life without altering your schedule:',
     'landing.microhabits.cat1.title': 'For Your Emotional Regulation',
@@ -1152,8 +1151,8 @@ export const translations = {
     'energy.low': 'Low',
 
     // Inactivity
-    'inactivity.title': 'Taking a break?',
-    'inactivity.message': 'Would you like to resume in 2 hours? I can save your progress.',
+    'inactivity.title': 'Shall we take a break?',
+    'inactivity.message': 'No rush.You cane resume whnever you want.',
     'inactivity.continue': 'Continue now',
     'inactivity.saveLater': 'Save and return later',
 

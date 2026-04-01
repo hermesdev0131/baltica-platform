@@ -79,12 +79,12 @@ export function Header() {
                 onClearAll={clearAll}
                 onDelete={deleteNotification}
               />
-              <NotificationSettings
+              {/* <NotificationSettings
                 settings={settings}
                 onUpdateSettings={updateSettings}
                 permissionStatus={permissionStatus}
                 onRequestPermission={requestPermission}
-              />
+              /> */}
             </>
           )}
 

@@ -203,7 +203,7 @@ const faqSections: Record<string, FaqSection[]> = {
       faqs: [
         {
           question: '¿Qué pasa si tengo dudas o necesito ayuda?',
-          answer: 'Puedes contactarnos directamente por WhatsApp al +57 3182644725. Estaremos encantados de ayudarte.',
+          answer: 'Puedes contactarnos directamente por electrónico info@baltica.com. Estaremos encantados de ayudarte.',
         },
       ],
     },
@@ -381,7 +381,7 @@ const faqSections: Record<string, FaqSection[]> = {
       faqs: [
         {
           question: '¿Qué pasa si tengo dudas o necesito ayuda?',
-          answer: 'Puedes contactarnos directamente por WhatsApp al +57 3182644725. Estaremos encantados de ayudarte.',
+          answer: 'Puedes contactarnos directamente por electrónico info@baltica.com. Estaremos encantados de ayudarte.',
         },
       ],
     },
@@ -558,7 +558,7 @@ const faqSections: Record<string, FaqSection[]> = {
       faqs: [
         {
           question: 'What if I have questions or need help?',
-          answer: 'You can contact us directly via WhatsApp at +57 3182644725. We will be happy to help you.',
+          answer: 'You can contact us directly via Email at info@baltica.com. We will be happy to help you.',
         },
       ],
     },

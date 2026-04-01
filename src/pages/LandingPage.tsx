@@ -30,10 +30,17 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Link to="/" className="flex items-center">
-            <BalticaLogo variant="header" size={56} />
+      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg dark:h-32">
+        <div className="container mx-auto flex h-24 dark:h-32 items-center justify-between px-4">
+          <Link to="/" className="flex items-center mt-6 dark:mt-6">
+            {/* Light mode logo */}
+            <span className="dark:hidden">
+              <BalticaLogo variant="header" size={80} />
+            </span>
+            {/* Dark mode logo, larger */}
+            <span className="hidden dark:inline">
+              <BalticaLogo variant="header" size={112} />
+            </span>
           </Link>
 
           <div className="flex items-center gap-1">
@@ -338,6 +345,43 @@ export default function LandingPage() {
             <p className="text-3xl md:text-4xl font-bold text-primary tracking-wide">
               {t('landing.format.mantra' as any)}
             </p>
+            {/* Testimonials box under Mantra */}
+            <div className="mt-8 bg-white/80 dark:bg-card border border-border/30 rounded-2xl p-6 flex flex-col md:flex-row gap-6 justify-center items-stretch shadow-soft">
+              {/* Testimonial 1 */}
+              <div className="flex-1 flex flex-col items-center text-center max-w-xs mx-auto">
+                <div className="flex gap-0.5 mb-2 justify-center">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+                <p className="text-sm md:text-base text-foreground italic mb-2">"Pensé que sería otro contenido más, pero el primer ejercicio ya me hizo sentir diferente."</p>
+                <div className="text-xs font-bold text-muted-foreground mb-1">— Daniel M.</div>
+                <div className="text-xs font-bold text-muted-foreground">Bogotá (Cundinamarca)</div>
+              </div>
+              {/* Testimonial 2 */}
+              <div className="flex-1 flex flex-col items-center text-center max-w-xs mx-auto">
+                <div className="flex gap-0.5 mb-2 justify-center">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+                <p className="text-sm md:text-base text-foreground italic mb-2">"Logré eliminar varios malos hábitos frente a redes sociales y uso del celular."</p>
+                <div className="text-xs font-bold text-muted-foreground mb-1">— Gloria M.</div>
+                <div className="text-xs font-bold text-muted-foreground">Pereira (Risaralda)</div>
+              </div>
+              {/* Testimonial 3 */}
+              <div className="flex-1 flex flex-col items-center text-center max-w-xs mx-auto">
+                <div className="flex gap-0.5 mb-2 justify-center">
+                  {[...Array(4)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" />
+                  ))}
+                  <StarHalf className="h-5 w-5 fill-amber-400 text-amber-400" />
+                </div>
+                <p className="text-sm md:text-base text-foreground italic mb-2">"Pensé que necesitaría mucho tiempo, pero en menos de 10 minutos al día ya sentía cambios."</p>
+                <div className="text-xs font-bold text-muted-foreground mb-1">— Héctor H.</div>
+                <div className="text-xs font-bold text-muted-foreground">Pereira (Risaralda)</div>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -422,6 +466,40 @@ export default function LandingPage() {
           >
             {t('landing.microhabits.closing' as any)}
           </motion.p>
+          {/* Testimonials box under Closing */}
+          <div className="mt-8 bg-white/80 dark:bg-card border border-border/30 rounded-2xl p-6 flex flex-col md:flex-row gap-6 justify-center items-stretch shadow-soft">
+            {/* Testimonial 1 */}
+            <div className="flex-1 flex flex-col items-center text-center max-w-xs mx-auto">
+              <div className="flex gap-0.5 mb-2 justify-center">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" />
+                ))}
+              </div>
+              <p className="text-sm md:text-base text-foreground italic mb-2">"Antes me sentía constantemente estresado. Después de hacer el reto logré encontrar momentos de calma que no tenía hace mucho tiempo."</p>
+              <div className="text-xs font-bold text-muted-foreground mb-1">— Mauricio L., Cali (Valle)</div>
+            </div>
+            {/* Testimonial 2 */}
+            <div className="flex-1 flex flex-col items-center text-center max-w-xs mx-auto">
+              <div className="flex gap-0.5 mb-2 justify-center">
+                {[...Array(4)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" />
+                ))}
+                <StarHalf className="h-5 w-5 fill-amber-400 text-amber-400" />
+              </div>
+              <p className="text-sm md:text-base text-foreground italic mb-2">"En menos de 10 minutos al día logré sentir más calma mental."</p>
+              <div className="text-xs font-bold text-muted-foreground mb-1">Laura M,  — Bogotá D.C.</div>
+            </div>
+            {/* Testimonial 3 */}
+            <div className="flex-1 flex flex-col items-center text-center max-w-xs mx-auto">
+              <div className="flex gap-0.5 mb-2 justify-center">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" />
+                ))}
+              </div>
+              <p className="text-sm md:text-base text-foreground italic mb-2">"Las masterclass son excelentes y son el complemento perfecto para seguir practicando"</p>
+              <div className="text-xs font-bold text-muted-foreground mb-1">Mariale S. Bogotá D.C.</div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -485,9 +563,15 @@ export default function LandingPage() {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.4 }}
           >
-            {/* Replace this placeholder with <video> when the client provides the video file */}
-            <Play className="h-12 w-12 mb-3 text-primary/40" />
-            <p className="text-sm font-medium">{locale.startsWith('es') ? 'Video próximamente' : 'Video coming soon'}</p>
+            <video
+              src="/LaCienciaDetrsdelRetoBltica_1080vL.mp4"
+              className="w-full h-auto block rounded-2xl"
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls
+            />
           </motion.div>
         </div>
       </section>
@@ -532,6 +616,19 @@ export default function LandingPage() {
               </motion.div>
             ))}
           </div>
+          {/* Testimonial after scientific points */}
+          <div className="mt-8 bg-white/80 dark:bg-card border border-border/30 rounded-2xl p-6 max-w-2xl mx-auto flex flex-col items-center text-center shadow-soft">
+            <div className="flex gap-0.5 mb-2 justify-center">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="h-5 w-5 fill-amber-400 text-amber-400" />
+              ))}
+            </div>
+            <p className="text-base md:text-lg text-foreground italic mb-2 whitespace-pre-line">
+              {`Hace meses sentía que mi mente estaba saturada por el trabajo.\nEncontré este reto casi por casualidad y decidí probarlo.\nLos ejercicios son simples, pero efectivos.\nDespués de hacerlo sentí más claridad mental y tranquilidad.\nLo recomiendo a cualquiera que necesite reconectar consigo mismo.`}
+            </p>
+            <div className="text-xs font-bold text-muted-foreground mb-1">— Vanesa R., Cali (Valle)</div>
+ 
+          </div>
         </div>
       </section>
 
@@ -573,7 +670,7 @@ export default function LandingPage() {
                   'Día 1: Grounding para ordenar tus ideas',
                   'Día 2: Acción con propósito para no estancarte',
                   'Día 3: Autocompasión para no rendirte',
-                  'Certificado de Bienestar',
+                  'Certificado de BienestaR',
                   'Video: La Ciencia Detrás del Reto Báltica',
                 ],
                 highlight: false,
@@ -628,19 +725,27 @@ export default function LandingPage() {
                   <span className="text-xs font-bold uppercase tracking-wider text-primary mb-2">Mejor valor</span>
                 )}
                 <h3 className="text-lg font-bold text-white mb-1">{plan.name}</h3>
-                <p className="text-lg md:text-xl font-bold text-white/80 mb-3">{plan.duration}</p>
+                <p className="text-xl md:text-3xl font-bold text-white/80 mb-3">{plan.duration}</p>
                 {plan.promo && (
-                  <span className="inline-block text-sm font-bold bg-primary/30 text-primary px-3 py-1.5 rounded-full mb-3 w-fit">{plan.promo}</span>
+                  <span className="inline-block text-xl font-bold bg-primary/30 text-primary px-3 py-1.5 rounded-full mb-3 w-fit">{plan.promo}</span>
                 )}
                 <p className="text-sm text-white/50 line-through">{plan.regular}</p>
-                <p className="text-4xl md:text-5xl font-extrabold text-primary mb-4">{plan.launch}<span className="text-base font-semibold text-white/60 ml-1">COP</span></p>
+                <p className="text-6xl md:text-6xl font-extrabold text-primary mb-4">{plan.launch}<span className="text-base font-semibold text-white/60 ml-1">COP</span></p>
                 <ul className="space-y-2 flex-1 mb-5">
-                  {plan.features.map((f, fi) => (
-                    <li key={fi} className="flex items-start gap-2 text-sm font-semibold text-white/90">
-                      <Check className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
-                      <span>{f}</span>
-                    </li>
-                  ))}
+                  {plan.features.map((f, fi) => {
+                    const isSpecial =
+                      (plan.id === 'intermedio' && fi >= plan.features.length - 2) ||
+                      (plan.id === 'premium' && fi >= plan.features.length - 2);
+                    return (
+                      <li
+                        key={fi}
+                        className="flex items-start gap-2 text-sm font-semibold text-white/90"
+                      >
+                        <Check className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
+                        <span className={isSpecial ? 'text-lg font-bold' : ''}>{f}</span>
+                      </li>
+                    );
+                  })}
                 </ul>
                 <Button
                   className={`w-full rounded-full font-semibold gap-2 ${plan.highlight ? 'bg-primary hover:bg-primary/90 text-primary-foreground' : 'bg-white/15 hover:bg-white/25 text-white border border-white/30'}`}

@@ -27,12 +27,22 @@ export function BalticaLogo({
   };
 
   return (
-    <img
-      src={getLogoSrc()}
-      alt="Báltica Education"
-      style={{ height: size, width: 'auto' }}
-      className={`object-contain dark:hidden ${className}`}
-    />
+    <>
+      {/* Light mode logo */}
+      <img
+        src={getLogoSrc()}
+        alt="Báltica Education"
+        style={{ height: size, width: 'auto' }}
+        className={`object-contain dark:hidden ${className}`}
+      />
+      {/* Dark mode logo */}
+      <img
+        src={'/Logo MODO NOCTURNO.jpeg'}
+        alt="Báltica Education"
+        style={{ height: size , width: 'auto' }}
+        className={`object-contain hidden dark:block ${className}`}
+      />
+    </>
   );
 }
 
